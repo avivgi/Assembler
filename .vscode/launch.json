@@ -1,0 +1,30 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "(lldb) Launch",
+            "type": "cppdbg",
+            "request": "launch",
+            "args": [
+                "3.5",
+                "43",
+                "567"
+            ],
+            "filterStdout": true,
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "program": "${workspaceFolder}/bin/assembler",
+            "environment": [],
+            "externalConsole": true,
+            "MIMode": "lldb",
+            "preLaunchTask": "C/C++: GCC build active file",
+            "targetArchitecture": "arm64",
+            "logging": {
+                "engineLogging": true,
+                "trace": false,
+                "traceResponse": false,
+                "programOutput": true
+            }
+        }
+    ]
+}
