@@ -20,5 +20,12 @@ int preCompile(const char *arg)
         exit(1);
     }
     strcat(fileName, ".as");
+    if ((destination = fopen(fileName, "rw")) == NULL)
+    {
+        fprintf(stderr, "Error! Failed open file %s\n", fileName);
+        free(fileName);
+        exit(1);
+    }
+
     return 0;
 }
