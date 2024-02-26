@@ -125,7 +125,6 @@ int parse_command(char *buffer, char *command, char *first_param)
     int i = 0;
     int j = 0;
     int result = 0;
-
     /* bypass spaced before command*/
     while (((buffer[i] != '\0') && (buffer[i] != ',')) && ((buffer[i] == ' ') || (buffer[i] == '\t')))
     {

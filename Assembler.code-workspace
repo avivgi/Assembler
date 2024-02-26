@@ -11,7 +11,9 @@
 			"assembler.h": "c",
 			"__config": "c",
 			"fsutils.h": "c",
-			"precompile.h": "c"
+			"precompile.h": "c",
+			"global_constants.h": "c",
+			"typeinfo": "c"
 		}
 	}
 }
