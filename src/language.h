@@ -2,6 +2,7 @@
 #define __LANGUAGE__
 
 #define NUM_OF_COMMANDS_IN_LANGUAGE 16
+#define NUM_OF_REGISTERS 8
 
 typedef struct
 {
@@ -38,13 +39,23 @@ enum sentance_type
     CONST
 };
 
-enum operand_adderss_type
+enum Operand_adderss_type
 {
     NA = -1,
     IMM = 0,
     DIRECT = 1,
     INDEX = 2,
     REGISTER = 3,
-};
+} operand_adderss_type;
+
+enum Instructor_type
+{
+    DATA,
+    STRING,
+    ENTRY,
+    EXTERN
+} instructor_type;
+
+const char registers[NUM_OF_REGISTERS][3] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
 
 #endif
