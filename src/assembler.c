@@ -28,24 +28,17 @@ void handleSourceFile(char *arg)
 
     // setupMemoryTables();
 
-    // preCompile();
+    // preCompile(arg);
 
-    // exportMacroTable();
-
-    // Compile(destination);
+    // Compile(arg);
 
     // evalCounters();
 
-    //  printSymbolTable();
-
-    // parseAssemblyCode(destination);
+    // printSymbolTable();
 
     // exportFiles();
 
-    /// printf("\Errors occoured during parsing. existing.\n");
-    ///  printf("\nexpanding macros for %s source file\nfailed due to some code errors\nmoving on to the next file if exist\n\n", fileName);
-
     /// free(everything );
-    // fclose(src);
-    // fclose(destination);
+    //// fclose(src);
+    //// fclose(destination);
 }
