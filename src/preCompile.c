@@ -1,9 +1,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "preAssembler.h"
+#include "preCompile.h"
 
-int preAssembler(const char *arg)
+int preCompile(const char *arg)
 {
     FILE *source, *destination;
 

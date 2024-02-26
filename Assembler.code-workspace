@@ -10,7 +10,8 @@
 			"stdlib.h": "c",
 			"assembler.h": "c",
 			"__config": "c",
-			"fsutils.h": "c"
+			"fsutils.h": "c",
+			"precompile.h": "c"
 		}
 	}
 }

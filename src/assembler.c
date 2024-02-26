@@ -18,10 +18,8 @@ int main(int argc, char *argv[])
         exit(1);
     }
     while (--argc)
-    {
-        handleSourceFile(argv[i]);
-        i++;
-    }
+        handleSourceFile(argv[i++]);
+
     exit(0);
 }
 
@@ -30,11 +28,11 @@ void handleSourceFile(char *arg)
 
     // setupMemoryTables();
 
-    // parseSourceFile(src, destination);
+    // preCompile();
 
     // exportMacroTable();
 
-    // parseAssemblyCode(destination);
+    // Compile(destination);
 
     // evalCounters();
 
