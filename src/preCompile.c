@@ -58,7 +58,7 @@ int preCompile(const char *arg)
                 exit(EXIT_FAILURE);
             }
 
-            list_of_macros[number_of_macros].number_of_lines = 0;
+            list_of_macros[number_of_macros - 1].number_of_lines = 0;
             strcpy(list_of_macros[number_of_macros - 1].macro_name, macro_name);
 
             /*pulling the content of the macro*/
@@ -67,7 +67,9 @@ int preCompile(const char *arg)
                 if (strcmp(line, "endmcr") == 0)
                     break;
                 list_of_macros[number_of_macros - 1].number_of_lines++;
-                list_of_macros[number_of_macros - 1].command_line = realloc(list_of_macros[number_of_macros - 1].command_line, list_of_macros[number_of_macros - 1].number_of_lines * sizeof(Command_line));
+                list_of_macros[number_of_macros - 1].command_line =
+                    realloc(list_of_macros[number_of_macros - 1].command_line,
+                            list_of_macros[number_of_macros - 1].number_of_lines * sizeof(Command_line));
 
                 if (list_of_macros[number_of_macros - 1].command_line == NULL)
                 {
