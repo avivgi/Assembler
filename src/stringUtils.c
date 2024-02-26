@@ -6,7 +6,7 @@
 #include "stringUtils.h"
 
 /* reads the line from stdin*/
-void read_line(FILE *file, char **buffer)
+int read_line(FILE *file, char **buffer)
 {
     size_t size = MAX_LINE_LENGTH;
     size_t len = 0;
@@ -40,6 +40,7 @@ void read_line(FILE *file, char **buffer)
     }
 
     (*buffer)[len] = '\0';
+    return (c == EOF) ? 0 : 1;
 }
 
 /*clean white spaces from a buffer*/

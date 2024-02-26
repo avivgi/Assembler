@@ -6,7 +6,7 @@
 #include <stdlib.h>
 #include "global_constants.h"
 
-void read_line(FILE *file, char **buffer);
+int read_line(FILE *file, char **buffer);
 
 /*clean white spaces from a buffer*/
 void clean_white_space(char **buffer);
