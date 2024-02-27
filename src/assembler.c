@@ -2,6 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "assembler.h"
+#include "preCompile.h"
 
 /* AVIV GIDEONI OPEN UNIVERSITY 2024*/
 /*program receives the name of a file, and opens it
@@ -28,7 +29,7 @@ void handleSourceFile(char *arg)
 
     // setupMemoryTables();
 
-    // preCompile(arg);
+    preCompile(arg);
 
     // Compile(arg);
 
