@@ -14,6 +14,9 @@ bne LOOP
 mcr m_mcr2
 cmp 4, #sz 
 bne LOOP
+bne LOOP
+bne LOOP
+bne LOOP
 endmcr
 END: hlt
 .define len=4
