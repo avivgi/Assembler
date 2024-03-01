@@ -1,7 +1,8 @@
 #ifndef __LANGUAGE__
 #define __LANGUAGE__
+
 #define NUM_OF_COMMANDS_IN_LANGUAGE 16
-#define NUNMER_OF_REGISTERS 8
+#define NUN_OF_REGISTERS 8
 
 typedef struct
 {
@@ -41,14 +42,14 @@ enum Sentance_type
     CONST
 };
 
-enum Operand_adderss_type
+enum Operand_type
 {
     NA = -1,
     IMM = 0,
     DIRECT = 1,
     INDEX = 2,
     REGISTER = 3
-} operand_adderss_type;
+};
 
 enum Instructor_type
 {
@@ -56,8 +57,23 @@ enum Instructor_type
     STRING,
     ENTRY,
     EXTERN
-} instructor_type;
+};
 
-const char registers[NUNMER_OF_REGISTERS][3] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
+#define REGISTERS                                      \
+    {                                                  \
+        "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7" \
+    }
+
+typedef struct
+{
+    As_Command as_command[NUM_OF_COMMANDS_IN_LANGUAGE];
+    // enum Sentance_type sentance_type;
+    // enum Instructor_type instructor_type;
+    // enum Instructor_type_name instructor_type_name;
+    // enum Operand_type operand_type;
+    char *registers[NUN_OF_REGISTERS];
+} Language;
+
+void initlize_language(Language *language);
 
 #endif

@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "global_constants.h"
 #include "datamodel.h"
+#include "language.h"
 
 int read_line(FILE *file, char **buffer);
 
@@ -21,5 +22,5 @@ int split(const char *input, char arr[][MAX_PARAM_SIZE], int arr_length, char sp
 /* parases a the command and first parameter*/
 int parse_command(char *buffer, char *command, char *first_param);
 
-int parse_line(Line_params **line_params, size_t *line_params_count, char *buffer);
+int parse_line(char *buffer, Data_model *data_model, Language *language);
 #endif

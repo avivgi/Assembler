@@ -19,7 +19,8 @@
 			"stringutils.h": "c",
 			"compilefirststage.h": "c",
 			"compilesecondstage.h": "c",
-			"datamodel.h": "c"
+			"datamodel.h": "c",
+			"language.h": "c"
 		}
 	}
 }

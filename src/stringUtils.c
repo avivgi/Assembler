@@ -6,6 +6,7 @@
 #include "stringUtils.h"
 #include "datamodel.h"
 #include "memoryUtils.h"
+#include "language.h"
 
 /* reads the line from stdin*/
 int read_line(FILE *file, char **buffer)
@@ -203,20 +204,55 @@ int parse_command(char *buffer, char *command, char *first_param)
     return result;
 }
 
-int parse_line(Line_params **line_params, size_t *line_params_count, char *buffer)
+int parse_line(char *buffer, Data_model *data_model, Language *language)
 {
     char *token;
-    Line_params new_line;
-    new_line.param_count = 0;
+
+    /* initilize a new line in data model -> line_params*/
+
+    data_model->line_params[data_model->line_params_count].line_type = -1;
+
+    data_model->line_params =
+        realloc(data_model->line_params, sizeof(Line_params) * data_model->line_params_count);
+
+    data_model->line_params[data_model->line_params_count].parsed_params =
+        malloc(MAX_LINE_LENGTH * data_model->line_params[data_model->line_params_count].param_count * 40);
+    /*i create place for 40 parameters per line*/
+    if (data_model->line_params[data_model->line_params_count].parsed_params == NULL)
+    {
+        fprintf(stderr, "Error allocating memory. exissting\n");
+        exit(ERR_MEMORY_ALLOCATION);
+    }
+    data_model->line_params[data_model->line_params_count].param_type =
+        malloc(40 * sizeof(int));
+    if (data_model->line_params[data_model->line_params_count].param_type == NULL)
+    {
+        fprintf(stderr, "Error allocating memory. exissting\n");
+        exit(ERR_MEMORY_ALLOCATION);
+    }
+    /*end of initilize line*/
 
     token = strtok(buffer, "\t\n\f\r ");
     while (token != NULL)
     {
+        printf("starting");
         token = strtok(NULL, " \t\n\f\r");
-        new_line.parsed_params[new_line.param_count++] = strdup(token);
+
+        data_model->line_params[data_model->line_params_count].parsed_params[data_model->line_params[data_model->line_params_count].param_count] = strdup("token");
+        if (data_model->line_params[data_model->line_params_count].parsed_params[data_model->line_params[data_model->line_params_count].param_count] == NULL)
+        {
+            fprintf(stderr, "Fail Allocating memory!!!!. Exiting\n");
+            fflush(stderr);
+            exit(ERR_MEMORY_ALLOCATION);
+        }
+
+        printf("%s\n", data_model->line_params[data_model->line_params_count].parsed_params[data_model->line_params[data_model->line_params_count].param_count]);
+        data_model->line_params[data_model->line_params_count].parsed_params[data_model->line_params[data_model->line_params_count].param_count] = strdup(token);
+
+        printf("%s\n", data_model->line_params[data_model->line_params_count].parsed_params[data_model->line_params[data_model->line_params_count].param_count]);
     }
-    push((void **)line_params, line_params_count, sizeof(Line_params), &new_line);
-    return new_line.param_count;
+
+    return 0;
 }
 /*typedef struct
 {

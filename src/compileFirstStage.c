@@ -6,13 +6,14 @@
 #include "global_constants.h"
 #include "datamodel.h"
 #include "memoryUtils.h"
+#include "language.h"
 
-int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_count, Opcode **opcodes, size_t *opcode_count, Line_params **Line_params, size_t *line_params_count)
+int compileFirstStage(const char *filename, Data_model *data_model, Language *language)
 {
     char *buffer = NULL;
     int result;
     // int data_count = 0, instruction_count = 0;
-    FILE *source, *destination;
+    FILE *source; // , *destination;
     Symbol new_Symbol;
     char command[MAX_PARAM_SIZE];
     char first_param[MAX_PARAM_SIZE];
@@ -36,23 +37,9 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
 
     while (read_line(source, &buffer))
     {
-
-        parse_line(Line_params, line_params_count, buffer);
-        printf("%s  \n", Line_params[0]->parsed_params[0]);
-
-        // parse_line(parsed_lines)
-
-        // char *token;
-
-        // token = strtok(lineCopy, "\t\n\f\r ");
-        // while (token != NULL)
-        // {
-        //     printf("%s\n", token);
-        //     token = strtok(NULL, " \t\n\f\r");
-        // }
-
+        parse_line(buffer, data_model, language);
+        printf("%s  \n", data_model->line_params[0].parsed_params[0]);
         result = parse_command(buffer, command, first_param);
-        //    printf("%s\t --> ", buffer);
 
         /* step 3 - if type== define*/
 
@@ -61,10 +48,8 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
             new_Symbol.type = MDEFINE;
             strcpy(new_Symbol.name, first_param);
             new_Symbol.value = 0;
-            push((void **)symbols, symbol_count, sizeof(Symbol), &new_Symbol);
+            push((void **)data_model->symbols, &data_model->symbol_count, sizeof(Symbol), &new_Symbol);
         }
-        // printf("%s\t", command);
-        // printf("%s\n", first_param);
 
         /* step 4 - put define in mdefine table.*/
         /* step 5+6  - is sybmol ? */
@@ -86,5 +71,11 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
     free(fullFileName);
     fclose(source);
     // fclose(destination);
+    return 0;
+}
+
+int legalLabel(char *label)
+{
+
     return 0;
 }
