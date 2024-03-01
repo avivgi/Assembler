@@ -18,7 +18,11 @@
 			"global_constants.h": "c",
 			"stringutils.h": "c",
 			"compilefirststage.h": "c",
-			"compilesecondstage.h": "c"
+			"compilesecondstage.h": "c",
+			"datamodel.h": "c",
+			"memoryutils.h": "c",
+			"language.h": "c",
+			"sstream": "c"
 		}
 	}
 }

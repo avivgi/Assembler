@@ -1,4 +1,5 @@
 .define sz = 2
+.define szns=3
 MAIN: mov r3, LIST[sz]
 LOOP: jmp L1
 prn #-5
