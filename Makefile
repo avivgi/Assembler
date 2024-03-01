@@ -1,5 +1,5 @@
 CC := gcc
-CFLAGS := -std=c11 -ansi -pedantic -Wall -Wno-comment
+CFLAGS := -std=c11 -ansi -pedantic -Wall -Wno-comment -Wunused-variable
 
 # Check if the DEBUG variable is set
 ifdef DEBUG

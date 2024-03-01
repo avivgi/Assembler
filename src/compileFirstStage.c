@@ -5,19 +5,19 @@
 #include "compileFirstStage.h"
 #include "global_constants.h"
 #include "datamodel.h"
+#include "memoryUtils.h"
 
-int compileFirstStage(const char *filename, Symbol *symbols, Opcode *opcodes)
+int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_count, Opcode **opcodes, size_t *opcode_count)
 {
     char *buffer = NULL;
     int result;
-
-    /* step 2 - read line */
     int data_count = 0, instruction_count = 0;
     FILE *source, *destination;
+    Symbol new_Symbol;
     char command[MAX_PARAM_SIZE];
     char first_param[MAX_PARAM_SIZE];
-
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
+    /* step 2 - read line */
 
     if (!fullFileName)
     {
@@ -53,8 +53,10 @@ int compileFirstStage(const char *filename, Symbol *symbols, Opcode *opcodes)
 
         if (strcmp(command, ".define") == 0)
         {
-            // symbol.type = MDEFINE;
-            // push(symbols, symbol);
+            new_Symbol.type = MDEFINE;
+            strcpy(new_Symbol.name, first_param);
+            new_Symbol.value = 0;
+            push((void **)symbols, symbol_count, sizeof(Symbol), &new_Symbol);
         }
         printf("%s\t", command);
         printf("%s\n", first_param);
@@ -71,6 +73,8 @@ int compileFirstStage(const char *filename, Symbol *symbols, Opcode *opcodes)
         /* step 14 - calculate L , build binary code of first word*/
         /* step 15 - IC = IC + L . goto #2*/
     }
+    printf("finish first stage\n");
+
     /*step 16- if errors stop*/
     /*step 17- update data with value IC+100 in symbol table*/
     free(fullFileName);
