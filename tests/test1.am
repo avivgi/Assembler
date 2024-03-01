@@ -12,8 +12,14 @@ END: hlt
 .define len=4
 cmp 4, #sz 
 bne LOOP
+bne LOOP
+bne LOOP
+bne LOOP
 STR: .string "abcdef"
 LIST: .data 6,-9,len
 K: .data 22
 cmp 4, #sz 
+bne LOOP
+bne LOOP
+bne LOOP
 bne LOOP

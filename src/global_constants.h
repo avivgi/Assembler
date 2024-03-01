@@ -3,6 +3,7 @@
 
 #define MAX_LINE_LENGTH 80
 #define MAX_PARAM_SIZE 20
+#define MAX_PROGRAM_LENGTH 1000
 
 /*Error types*/
 #define ERR_ILLEGAL_COMMA -1

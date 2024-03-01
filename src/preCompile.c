@@ -55,6 +55,8 @@ int preCompile(const char *arg)
                 perror("Memory allocation failed.\n");
                 free(list_of_macros);
                 free(fileName);
+                fclose(source);
+                fclose(destination);
                 exit(EXIT_FAILURE);
             }
 
@@ -77,6 +79,8 @@ int preCompile(const char *arg)
                     free(list_of_macros);
                     free(fileName);
                     free(line);
+                    fclose(source);
+                    fclose(destination);
                     exit(EXIT_FAILURE);
                 }
                 strcpy(list_of_macros[number_of_macros - 1].command_line[list_of_macros[number_of_macros - 1].number_of_lines - 1], line);
@@ -102,5 +106,7 @@ int preCompile(const char *arg)
     free(list_of_macros);
     free(fileName);
     free(line);
+    fclose(source);
+    fclose(destination);
     return 0;
 }

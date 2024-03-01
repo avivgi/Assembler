@@ -3,6 +3,7 @@
 #include <string.h>
 #include "assembler.h"
 #include "preCompile.h"
+#include "compile.h"
 
 /* AVIV GIDEONI OPEN UNIVERSITY 2024*/
 /*program receives the name of a file, and opens it
@@ -31,7 +32,7 @@ void handleSourceFile(char *arg)
 
     preCompile(arg);
 
-    // Compile(arg);
+    compile(arg);
 
     // evalCounters();
 

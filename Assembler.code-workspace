@@ -15,7 +15,10 @@
 			"stdio.h": "c",
 			"string.h": "c",
 			"compile.h": "c",
-			"global_constants.h": "c"
+			"global_constants.h": "c",
+			"stringutils.h": "c",
+			"compilefirststage.h": "c",
+			"compilesecondstage.h": "c"
 		}
 	}
 }
