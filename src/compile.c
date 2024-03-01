@@ -14,9 +14,13 @@ int compile(const char *filename)
     size_t opcode_count = 0;
 
     Symbol *symbols = NULL;
-    Opcode opcodes[MAX_PROGRAM_LENGTH];
+    Opcode *opcodes = NULL;
+    //[MAX_PROGRAM_LENGTH];
 
-    compileFirstStage(filename, &symbols, &symbol_count, &opcodes, &opcode_count);
+    Line_params *line_params = NULL;
+    size_t line_params_count;
+
+    compileFirstStage(filename, &symbols, &symbol_count, &opcodes, &opcode_count, &line_params, &line_params_count);
     printf("%s\n", symbols[0].name);
     printf("%s\n", symbols[1].name);
 

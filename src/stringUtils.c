@@ -4,6 +4,8 @@
 #include <ctype.h>
 #include "global_constants.h"
 #include "stringUtils.h"
+#include "datamodel.h"
+#include "memoryUtils.h"
 
 /* reads the line from stdin*/
 int read_line(FILE *file, char **buffer)
@@ -200,3 +202,26 @@ int parse_command(char *buffer, char *command, char *first_param)
 
     return result;
 }
+
+int parse_line(Line_params **line_params, size_t *line_params_count, char *buffer)
+{
+    char *token;
+    Line_params new_line;
+    new_line.param_count = 0;
+
+    token = strtok(buffer, "\t\n\f\r ");
+    while (token != NULL)
+    {
+        token = strtok(NULL, " \t\n\f\r");
+        new_line.parsed_params[new_line.param_count++] = strdup(token);
+    }
+    push((void **)line_params, line_params_count, sizeof(Line_params), &new_line);
+    return new_line.param_count;
+}
+/*typedef struct
+{
+    char **parsed_params;
+    int *param_type;
+    int param_count;
+    enum Sentance_type line_type;
+} Line_params;*/

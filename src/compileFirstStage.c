@@ -7,11 +7,11 @@
 #include "datamodel.h"
 #include "memoryUtils.h"
 
-int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_count, Opcode **opcodes, size_t *opcode_count)
+int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_count, Opcode **opcodes, size_t *opcode_count, Line_params **Line_params, size_t *line_params_count)
 {
     char *buffer = NULL;
     int result;
-    int data_count = 0, instruction_count = 0;
+    // int data_count = 0, instruction_count = 0;
     FILE *source, *destination;
     Symbol new_Symbol;
     char command[MAX_PARAM_SIZE];
@@ -37,6 +37,11 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
     while (read_line(source, &buffer))
     {
 
+        parse_line(Line_params, line_params_count, buffer);
+        printf("%s  \n", Line_params[0]->parsed_params[0]);
+
+        // parse_line(parsed_lines)
+
         // char *token;
 
         // token = strtok(lineCopy, "\t\n\f\r ");
@@ -58,8 +63,8 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
             new_Symbol.value = 0;
             push((void **)symbols, symbol_count, sizeof(Symbol), &new_Symbol);
         }
-        printf("%s\t", command);
-        printf("%s\n", first_param);
+        // printf("%s\t", command);
+        // printf("%s\n", first_param);
 
         /* step 4 - put define in mdefine table.*/
         /* step 5+6  - is sybmol ? */
@@ -72,6 +77,7 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
         /* step 13 - lookup operation in table*/
         /* step 14 - calculate L , build binary code of first word*/
         /* step 15 - IC = IC + L . goto #2*/
+        printf("%d\n", result);
     }
     printf("finish first stage\n");
 
