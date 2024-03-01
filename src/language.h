@@ -58,6 +58,8 @@ enum Instructor_type
     EXTERN
 } instructor_type;
 
-const char registers[NUNMER_OF_REGISTERS][3] = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
-
+#define RESIGTERS                                      \
+    {                                                  \
+        "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7" \
+    }
 #endif

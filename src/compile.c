@@ -15,12 +15,12 @@ int compile(const char *filename)
 
     Symbol *symbols = NULL;
     Opcode *opcodes = NULL;
-    //[MAX_PROGRAM_LENGTH];
 
     Line_params *line_params = NULL;
-    size_t line_params_count;
+    size_t line_params_count = 0;
 
     compileFirstStage(filename, &symbols, &symbol_count, &opcodes, &opcode_count, &line_params, &line_params_count);
+    exit(0);
     printf("%s\n", symbols[0].name);
     printf("%s\n", symbols[1].name);
 
