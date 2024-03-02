@@ -5,7 +5,7 @@
 #include "preCompile.h"
 #include "compile.h"
 
-/* AVIV GIDEONI & OMER RAZ   OPEN UNIVERSITY 2024*/
+/* AVIV GIDEONI & OMER RAZ OPEN UNIVERSITY 2024*/
 /*program receives the name of a file, and opens it
 in takes each unique word in the file and prints it and in which lines it appeared
 */
