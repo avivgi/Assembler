@@ -35,7 +35,7 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     }
     for (i = 0; i < symbol_count; i++)
     {
-        if (strcmp(label_name, (symbols[i]->name)) == 0)
+        if (strcmp(label_name, (*symbols)[i - 1].name) == 0)
         {
             fprintf(stderr, "The name of the label is already taken\n");
             return ERR_LABEL_OR_NAME_IS_TAKEN;

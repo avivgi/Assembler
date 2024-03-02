@@ -20,7 +20,7 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
     // int data_count = 0, instruction_count = 0;
     FILE *source;
     /*FILE *destination;*/
-    char first_param[MAX_PARAM_SIZE];
+    // char first_param[MAX_PARAM_SIZE];
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
     /* step 2 - read line */
 
@@ -44,11 +44,13 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
         Symbol new_Symbol;
         char *endptr;
         long numeralValue;
+
         parse_line(line_params, line_params_count, buffer);
 
         /* step 3 - if type== define*/
         if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".define") == 0)
         {
+            printf(">>> %s\n", (*line_params)[*line_params_count - 1].parsed_params[1]);
             if ((legalLabel((*line_params)[*line_params_count - 1].parsed_params[1], symbols, *symbol_count)) == 0)
             {
                 new_Symbol.type = MDEFINE;
@@ -76,8 +78,8 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
                 error_flag = -1;
                 result = -1;
             }
-            printf("symbol_count %s\t", (*symbols)[*symbol_count - 1].name);
-            fflush(stdout);
+            // printf("symbol_count %s\t", (*symbols)[*symbol_count - 1].name);
+            // fflush(stdout);
 
             // printf("%s\t", command);
             // printf("%s\n", first_param);
@@ -93,10 +95,10 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
             /* step 13 - lookup operation in table*/
             /* step 14 - calculate L , build binary code of first word*/
             /* step 15 - IC = IC + L . goto #2*/
-            printf("\n%d\n", result);
+            // printf("\n%d\n", result);
         }
     }
-    printf("finish first stage\n");
+    printf("finish first stage with error %d and result %d\n", error_flag, result);
 
     /*step 16- if errors stop*/
     /*step 17- update data with value IC+100 in symbol table*/
