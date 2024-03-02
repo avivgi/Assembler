@@ -12,7 +12,7 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     int i;
     if (isalpha(label_name[0]) == 0)
     {
-        fprintf(stderr, "The first character of the label isn't a letter\n");
+        fprintf(stderr, "The first character of the label %s isn't a letter\n", label_name);
         return FIRST_LETTER_IS_NOT_A_LETTER;
     }
     for (i = 0; i < NUM_OF_COMMANDS_IN_LANGUAGE; i++)

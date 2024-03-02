@@ -45,19 +45,30 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
         char *endptr;
         long numeralValue;
 
-        parse_line(line_params, line_params_count, buffer);
+        parse_line(line_params, line_params_count, buffer, "\t\n\f\r ");
 
         /* step 3 - if type== define*/
         if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".define") == 0)
         {
-            printf(">>> %s\n", (*line_params)[*line_params_count - 1].parsed_params[1]);
-            if ((legalLabel((*line_params)[*line_params_count - 1].parsed_params[1], symbols, *symbol_count)) == 0)
+            char *define_string;
+            define_string = strdup(mid(buffer, strlen(".define "), 0));
+            if (define_string == NULL)
+            {
+                printf("Error Allocating Memory, exiting\n");
+                exit(ERR_MEMORY_ALLOCATION_ERROR);
+            }
+            clean_white_space(&define_string);
+            (*line_params_count)--;
+            parse_line(line_params, line_params_count, define_string, "=");
+
+            // printf("###%s### -> %s\n", (*line_params)[*line_params_count - 1].parsed_params[0], (*line_params)[*line_params_count - 1].parsed_params[1]);
+
+            if ((legalLabel((*line_params)[*line_params_count - 1].parsed_params[0], symbols, *symbol_count)) == 0)
             {
                 new_Symbol.type = MDEFINE;
-                strcpy(new_Symbol.name, (*line_params)[*line_params_count - 1].parsed_params[1]);
-                // new_Symbol.value = atoi((line_params)[*line_params_count - 1]->parsed_params[3]);
+                strcpy(new_Symbol.name, (*line_params)[*line_params_count - 1].parsed_params[0]);
 
-                numeralValue = strtol((*line_params)[*line_params_count - 1].parsed_params[3], &endptr, 10);
+                numeralValue = strtol((*line_params)[*line_params_count - 1].parsed_params[1], &endptr, 10);
                 if ((errno == ERANGE && (numeralValue == LONG_MAX || numeralValue == LONG_MIN)) || (errno != 0 && numeralValue == 0))
                 {
                     fprintf(stderr, "Define parmater isn't a number\n");

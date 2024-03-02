@@ -21,5 +21,6 @@ int split(const char *input, char arr[][MAX_PARAM_SIZE], int arr_length, char sp
 /* parases a the command and first parameter*/
 int parse_command(char *buffer, char *command, char *first_param);
 
-int parse_line(Line_params **line_params, size_t *line_params_count, char *buffer, char *delimitors);
+int parse_line(Line_params **line_params, size_t *line_params_count, const char *buffer, char *delimitors);
+char *mid(char *buffer, int start, int end);
 #endif

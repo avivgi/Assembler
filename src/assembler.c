@@ -12,6 +12,7 @@ in takes each unique word in the file and prints it and in which lines it appear
 
 int main(int argc, char *argv[])
 {
+
     int filesCount = argc - 1;
     int i = 1;
     if (filesCount < 1)

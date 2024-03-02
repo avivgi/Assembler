@@ -204,11 +204,16 @@ int parse_command(char *buffer, char *command, char *first_param)
     return result;
 }
 
-int parse_line(Line_params **line_params, size_t *line_params_count, char *buffer, char *delimitors)
+int parse_line(Line_params **line_params, size_t *line_params_count, const char *buffer, char *delimitors)
 {
     char *token;
     int i;
-
+    char *buffer_c = strdup(buffer);
+    if (buffer_c == NULL)
+    {
+        fprintf(stderr, "Failed allocating memory, existing.\n");
+        exit(ERR_MEMORY_ALLOCATION_ERROR);
+    }
     /* init new Line Params*/
 
     /* Allocate memory for a new Line_params struct */
@@ -252,7 +257,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, char *buffe
 
     /* end of init new Line Params*/
     i = 0;
-    token = strtok(buffer, delimitors);
+    token = strtok(buffer_c, delimitors);
     snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
 
     while (token != NULL)
@@ -271,4 +276,23 @@ int parse_line(Line_params **line_params, size_t *line_params_count, char *buffe
     // }
 
     return 0; /* Indicate success */
+}
+
+char *mid(char *buffer, int start, int end)
+{
+    int length;
+    char *result = NULL;
+    if (end == 0)
+        end = strlen(buffer);
+    length = end - start + 1;
+    result = malloc((length + 1) * sizeof(char));
+    if (result == NULL)
+    {
+        fprintf(stderr, "Failed allocating memory, exiting.\n");
+        exit(ERR_MEMORY_ALLOCATION_ERROR);
+    }
+    strncpy(result, buffer + start, length);
+    result[length] = '\0';
+
+    return result;
 }
