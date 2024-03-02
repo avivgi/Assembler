@@ -1,5 +1,5 @@
 .define sz = 2
-.define szns=3
+.define abc = 4444
 MAIN: mov r3, LIST[sz]
 LOOP: jmp L1
 mcr m_mcr

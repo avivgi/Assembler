@@ -220,10 +220,11 @@ int parse_line(Line_params **line_params, size_t *line_params_count, char *buffe
     }
 
     /* Initialize the new Line_params struct */
-    (*line_params)[*line_params_count].line_type = 0; /* Example line type, replace with your logic
+    (*line_params)[*line_params_count].line_type = -1; /* Example line type, replace with your logic*/
 
     /* Allocate memory for parsed_params array of char pointers */
-    (*line_params)[*line_params_count].parsed_params = malloc(MAX_PARAM_COUNT * sizeof(char *));
+    (*line_params)[*line_params_count]
+        .parsed_params = malloc(MAX_PARAM_COUNT * sizeof(char *));
     if ((*line_params)[*line_params_count].parsed_params == NULL)
     {
         fprintf(stderr, "Failed allocating memory, existing.\n");
@@ -263,10 +264,10 @@ int parse_line(Line_params **line_params, size_t *line_params_count, char *buffe
     (*line_params)[*line_params_count].param_count = i - 1;
     (*line_params_count)++;
 
-    printf("Contents of parsed_params:\t ");
+    printf("Contents of parsed_params:\n ");
     for (i = 0; i < (*line_params)[*line_params_count - 1].param_count; i++)
     {
-        printf("parsed_params[%d]: %s\n", i, (*line_params)[*line_params_count - 1].parsed_params[i]);
+        printf("Line #%d -> parsed_params[%d]: %s\n", *line_params_count - 1, i, (*line_params)[*line_params_count - 1].parsed_params[i]);
     }
 
     return 0; /* Indicate success */
