@@ -5,6 +5,7 @@
 
 enum Symbol_type
 {
+    UNDEFINED,
     MDEFINE,
     CODE,
     DATA

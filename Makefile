@@ -10,8 +10,8 @@ SRCDIR := src
 OBJDIR := obj
 BINDIR := bin
 
-# Use wildcard to automatically find all .c files in the source directory
-SOURCES := $(wildcard $(SRCDIR)/*.c)
+# Use wildcard to automatically find all .c files in the source directory and its subdirectories
+SOURCES := $(wildcard $(SRCDIR)/*.c) $(wildcard $(SRCDIR)/*/*.c)
 
 # Generate a list of object files
 OBJECTS := $(patsubst $(SRCDIR)/%.c, $(OBJDIR)/%.o, $(SOURCES))
@@ -29,7 +29,7 @@ $(TARGET): $(OBJECTS)
 
 # Rule to make object files
 $(OBJDIR)/%.o: $(SRCDIR)/%.c
-	@mkdir -p $(OBJDIR)
+	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c -o $@ $<
 
 # Clean rule

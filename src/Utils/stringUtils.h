@@ -4,8 +4,8 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
-#include "global_constants.h"
-#include "datamodel.h"
+#include "../global_constants.h"
+#include "../datamodel.h"
 
 int read_line(FILE *file, char **buffer);
 

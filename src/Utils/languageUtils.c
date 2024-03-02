@@ -19,7 +19,7 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     {
         if (strcmp(label_name, (assember_commands[i].command_name)) == 0)
         {
-            fprintf(stderr, "The name of the label is already taken\n");
+            fprintf(stderr, "The name of the label %s is already taken\n", label_name);
             return ERR_LABEL_OR_NAME_IS_TAKEN; /*illegal*/
         }
     }
@@ -28,7 +28,7 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     {
         if (strcmp(label_name, (registers[i])) == 0)
         {
-            fprintf(stderr, "The name of the label is already taken\n");
+            fprintf(stderr, "The name of the label %s is already taken\n", label_name);
 
             return ERR_LABEL_OR_NAME_IS_TAKEN; /*illegal*/
         }
@@ -37,7 +37,7 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     {
         if (strcmp(label_name, (*symbols)[i - 1].name) == 0)
         {
-            fprintf(stderr, "The name of the label is already taken\n");
+            fprintf(stderr, "The name of the label %s is already taken\n", label_name);
             return ERR_LABEL_OR_NAME_IS_TAKEN;
         }
     }

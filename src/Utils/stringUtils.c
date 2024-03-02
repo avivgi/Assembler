@@ -2,9 +2,9 @@
 #include <string.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "global_constants.h"
+#include "../global_constants.h"
 #include "stringUtils.h"
-#include "datamodel.h"
+#include "../datamodel.h"
 #include "memoryUtils.h"
 
 /* reads the line from stdin*/

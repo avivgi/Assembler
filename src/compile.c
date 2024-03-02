@@ -1,12 +1,13 @@
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-#include "stringUtils.h"
+#include "Utils/stringUtils.h"
 #include "compile.h"
 #include "compileFirstStage.h"
 #include "compileSecondStage.h"
 #include "global_constants.h"
 #include "datamodel.h"
+#include "Utils/printUtils.h"
 
 int compile(const char *filename)
 {
@@ -20,12 +21,9 @@ int compile(const char *filename)
     size_t line_params_count = 0;
 
     compileFirstStage(filename, &symbols, &symbol_count, &opcodes, &opcode_count, &line_params, &line_params_count);
-    exit(0);
-    printf("%s\n", symbols[0].name);
-    printf("%s\n", symbols[1].name);
-
-    // printf("\n name is: %s value is: %d \n", symbols[symbol_count - 1].name, symbols[symbol_count - 1].value);
     compileSecondStage(filename);
 
+    print_symbol_table(&symbols, &symbol_count);
+    print_opcode_table(&opcodes, &opcode_count);
     return 0;
 }

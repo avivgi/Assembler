@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "preCompile.h"
-#include "stringUtils.h"
+#include "Utils/stringUtils.h"
 #include "global_constants.h"
 
 int preCompile(const char *arg)

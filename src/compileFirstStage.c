@@ -4,13 +4,14 @@
 #include <string.h>
 #include <errno.h>
 #include <limits.h>
-#include "stringUtils.h"
+#include "Utils/stringUtils.h"
 #include "compileFirstStage.h"
 #include "global_constants.h"
 #include "datamodel.h"
-#include "memoryUtils.h"
+#include "Utils/memoryUtils.h"
 #include "language.h"
-#include "languageUtils.h"
+#include "Utils/languageUtils.h"
+#include "compilationStages/createDefineSymbol.h"
 
 int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_count, Opcode **opcodes, size_t *opcode_count, Line_params **line_params, size_t *line_params_count)
 {
@@ -41,74 +42,33 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
 
     while (read_line(source, &buffer))
     {
-        Symbol new_Symbol;
-        char *endptr;
-        long numeralValue;
 
         parse_line(line_params, line_params_count, buffer, "\t\n\f\r ");
 
         /* step 3 - if type== define*/
         if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".define") == 0)
-        {
-            char *define_string;
-            define_string = strdup(mid(buffer, strlen(".define "), 0));
-            if (define_string == NULL)
-            {
-                printf("Error Allocating Memory, exiting\n");
-                exit(ERR_MEMORY_ALLOCATION_ERROR);
-            }
-            clean_white_space(&define_string);
-            (*line_params_count)--;
-            parse_line(line_params, line_params_count, define_string, "=");
+            result = createDefineSymbol(symbols, symbol_count, line_params, line_params_count, &buffer);
 
-            // printf("###%s### -> %s\n", (*line_params)[*line_params_count - 1].parsed_params[0], (*line_params)[*line_params_count - 1].parsed_params[1]);
+        // printf("symbol_count %s\t", (*symbols)[*symbol_count - 1].name);
+        // fflush(stdout);
 
-            if ((legalLabel((*line_params)[*line_params_count - 1].parsed_params[0], symbols, *symbol_count)) == 0)
-            {
-                new_Symbol.type = MDEFINE;
-                strcpy(new_Symbol.name, (*line_params)[*line_params_count - 1].parsed_params[0]);
+        // printf("%s\t", command);
+        // printf("%s\n", first_param);
 
-                numeralValue = strtol((*line_params)[*line_params_count - 1].parsed_params[1], &endptr, 10);
-                if ((errno == ERANGE && (numeralValue == LONG_MAX || numeralValue == LONG_MIN)) || (errno != 0 && numeralValue == 0))
-                {
-                    fprintf(stderr, "Define parmater isn't a number\n");
-                    error_flag = -1;
-                    continue;
-                }
-                if (endptr == (*line_params)[*line_params_count - 1].parsed_params[3])
-                {
-                    fprintf(stderr, "No digits were found\n");
-                    error_flag = -1;
-                    continue;
-                }
-                new_Symbol.value = numeralValue;
-                push((void **)symbols, symbol_count, sizeof(Symbol), &new_Symbol);
-            }
-            else
-            {
-                error_flag = -1;
-                result = -1;
-            }
-            // printf("symbol_count %s\t", (*symbols)[*symbol_count - 1].name);
-            // fflush(stdout);
-
-            // printf("%s\t", command);
-            // printf("%s\n", first_param);
-
-            /* step 4 - put define in mdefine table.*/
-            /* step 5+6  - is sybmol ? */
-            /* step 7 - is data or string */
-            /* step 8 - put symbol in symbol table */
-            /* step 9 - identify data/params and put them in mem table (which?) update DC */
-            /* step 10 - if extern or entry */
-            /* step 11 - if extern put in etx table*/
-            /* step 12 - if symbol put in symbol table*/
-            /* step 13 - lookup operation in table*/
-            /* step 14 - calculate L , build binary code of first word*/
-            /* step 15 - IC = IC + L . goto #2*/
-            // printf("\n%d\n", result);
-        }
+        /* step 4 - put define in mdefine table.*/
+        /* step 5+6  - is sybmol ? */
+        /* step 7 - is data or string */
+        /* step 8 - put symbol in symbol table */
+        /* step 9 - identify data/params and put them in mem table (which?) update DC */
+        /* step 10 - if extern or entry */
+        /* step 11 - if extern put in etx table*/
+        /* step 12 - if symbol put in symbol table*/
+        /* step 13 - lookup operation in table*/
+        /* step 14 - calculate L , build binary code of first word*/
+        /* step 15 - IC = IC + L . goto #2*/
+        // printf("\n%d\n", result);
     }
+
     printf("finish first stage with error %d and result %d\n", error_flag, result);
 
     /*step 16- if errors stop*/
