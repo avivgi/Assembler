@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "memoryUtils.h"
-
+#include "global_constants.h"
 /* convert an integer from any base to another base (up to hex) */
 /* use it:  char *result = convertBase(num, fromBase, toBase);*/
 char *convertBase(int num, int fromBase, int toBase)
@@ -10,7 +10,11 @@ char *convertBase(int num, int fromBase, int toBase)
     int index = 0, i;
     char *finalResult = NULL;
     char *result = (char *)malloc(32 * sizeof(char));
-    CHECK_MEMORY_ALLOCATION(result)
+    if (result == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(ERR_MEMORY_ALLOCATION_ERROR);
+    }
     if (num < 0)
     {
         result[index++] = '-';
@@ -29,7 +33,11 @@ char *convertBase(int num, int fromBase, int toBase)
     }
 
     finalResult = (char *)malloc((index + 1) * sizeof(char));
-    CHECK_MEMORY_ALLOCATION(finalResult);
+    if (finalResult == NULL)
+    {
+        fprintf(stderr, "Memory allocation failed\n");
+        exit(ERR_MEMORY_ALLOCATION_ERROR);
+    }
 
     /* Copy the result string in reverse order to finalResult */
     for (i = 0; i < index; i++)
