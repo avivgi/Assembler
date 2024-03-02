@@ -11,4 +11,7 @@
 .define lenX=4fcc
 .define 3lenX=4fcc
 .define len5=4 ddddd
+LABEL1: Aviv hamatok
+mystring: .string "avner"
+myint: .data 5
 

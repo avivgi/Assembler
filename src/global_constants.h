@@ -6,6 +6,8 @@
 #define MAX_PROGRAM_LENGTH 1000
 #define MAX_PARAM_COUNT 40
 
+/*messages*/
+#define SYMBOL_WAS_FOUND 1
 /*Error types*/
 #define ERR_ILLEGAL_COMMA -1
 #define ERR_COMMAND_NOT_FOUND -2
