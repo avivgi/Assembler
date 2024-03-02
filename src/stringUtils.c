@@ -204,7 +204,7 @@ int parse_command(char *buffer, char *command, char *first_param)
     return result;
 }
 
-int parse_line(Line_params **line_params, size_t *line_params_count, char *buffer)
+int parse_line(Line_params **line_params, size_t *line_params_count, char *buffer, char *delimitors)
 {
     char *token;
     int i;
@@ -252,7 +252,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, char *buffe
 
     /* end of init new Line Params*/
     i = 0;
-    token = strtok(buffer, "\t\n\f\r ");
+    token = strtok(buffer, delimitors);
     snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
 
     while (token != NULL)
