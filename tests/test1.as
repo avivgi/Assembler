@@ -20,7 +20,7 @@ bne LOOP
 bne LOOP
 endmcr
 END: hlt
-.define len=4
+.define len = 4
 m_mcr2
 STR: .string "abcdef"
 LIST: .data 6,-9,len
