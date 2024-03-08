@@ -53,7 +53,7 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
         if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".define") == 0)
         {
             result = createDefineSymbol(symbols, symbol_count, line_params, line_params_count, &buffer);
-            error_flag = result;
+            error_flag += result;
             continue;
         }
 

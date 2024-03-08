@@ -220,6 +220,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     *line_params = realloc(*line_params, (*line_params_count + 1) * sizeof(Line_params));
     if (*line_params == NULL)
     {
+        free(buffer_c);
         fprintf(stderr, "Failed allocating memory, existing.\n");
         exit(ERR_MEMORY_ALLOCATION_ERROR);
     }
@@ -232,6 +233,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
         .parsed_params = malloc(MAX_PARAM_COUNT * sizeof(char *));
     if ((*line_params)[*line_params_count].parsed_params == NULL)
     {
+        free(buffer_c);
         fprintf(stderr, "Failed allocating memory, existing.\n");
         exit(ERR_MEMORY_ALLOCATION_ERROR);
     }
@@ -240,6 +242,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     (*line_params)[*line_params_count].param_type = malloc(MAX_PARAM_COUNT * sizeof(int));
     if ((*line_params)[*line_params_count].param_type == NULL)
     {
+        free(buffer_c);
         fprintf(stderr, "Failed allocating memory, existing.\n");
         exit(ERR_MEMORY_ALLOCATION_ERROR);
     }
@@ -250,6 +253,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
         (*line_params)[*line_params_count].parsed_params[i] = malloc((MAX_PARAM_SIZE + 1) * sizeof(char));
         if ((*line_params)[*line_params_count].parsed_params[i] == NULL)
         {
+            free(buffer_c);
             fprintf(stderr, "Failed allocating memory, existing.\n");
             exit(ERR_MEMORY_ALLOCATION_ERROR);
         }

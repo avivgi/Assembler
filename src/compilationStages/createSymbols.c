@@ -22,11 +22,16 @@ int createSymbols(Symbol **symbols, size_t *symbol_count, Line_params **line_par
     }
     str_len = strlen(label_name);
     if (str_len < 2)
+    {
+        free(label_name);
         return ERR_WORD_NOT_FOUND;
+    }
 
     if ((*line_params)[*line_params_count - 1].parsed_params[0][str_len - 1] != ':')
+    {
+        free(label_name);
         return ERR_WORD_NOT_FOUND;
-
+    }
     label_name[str_len - 1] = '\0';
     str_len--;
     is_symbol = 1;
@@ -52,6 +57,6 @@ int createSymbols(Symbol **symbols, size_t *symbol_count, Line_params **line_par
     }
     strcpy(new_symbol.name, label_name);
     push((void **)symbols, symbol_count, sizeof(Symbol), &new_symbol);
-
+    free(label_name);
     return SYMBOL_WAS_FOUND;
 }

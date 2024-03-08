@@ -13,15 +13,8 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
     Symbol new_symbol;
     int value;
     char *endptr;
-    char *define_string;
     char *param = NULL;
-
-    define_string = strdup(mid(*buffer, strlen(".define "), 0));
-    if (define_string == NULL)
-    {
-        printf("Error Allocating Memory, exiting\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
-    }
+    char *define_string = mid(*buffer, strlen(".define "), 0);
 
     clean_white_space(&define_string);
 
@@ -39,6 +32,7 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
         param = strdup((*line_params)[*line_params_count - 1].parsed_params[1]);
         if (param == NULL)
         {
+            free(define_string);
             printf("Error Allocating Memory, exiting\n");
             exit(ERR_MEMORY_ALLOCATION_ERROR);
         }
@@ -48,11 +42,13 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
         {
             fprintf(stderr, "Define parameter isn't a number\n");
             free(param);
+            free(define_string);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         if (endptr == (*line_params)[*line_params_count - 1].parsed_params[3])
         {
             fprintf(stderr, "No digits were found\n");
+            free(define_string);
             free(param);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
@@ -63,6 +59,7 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
     {
         return ERR_LABEL_OR_NAME_IS_TAKEN;
     }
+    free(define_string);
     free(param);
     return 0;
 }
