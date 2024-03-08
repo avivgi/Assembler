@@ -22,7 +22,7 @@ int createExtern(Symbol **symbols, size_t *symbol_count, Line_params **line_para
     Symbol new_symbol;
     char *label_name;
     label_name = strdup((*line_params)[*line_params_count - 1].parsed_params[1]);
-    if (!label_name)
+    if (label_name == NULL)
         EXIT_ON_MEM_ALLOC_FAIL
 
     str_len = strlen(label_name);

@@ -24,10 +24,11 @@ int createSymbols(Symbol **symbols,
     int is_symbol = 0;
     Symbol new_symbol;
     char *label_name;
-    label_name = strdup((*line_params)[*line_params_count - 1].parsed_params[0]);
-    if (!label_name)
-        EXIT_ON_MEM_ALLOC_FAIL
 
+    label_name = strdup((*line_params)[*line_params_count - 1].parsed_params[0]);
+
+    if (label_name == NULL)
+        EXIT_ON_MEM_ALLOC_FAIL
     str_len = strlen(label_name);
     if (str_len < 2)
     {
@@ -75,7 +76,13 @@ int createSymbols(Symbol **symbols,
 }
 
 /* pass array of integers and push them into assembly_code table*/
-int add_int_array_to_assembly(Assembly_code **assembly_code, size_t *assembly_code_count, Line_params line_params, size_t *line_params_count, int *data_count, Symbol *symbols, size_t symbol_count)
+int add_int_array_to_assembly(Assembly_code **assembly_code,
+                              size_t *assembly_code_count,
+                              Line_params line_params,
+                              size_t *line_params_count,
+                              int *data_count,
+                              Symbol *symbols,
+                              size_t symbol_count)
 {
     int i;
     int result;
@@ -104,7 +111,11 @@ int add_int_array_to_assembly(Assembly_code **assembly_code, size_t *assembly_co
 }
 
 /* pass array of integers and push them into assembly_code table*/
-int add_char_array_to_assembly(Assembly_code **assembly_code, size_t *assembly_code_count, Line_params line_params, size_t *line_params_count, int *data_count)
+int add_char_array_to_assembly(Assembly_code **assembly_code,
+                               size_t *assembly_code_count,
+                               Line_params line_params,
+                               size_t *line_params_count,
+                               int *data_count)
 {
     int i;
     int result;
@@ -130,14 +141,20 @@ int add_char_array_to_assembly(Assembly_code **assembly_code, size_t *assembly_c
 }
 
 /*this function parses a string using a delimier, convert the items into integers if possible and returns array of integers. if it cannot convert into integer one of the item it returns error */
-int parse_string_into_int_array(const char *buffer, int **result_array, const char *delimitors, size_t *count, Symbol *symbols, size_t symbol_count)
+int parse_string_into_int_array(const char *buffer,
+                                int **result_array,
+                                const char *delimitors,
+                                size_t *count,
+                                Symbol *symbols,
+                                size_t symbol_count)
 {
     char *token;
     int i = 0;
     int temp;
     int result;
-    char *buffer_c = strdup(buffer);
-    if (!buffer_c)
+    char *buffer_c = NULL;
+    buffer_c = strdup(buffer);
+    if (buffer_c == NULL)
         EXIT_ON_MEM_ALLOC_FAIL
 
     token = strtok(buffer_c, delimitors);
@@ -173,6 +190,5 @@ int parse_string_into_int_array(const char *buffer, int **result_array, const ch
     }
     *count = i;
     free(buffer_c);
-    free(token);
     return 0;
 }

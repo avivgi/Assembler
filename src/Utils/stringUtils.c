@@ -212,7 +212,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     char *token;
     int i;
     char *buffer_c = strdup(buffer);
-    if (!buffer_c)
+    if (buffer_c == NULL)
         EXIT_ON_MEM_ALLOC_FAIL
 
     /* init new Line Params*/
