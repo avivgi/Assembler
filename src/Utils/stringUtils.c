@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <string.h>
+#include <errno.h>
+#include <limits.h>
 #include <stdlib.h>
 #include <ctype.h>
 #include "../global_constants.h"
@@ -299,4 +301,31 @@ char *mid(char *buffer, int start, int end)
     result[length] = '\0';
 
     return result;
+}
+
+/*util function that checks if a parameter is a number ANSI C. if is number the funtion returns 1 and change *result to the number. if not, the function returns 0 */
+int is_number(const char *s, int *result)
+{
+    char *end;
+    long val;
+    if (s == NULL)
+    {
+        return 0;
+    }
+    errno = 0;
+    val = strtol(s, &end, 10);
+    if (errno == ERANGE || val > INT_MAX || val < INT_MIN)
+    {
+        return 0;
+    }
+    if (end == s)
+    {
+        return 0;
+    }
+    if (*end != '\0')
+    {
+        return 0;
+    }
+    *result = (int)val;
+    return 1;
 }
