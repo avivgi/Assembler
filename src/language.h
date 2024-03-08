@@ -50,13 +50,13 @@ enum Operand_adderss_type
     REGISTER = 3
 } operand_adderss_type;
 
-enum Instructor_type
-{
-    DATA_INSTRUCTION,
-    STRING,
-    ENTRY,
-    EXTERN
-} instructor_type;
+// enum Instructor_type
+// {
+//     DATA_INSTRUCTION,
+//     STRING,
+//     ENTRY,
+//     EXTERN
+// } instructor_type;
 
 #define RESIGTERS                                      \
     {                                                  \
