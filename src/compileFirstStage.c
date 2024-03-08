@@ -13,6 +13,7 @@
 #include "Utils/languageUtils.h"
 #include "compilationStages/createDefineSymbol.h"
 #include "compilationStages/createSymbols.h"
+#include "compilationStages/createExtern.h"
 
 int compileFirstStage(const char *filename,
                       Symbol **symbols,
@@ -76,6 +77,12 @@ int compileFirstStage(const char *filename,
         /* step 8 - put symbol in symbol table */
         /* step 9 - identify data/params and put them in mem table (which?) update DC */
         /* step 10 - if extern or entry */
+        if (result != 1)
+            result = createExtern(symbols, symbol_count, line_params, line_params_count, &instruction_count, &data_count);
+        if (result == 1)
+        {
+            continue;
+        }
 
         /* step 11 - if extern put in etx table*/
         /* step 12 - if symbol put in symbol table*/
