@@ -31,6 +31,8 @@ int compileFirstStage(const char *filename,
     int data_count = 0;
     int instruction_count = 0;
     FILE *source;
+    int i = 0;
+    As_Command assember_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     /*FILE *destination;*/
     // char first_param[MAX_PARAM_SIZE];
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
@@ -87,6 +89,22 @@ int compileFirstStage(const char *filename,
         /* step 11 - if extern put in etx table*/
         /* step 12 - if symbol put in symbol table*/
         /* step 13 - lookup operation in table*/
+        result = ERR_WORD_NOT_FOUND;
+        for (i = 0; i < NUM_OF_COMMANDS_IN_LANGUAGE; i++)
+        {
+            if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0],
+                       (assember_commands[i].command_name)) == 0)
+            {
+                result = SYMBOL_WAS_FOUND;
+                break;
+            }
+        }
+        if (result == ERR_WORD_NOT_FOUND)
+        {
+            fprintf(stderr, "Didn't find command name: %s\n",
+                    (*line_params)[*line_params_count - 1].parsed_params[0]);
+            continue;
+        }
         /* step 14 - calculate L , build binary code of first word*/
         /* step 15 - IC = IC + L . goto #2*/
         // printf("\n%d\n", result);

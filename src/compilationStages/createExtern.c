@@ -41,15 +41,21 @@ int createExtern(Symbol **symbols, size_t *symbol_count, Line_params **line_para
     {
         new_symbol.type = EXTERN; /*(~extern~)*/
         new_symbol.value = 0;     /*unclear what the value should be*/
+        strcpy(new_symbol.name, label_name);
+        push((void **)symbols, symbol_count, sizeof(Symbol), &new_symbol);
+        free(label_name);
+        return SYMBOL_WAS_FOUND;
     }
     else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".entry") == 0)
     {
         new_symbol.type = ENTRY;
         new_symbol.value = 0; /*unclear what the value should be*/
+        strcpy(new_symbol.name, label_name);
+        push((void **)symbols, symbol_count, sizeof(Symbol), &new_symbol);
+        free(label_name);
+        return SYMBOL_WAS_FOUND;
     }
 
-    strcpy(new_symbol.name, label_name);
-    push((void **)symbols, symbol_count, sizeof(Symbol), &new_symbol);
     free(label_name);
-    return SYMBOL_WAS_FOUND;
+    return ERR_WORD_NOT_FOUND;
 }
