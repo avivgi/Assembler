@@ -25,7 +25,7 @@ void print_assembly_code_table(Assembly_code **Assembly_codes, size_t *assembly_
     printf("\nPrinting assembly_code table with %lu assembly_codes\n", *assembly_code_count);
     for (i = 0; i < *assembly_code_count; i++)
     {
-        printf("command address: %d\t", (*Assembly_codes)[i].address);
-        printf("assembly_code: %d\t", (*Assembly_codes)[i].binary_code);
+        printf("Address: %d\t", (*Assembly_codes)[i].address);
+        printf("Machine Code: %d\n", (*Assembly_codes)[i].binary_code);
     }
 }

@@ -228,7 +228,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     }
 
     /* Initialize the new Line_params struct */
-    (*line_params)[*line_params_count].line_type = -1; /* Example line type, replace with your logic*/
+    (*line_params)[*line_params_count].line_type = -1;
 
     /* Allocate memory for parsed_params array of char pointers */
     (*line_params)[*line_params_count]
@@ -268,7 +268,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
 
     while (token != NULL)
     {
-        token = strtok(NULL, "\t\n\f\r ");
+        token = strtok(NULL, delimitors);
         snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
     }
 
@@ -328,4 +328,43 @@ int is_number(const char *s, int *result)
     }
     *result = (int)val;
     return 1;
+}
+
+/*this function parses a string using a delimier, convert the items into integers if possible and returns array of integers. if it cannot convert into integer one of the item it returns error */
+int parse_string_into_int_array(const char *buffer, int **result_array, const char *delimitors, size_t *count)
+{
+    char *token;
+    int i = 0;
+    int temp;
+    char *buffer_c = strdup(buffer);
+    if (buffer_c == NULL)
+    {
+        fprintf(stderr, "Failed allocating memory, existing.\n");
+        exit(ERR_MEMORY_ALLOCATION_ERROR);
+    }
+    token = strtok(buffer_c, delimitors);
+    while (token != NULL)
+    {
+        if (is_number(token, &temp))
+        {
+            (*result_array) = realloc((*result_array), (i + 1) * sizeof(int));
+            if ((*result_array) == NULL)
+            {
+                free(buffer_c);
+                fprintf(stderr, "Failed allocating memory, existing.\n");
+                exit(ERR_MEMORY_ALLOCATION_ERROR);
+            }
+            (*result_array)[i++] = temp;
+        }
+        else
+        {
+            free(buffer_c);
+            fprintf(stderr, "Variable is not an integer.\n");
+            return ERR_VARIABLE_ISNT_INTEGER;
+        }
+        token = strtok(NULL, delimitors);
+    }
+    *count = i;
+    free(buffer_c);
+    return 0;
 }

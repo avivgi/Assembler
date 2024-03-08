@@ -30,7 +30,9 @@
 			"limits.h": "c",
 			"printutils.h": "c",
 			"createsymbols.h": "c",
-			"errno.h": "c"
+			"errno.h": "c",
+			"string": "c",
+			"string_view": "c"
 		}
 	}
 }

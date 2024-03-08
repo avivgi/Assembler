@@ -72,7 +72,7 @@ int compileFirstStage(const char *filename,
 
         /* step 4 - put define in mdefine table.*/
         /* step 5+6  - is sybmol ? */
-        result = createSymbols(symbols, symbol_count, line_params, line_params_count, &instruction_count, &data_count);
+        result = createSymbols(symbols, symbol_count, line_params, line_params_count, &instruction_count, &data_count, assembly_codes, assembly_code_count);
         /* step 7 - is data or string */
         /* step 8 - put symbol in symbol table */
         /* step 9 - identify data/params and put them in mem table (which?) update DC */
