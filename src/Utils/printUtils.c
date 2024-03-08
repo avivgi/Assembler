@@ -19,13 +19,13 @@ void print_symbol_table(Symbol **Symbols, size_t *symbol_count)
         printf("type: %d\n", (*Symbols)[i].type);
     }
 }
-void print_opcode_table(Opcode **Opcodes, size_t *opcode_count)
+void print_assembly_code_table(Assembly_code **Assembly_codes, size_t *assembly_code_count)
 {
     int i;
-    printf("\nPrinting opcode table with %lu opcodes\n", *opcode_count);
-    for (i = 0; i < *opcode_count; i++)
+    printf("\nPrinting assembly_code table with %lu assembly_codes\n", *assembly_code_count);
+    for (i = 0; i < *assembly_code_count; i++)
     {
-        printf("command address: %d\t", (*Opcodes)[i].address);
-        printf("opcode: %d\t", (*Opcodes)[i].binary_code);
+        printf("command address: %d\t", (*Assembly_codes)[i].address);
+        printf("assembly_code: %d\t", (*Assembly_codes)[i].binary_code);
     }
 }

@@ -24,7 +24,7 @@ typedef struct
 {
     int address;
     int binary_code;
-} Opcode;
+} Assembly_code;
 
 typedef struct
 {

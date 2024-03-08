@@ -28,7 +28,9 @@
 			"languageutils.h": "c",
 			"createdefinesymbol.h": "c",
 			"limits.h": "c",
-			"printutils.h": "c"
+			"printutils.h": "c",
+			"createsymbols.h": "c",
+			"errno.h": "c"
 		}
 	}
 }

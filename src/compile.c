@@ -11,19 +11,25 @@
 
 int compile(const char *filename)
 {
-    size_t symbol_count = 0;
-    size_t opcode_count = 0;
+    Assembly_code *assembly_codes = NULL;
+    size_t assembly_code_count = 0;
 
     Symbol *symbols = NULL;
-    Opcode *opcodes = NULL;
+    size_t symbol_count = 0;
+
+    Reference_address *entries = NULL;
+    size_t entry_count = 0;
+
+    Reference_address *externals = NULL;
+    size_t externals_count = 0;
 
     Line_params *line_params = NULL;
     size_t line_params_count = 0;
 
-    compileFirstStage(filename, &symbols, &symbol_count, &opcodes, &opcode_count, &line_params, &line_params_count);
+    compileFirstStage(filename, &symbols, &symbol_count, &assembly_codes, &assembly_code_count, &line_params, &line_params_count);
     compileSecondStage(filename);
 
     print_symbol_table(&symbols, &symbol_count);
-    print_opcode_table(&opcodes, &opcode_count);
+    print_assembly_code_table(&assembly_codes, &assembly_code_count);
     return 0;
 }

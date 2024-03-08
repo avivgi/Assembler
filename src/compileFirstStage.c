@@ -14,7 +14,13 @@
 #include "compilationStages/createDefineSymbol.h"
 #include "compilationStages/createSymbols.h"
 
-int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_count, Opcode **opcodes, size_t *opcode_count, Line_params **line_params, size_t *line_params_count)
+int compileFirstStage(const char *filename,
+                      Symbol **symbols,
+                      size_t *symbol_count,
+                      Assembly_code **assembly_codes,
+                      size_t *assembly_code_count,
+                      Line_params **line_params,
+                      size_t *line_params_count)
 {
     char *buffer = NULL;
     int result = 0;
@@ -66,11 +72,11 @@ int compileFirstStage(const char *filename, Symbol **symbols, size_t *symbol_cou
         /* step 4 - put define in mdefine table.*/
         /* step 5+6  - is sybmol ? */
         result = createSymbols(symbols, symbol_count, line_params, line_params_count, &instruction_count, &data_count);
-
         /* step 7 - is data or string */
         /* step 8 - put symbol in symbol table */
         /* step 9 - identify data/params and put them in mem table (which?) update DC */
         /* step 10 - if extern or entry */
+
         /* step 11 - if extern put in etx table*/
         /* step 12 - if symbol put in symbol table*/
         /* step 13 - lookup operation in table*/
