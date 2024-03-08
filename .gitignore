@@ -1,4 +1,3 @@
 obj/*
 bin/*
-tests/test?.am
-tests/test*.am
+tests/*.am

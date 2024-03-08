@@ -11,10 +11,8 @@ char *convertBase(int num, int fromBase, int toBase)
     char *finalResult = NULL;
     char *result = (char *)malloc(32 * sizeof(char));
     if (result == NULL)
-    {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
-    }
+        EXIT_ON_MEM_ALLOC_FAIL
+
     if (num < 0)
     {
         result[index++] = '-';
@@ -33,11 +31,8 @@ char *convertBase(int num, int fromBase, int toBase)
     }
 
     finalResult = (char *)malloc((index + 1) * sizeof(char));
-    if (finalResult == NULL)
-    {
-        fprintf(stderr, "Memory allocation failed\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
-    }
+    if (!finalResult)
+        EXIT_ON_MEM_ALLOC_FAIL
 
     /* Copy the result string in reverse order to finalResult */
     for (i = 0; i < index; i++)

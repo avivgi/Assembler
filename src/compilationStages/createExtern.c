@@ -22,11 +22,9 @@ int createExtern(Symbol **symbols, size_t *symbol_count, Line_params **line_para
     Symbol new_symbol;
     char *label_name;
     label_name = strdup((*line_params)[*line_params_count - 1].parsed_params[1]);
-    if (label_name == NULL)
-    {
-        fprintf(stderr, "Error Allocating Memory, exiting\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
-    }
+    if (!label_name)
+        EXIT_ON_MEM_ALLOC_FAIL
+
     str_len = strlen(label_name);
     if (str_len < 2)
     {

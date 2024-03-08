@@ -1,6 +1,5 @@
 #ifndef __DATA_MODEL__
 #define __DATA_MODEL__
-
 #include "global_constants.h"
 
 enum Symbol_type
@@ -39,5 +38,8 @@ typedef struct
     int param_count;
     int line_type;
 } Line_params;
+
+int isLabelExist(char *label, Symbol *symbol_table, int symbol_count);
+int getLabelAddress(char *label, Symbol *symbol_table, int symbol_count);
 
 #endif

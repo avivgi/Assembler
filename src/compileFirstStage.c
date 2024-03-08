@@ -101,7 +101,7 @@ int compileFirstStage(const char *filename,
         }
         if (result == ERR_WORD_NOT_FOUND)
         {
-            fprintf(stderr, "Didn't find command name: %s\n",
+            fprintf(stderr, "Error. Didn't find command name: %s\n",
                     (*line_params)[*line_params_count - 1].parsed_params[0]);
             continue;
         }

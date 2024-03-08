@@ -8,6 +8,7 @@
 #include "stringUtils.h"
 #include "../datamodel.h"
 #include "memoryUtils.h"
+#include "../datamodel.h"
 
 /* reads the line from stdin*/
 int read_line(FILE *file, char **buffer)
@@ -211,11 +212,9 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     char *token;
     int i;
     char *buffer_c = strdup(buffer);
-    if (buffer_c == NULL)
-    {
-        fprintf(stderr, "Failed allocating memory, existing.\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
-    }
+    if (!buffer_c)
+        EXIT_ON_MEM_ALLOC_FAIL
+
     /* init new Line Params*/
 
     /* Allocate memory for a new Line_params struct */
@@ -223,8 +222,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     if (*line_params == NULL)
     {
         free(buffer_c);
-        fprintf(stderr, "Failed allocating memory, existing.\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
+        EXIT_ON_MEM_ALLOC_FAIL
     }
 
     /* Initialize the new Line_params struct */
@@ -236,8 +234,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     if ((*line_params)[*line_params_count].parsed_params == NULL)
     {
         free(buffer_c);
-        fprintf(stderr, "Failed allocating memory, existing.\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
+        EXIT_ON_MEM_ALLOC_FAIL
     }
 
     /* Allocate memory for param_type array */
@@ -245,8 +242,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     if ((*line_params)[*line_params_count].param_type == NULL)
     {
         free(buffer_c);
-        fprintf(stderr, "Failed allocating memory, existing.\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
+        EXIT_ON_MEM_ALLOC_FAIL
     }
 
     /* Allocate memory for each char pointer in parsed_params */
@@ -256,8 +252,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
         if ((*line_params)[*line_params_count].parsed_params[i] == NULL)
         {
             free(buffer_c);
-            fprintf(stderr, "Failed allocating memory, existing.\n");
-            exit(ERR_MEMORY_ALLOCATION_ERROR);
+            EXIT_ON_MEM_ALLOC_FAIL
         }
     }
 
@@ -293,10 +288,8 @@ char *mid(char *buffer, int start, int end)
     length = end - start + 1;
     result = malloc((length + 1) * sizeof(char));
     if (result == NULL)
-    {
-        fprintf(stderr, "Failed allocating memory, exiting.\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
-    }
+        EXIT_ON_MEM_ALLOC_FAIL
+
     strncpy(result, buffer + start, length);
     result[length] = '\0';
 
@@ -328,43 +321,4 @@ int is_number(const char *s, int *result)
     }
     *result = (int)val;
     return 1;
-}
-
-/*this function parses a string using a delimier, convert the items into integers if possible and returns array of integers. if it cannot convert into integer one of the item it returns error */
-int parse_string_into_int_array(const char *buffer, int **result_array, const char *delimitors, size_t *count)
-{
-    char *token;
-    int i = 0;
-    int temp;
-    char *buffer_c = strdup(buffer);
-    if (buffer_c == NULL)
-    {
-        fprintf(stderr, "Failed allocating memory, existing.\n");
-        exit(ERR_MEMORY_ALLOCATION_ERROR);
-    }
-    token = strtok(buffer_c, delimitors);
-    while (token != NULL)
-    {
-        if (is_number(token, &temp))
-        {
-            (*result_array) = realloc((*result_array), (i + 1) * sizeof(int));
-            if ((*result_array) == NULL)
-            {
-                free(buffer_c);
-                fprintf(stderr, "Failed allocating memory, existing.\n");
-                exit(ERR_MEMORY_ALLOCATION_ERROR);
-            }
-            (*result_array)[i++] = temp;
-        }
-        else
-        {
-            free(buffer_c);
-            fprintf(stderr, "Variable is not an integer.\n");
-            return ERR_VARIABLE_ISNT_INTEGER;
-        }
-        token = strtok(NULL, delimitors);
-    }
-    *count = i;
-    free(buffer_c);
-    return 0;
 }

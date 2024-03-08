@@ -33,8 +33,7 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
         if (param == NULL)
         {
             free(define_string);
-            printf("Error Allocating Memory, exiting\n");
-            exit(ERR_MEMORY_ALLOCATION_ERROR);
+            EXIT_ON_MEM_ALLOC_FAIL
         }
         value = (int)strtol(param, &endptr, 10);
 
