@@ -8,7 +8,9 @@ enum Symbol_type
     UNDEFINED,
     MDEFINE,
     CODE,
-    DATA
+    DATA,
+    ENTRY,
+    EXTERN
 };
 
 typedef struct
@@ -23,6 +25,12 @@ typedef struct
     int address;
     int binary_code;
 } Opcode;
+
+typedef struct
+{
+    char name[MAX_PARAM_SIZE];
+    int address;
+} Reference_address;
 
 typedef struct
 {
