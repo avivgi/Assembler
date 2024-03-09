@@ -90,7 +90,7 @@ int preCompile(const char *arg)
 
         /*check if the line is a macro*/
         for (j = 0; j < number_of_macros; j++)
-        {
+        { /*fix for a macro that is inside a label*/
             if (strcmp(line, list_of_macros[j].macro_name) == 0)
             {
                 for (i = 0; i < list_of_macros[j].number_of_lines; i++)
