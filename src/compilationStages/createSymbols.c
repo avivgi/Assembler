@@ -66,7 +66,7 @@ int createSymbols(Symbol **symbols,
     {
         new_symbol.type = CODE;
         new_symbol.value = *instruction_count;
-        // fix to reflect size of instruction
+        /* fix to reflect size of instruction*/
         (*instruction_count)++;
     }
     strcpy(new_symbol.name, label_name);

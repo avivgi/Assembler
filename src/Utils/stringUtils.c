@@ -77,52 +77,52 @@ int word_check(const char *list[], int length, char *word)
 
 int split(const char *input, char arr[][MAX_PARAM_SIZE], int arr_length, char split_by)
 {
-    // /* int i;
-    // /* int x = 0;
-    // /* int j = 0;
-    // /* char temp[MAX_PARAM_SIZE];
-    // /* size_t length = strlen(input);
-    // /* for (i = 0; i < length; i++)
-    // /* {
-    // /*     if (x == MAX_PARAMS_IN_COMMAND - 1)
-    // /*     {
-    // /*         printf("Extraneous text after end of command\n");
-    // /*         return ERR_EXTRA_TEXT_AFTER_COMMAS;
-    // /*     }
-    // /*     if (input[i] == split_by)
-    // /*     {
-    // /*         temp[j] = '\0';
-    // /*         strcpy(arr[x], temp);
-    // /*         temp[0] = '\0';
-    // /*         j = 0;
-    // /*         if (x == arr_length)
-    // /*         {
-    // /*             return ERR_EXTRA_TEXT_AFTER_COMMAS;
-    // /*         }
-    // /*         x++;
-    // /*     }
-    // /*     else
-    // /*     {
+    /* int i;
+     int x = 0;
+    /* int j = 0;
+    /* char temp[MAX_PARAM_SIZE];
+    /* size_t length = strlen(input);
+    /* for (i = 0; i < length; i++)
+    /* {
+    /*     if (x == MAX_PARAMS_IN_COMMAND - 1)
+    /*     {
+    /*         printf("Extraneous text after end of command\n");
+    /*         return ERR_EXTRA_TEXT_AFTER_COMMAS;
+    /*     }
+    /*     if (input[i] == split_by)
+    /*     {
+    /*         temp[j] = '\0';
+    /*         strcpy(arr[x], temp);
+    /*         temp[0] = '\0';
+    /*         j = 0;
+    /*         if (x == arr_length)
+    /*         {
+    /*             return ERR_EXTRA_TEXT_AFTER_COMMAS;
+    /*         }
+    /*         x++;
+    /*     }
+    /*     else
+    /*     {
 
-    // /*         if ((j < MAX_PARAM_SIZE - 1) && (temp[j] != '\n'))
-    // /*         {
-    // /*             temp[j] = input[i];
-    // /*             j++;
-    // /*         }
-    // /*     }
-    // /* }
+    /*         if ((j < MAX_PARAM_SIZE - 1) && (temp[j] != '\n'))
+    /*         {
+    /*             temp[j] = input[i];
+    /*             j++;
+    /*         }
+    /*     }
+    /* }
 
-    // /* if (temp[j - 1] == '\n')
-    // /* {
-    // /*     temp[j - 1] = '\0';
-    // /* }
-    // /* else
-    // /* {
-    // /*     temp[j] = '\0';
-    // /* }
-    // /* strcpy(arr[x], temp);
-    // /* return x + 1;
-    // return 0; */
+    /* if (temp[j - 1] == '\n')
+    /* {
+    /*     temp[j - 1] = '\0';
+    /* }
+    /* else
+    /* {
+    /*     temp[j] = '\0';
+    /* }
+    /* strcpy(arr[x], temp);
+    /* return x + 1;
+    return 0; */
     return 0;
 }
 
@@ -270,11 +270,11 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     (*line_params)[*line_params_count].param_count = i - 1;
     (*line_params_count)++;
 
-    // printf("Contents of parsed_params:\n ");
-    // for (i = 0; i < (*line_params)[*line_params_count - 1].param_count; i++)
-    // {
-    //     printf("Line #%d -> parsed_params[%d]: %s\n", *line_params_count - 1, i, (*line_params)[*line_params_count - 1].parsed_params[i]);
-    // }
+    printf("Contents of parsed_params:\n ");
+    for (i = 0; i < (*line_params)[*line_params_count - 1].param_count; i++)
+    {
+        printf("Line #%d -> parsed_params[%d]: %s\n", *line_params_count - 1, i, (*line_params)[*line_params_count - 1].parsed_params[i]);
+    }
 
     return 0; /* Indicate success */
 }

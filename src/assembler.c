@@ -29,19 +29,19 @@ int main(int argc, char *argv[])
 void handleSourceFile(char *arg)
 {
 
-    // setupMemoryTables();
+    /*setupMemoryTables();*/
 
     preCompile(arg);
 
     compile(arg);
 
-    // evalCounters();
+    /* evalCounters();
 
-    // printSymbolTable();
+printSymbolTable();
 
-    // exportFiles();
+exportFiles();
 
-    /// free(everything );
-    //// fclose(src);
-    //// fclose(destination);
+ free(everything );
+fclose(src);
+ fclose(destination);*/
 }

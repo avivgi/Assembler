@@ -23,7 +23,7 @@
             "type": "cppbuild",
             "label": "C/C++: GCC build active file",
             "command": "make",
-            // Set the DEBUG variable to enable -g flag
+            /* Set the DEBUG variable to enable -g flag*/
             "args": [
                 "-f",
                 "${workspaceFolder}/Makefile",

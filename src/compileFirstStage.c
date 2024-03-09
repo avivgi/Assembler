@@ -34,7 +34,7 @@ int compileFirstStage(const char *filename,
     int i = 0;
     As_Command assember_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     /*FILE *destination;*/
-    // char first_param[MAX_PARAM_SIZE];
+    /* char first_param[MAX_PARAM_SIZE];*/
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
     /* step 2 - read line */
 
@@ -66,11 +66,11 @@ int compileFirstStage(const char *filename,
             continue;
         }
 
-        // printf("symbol_count %s\t", (*symbols)[*symbol_count - 1].name);
-        // fflush(stdout);
+        /* printf("symbol_count %s\t", (*symbols)[*symbol_count - 1].name);
+         fflush(stdout);
 
-        // printf("%s\t", command);
-        // printf("%s\n", first_param);
+         printf("%s\t", command);
+         printf("%s\n", first_param);*/
 
         /* step 4 - put define in mdefine table.*/
         /* step 5+6  - is sybmol ? */
@@ -107,7 +107,7 @@ int compileFirstStage(const char *filename,
         }
         /* step 14 - calculate L , build binary code of first word*/
         /* step 15 - IC = IC + L . goto #2*/
-        // printf("\n%d\n", result);
+        /* printf("\n%d\n", result);*/
     }
 
     printf("finish first stage with error %d and result %d\n", error_flag, result);
@@ -116,6 +116,6 @@ int compileFirstStage(const char *filename,
     /*step 17- update data with value IC+100 in symbol table*/
     free(fullFileName);
     fclose(source);
-    // fclose(destination);
+    /* fclose(destination);*/
     return 0;
 }

@@ -22,7 +22,7 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
     (*line_params_count)--;
     parse_line(line_params, line_params_count, define_string, "=");
 
-    // printf("###%s### -> %s\n", (*line_params)[*line_params_count - 1].parsed_params[0], (*line_params)[*line_params_count - 1].parsed_params[1]);
+    /* printf("###%s### -> %s\n", (*line_params)[*line_params_count - 1].parsed_params[0], (*line_params)[*line_params_count - 1].parsed_params[1]);*/
 
     if ((legalLabel((*line_params)[*line_params_count - 1].parsed_params[0], symbols, *symbol_count)) == 0)
     {

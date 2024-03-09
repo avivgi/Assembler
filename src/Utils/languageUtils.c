@@ -6,7 +6,7 @@
 
 int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not good enough*/
 {
-    As_Command assember_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
+    As_Command assembךer_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     const char registers[NUNMER_OF_REGISTERS][3] = RESIGTERS;
 
     int i;
@@ -17,7 +17,7 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     }
     for (i = 0; i < NUM_OF_COMMANDS_IN_LANGUAGE; i++)
     {
-        if (strcmp(label_name, (assember_commands[i].command_name)) == 0)
+        if (strcmp(label_name, (assembךer_commands[i].command_name)) == 0)
         {
             fprintf(stderr, "The name of the label %s is already taken\n", label_name);
             return ERR_LABEL_OR_NAME_IS_TAKEN; /*illegal*/
