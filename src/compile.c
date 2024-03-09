@@ -32,7 +32,7 @@ int compile(const char *filename)
     Line_params *line_params = NULL;
     size_t line_params_count = 0;
 
-    compileFirstStage(filename, &symbols, &symbol_count, &assembly_codes, &assembly_code_count, &line_params, &line_params_count);
+    compileFirstStage(filename, &symbols, &symbol_count, &assembly_codes, &assembly_code_count, &line_params, &line_params_count, &entries, &entry_count, &externals, &externals_count);
     compileSecondStage(filename);
 
     print_symbol_table(&symbols, &symbol_count);

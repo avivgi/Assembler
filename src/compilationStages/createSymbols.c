@@ -33,7 +33,7 @@ int createSymbols(Symbol **symbols,
                   size_t *assembly_code_count)
 {
     int str_len = 0;
-    int is_symbol = 0;
+    // int is_symbol = 0;
     Symbol new_symbol;
     char *label_name;
 
@@ -55,7 +55,7 @@ int createSymbols(Symbol **symbols,
     }
     label_name[str_len - 1] = '\0';
     str_len--;
-    is_symbol = 1;
+    // is_symbol = 1;
 
     if ((legalLabel(label_name, symbols, *symbol_count)) != 0)
         return ERR_LABEL_OR_NAME_IS_TAKEN;
@@ -158,7 +158,7 @@ int parse_string_into_int_array(const char *buffer,
     char *token;
     int i = 0;
     int temp;
-    int result;
+    // int result;
     char *buffer_c = NULL;
     buffer_c = strdup(buffer);
     if (buffer_c == NULL)
@@ -216,7 +216,7 @@ int add_char_array_to_assembly(Assembly_code **assembly_code,
                                int *data_count)
 {
     int i;
-    int result;
+    //  int result;
     Assembly_code data_assembly;
     const char *str = (line_params).parsed_params[2];
     size_t str_len = strlen(str);

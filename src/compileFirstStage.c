@@ -27,13 +27,17 @@ int compileFirstStage(const char *filename,
                       Assembly_code **assembly_codes,
                       size_t *assembly_code_count,
                       Line_params **line_params,
-                      size_t *line_params_count)
+                      size_t *line_params_count,
+                      Reference_address **entries,
+                      size_t *entry_count,
+                      Reference_address **externals,
+                      size_t *externals_count)
 {
     char *buffer = NULL;
     int result = 0;
     int error_flag = 0;
-    int is_symbol = 0;
-    int str_len = 0;
+    // int is_symbol = 0;
+    // int str_len = 0;
     int data_count = 0;
     int instruction_count = 0;
     FILE *source;
