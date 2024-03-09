@@ -10,7 +10,13 @@
 #include "memoryUtils.h"
 #include "../datamodel.h"
 
-/* reads the line from stdin*/
+/**
+ * @brief Reads a line from a file and places it in the given buffer.
+ *
+ * @param file The file to read from.
+ * @param buffer Pointer to the buffer where the line will be stored.
+ * @return Returns 1 if reached EOF, 0 otherwise.
+ */
 int read_line(FILE *file, char **buffer)
 {
     size_t size = MAX_LINE_LENGTH;
@@ -36,9 +42,8 @@ int read_line(FILE *file, char **buffer)
             temp = realloc(*buffer, size);
             if (!temp)
             {
-                fprintf(stdout, "Error: Memory reallocation error. Existing\n");
                 free(*buffer);
-                exit(1);
+                EXIT_ON_MEM_ALLOC_FAIL
             }
             *buffer = temp;
         }
@@ -48,7 +53,11 @@ int read_line(FILE *file, char **buffer)
     return (c == EOF) ? 0 : 1;
 }
 
-/*clean white spaces from a buffer*/
+/**
+ * @brief Cleans white spaces from a buffer by removing all whitespace characters.
+ *
+ * @param buffer Pointer to the buffer to clean.
+ */
 void clean_white_space(char **buffer)
 {
     char *w = *buffer;
@@ -63,7 +72,14 @@ void clean_white_space(char **buffer)
     *w = '\0';
 }
 
-/* find if a string exists in a string array*/
+/**
+ * @brief Finds if a string exists in a string array.
+ *
+ * @param list The string array to search in.
+ * @param length The length of the string array.
+ * @param word The word to search for.
+ * @return Returns the index of the found word, or ERR_WORD_NOT_FOUND if not found.
+ */
 int word_check(const char *list[], int length, char *word)
 {
     int i;
@@ -74,58 +90,14 @@ int word_check(const char *list[], int length, char *word)
     }
     return ERR_WORD_NOT_FOUND;
 }
-
-int split(const char *input, char arr[][MAX_PARAM_SIZE], int arr_length, char split_by)
-{
-    /* int i;
-     int x = 0;
-    /* int j = 0;
-    /* char temp[MAX_PARAM_SIZE];
-    /* size_t length = strlen(input);
-    /* for (i = 0; i < length; i++)
-    /* {
-    /*     if (x == MAX_PARAMS_IN_COMMAND - 1)
-    /*     {
-    /*         printf("Extraneous text after end of command\n");
-    /*         return ERR_EXTRA_TEXT_AFTER_COMMAS;
-    /*     }
-    /*     if (input[i] == split_by)
-    /*     {
-    /*         temp[j] = '\0';
-    /*         strcpy(arr[x], temp);
-    /*         temp[0] = '\0';
-    /*         j = 0;
-    /*         if (x == arr_length)
-    /*         {
-    /*             return ERR_EXTRA_TEXT_AFTER_COMMAS;
-    /*         }
-    /*         x++;
-    /*     }
-    /*     else
-    /*     {
-
-    /*         if ((j < MAX_PARAM_SIZE - 1) && (temp[j] != '\n'))
-    /*         {
-    /*             temp[j] = input[i];
-    /*             j++;
-    /*         }
-    /*     }
-    /* }
-
-    /* if (temp[j - 1] == '\n')
-    /* {
-    /*     temp[j - 1] = '\0';
-    /* }
-    /* else
-    /* {
-    /*     temp[j] = '\0';
-    /* }
-    /* strcpy(arr[x], temp);
-    /* return x + 1;
-    return 0; */
-    return 0;
-}
-
+/**
+ * @brief Parses a command from a buffer and extracts the command and the first parameter.
+ *
+ * @param buffer The buffer containing the command and parameter.
+ * @param command Pointer to store the extracted command.
+ * @param first_param Pointer to store the extracted first parameter.
+ * @return Returns the result code: 0 for success, or an error code if an error occurred.
+ */
 int parse_command(char *buffer, char *command, char *first_param)
 {
     int i = 0;
@@ -197,16 +169,22 @@ int parse_command(char *buffer, char *command, char *first_param)
     while ((buffer[i] != '\0') && (buffer[i] != '\n') && (buffer[i] != ','))
     {
         if (((buffer[i] != ' ') && (buffer[i] != '\t')))
-        {
-            result = 1;
             return ERR_EXTRA_TEXT_NO_COMMA_AFTER_FIRST_PARAM;
-        }
         i++;
     }
 
     return result;
 }
 
+/**
+ * @brief Parses a line and extracts the parameters using the specified delimiters.
+ *
+ * @param line_params Pointer to the array of Line_params structs.
+ * @param line_params_count Pointer to the count of Line_params structs.
+ * @param buffer The line to parse.
+ * @param delimiters The delimiters to use for parsing.
+ * @return Returns 0 for success.
+ */
 int parse_line(Line_params **line_params, size_t *line_params_count, const char *buffer, char *delimitors)
 {
     char *token;
@@ -273,12 +251,20 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     printf("Contents of parsed_params:\n ");
     for (i = 0; i < (*line_params)[*line_params_count - 1].param_count; i++)
     {
-        printf("Line #%d -> parsed_params[%d]: %s\n", *line_params_count - 1, i, (*line_params)[*line_params_count - 1].parsed_params[i]);
+        printf("Line #%lu -> parsed_params[%d]: %s\n", *line_params_count - 1, i, (*line_params)[*line_params_count - 1].parsed_params[i]);
     }
 
     return 0; /* Indicate success */
 }
 
+/**
+ * @brief Extracts a substring from a buffer.
+ *
+ * @param buffer The buffer to extract the substring from.
+ * @param start The starting index of the substring.
+ * @param end The ending index of the substring.
+ * @return Returns the extracted substring.
+ */
 char *mid(char *buffer, int start, int end)
 {
     int length;
@@ -296,7 +282,13 @@ char *mid(char *buffer, int start, int end)
     return result;
 }
 
-/*util function that checks if a parameter is a number ANSI C. if is number the funtion returns 1 and change *result to the number. if not, the function returns 0 */
+/**
+ * @brief Checks if a parameter is a number.
+ *
+ * @param s The parameter to check.
+ * @param result Pointer to store the converted number if it is a number.
+ * @return Returns 1 if the parameter is a number, 0 otherwise.
+ */
 int is_number(const char *s, int *result)
 {
     char *end;
