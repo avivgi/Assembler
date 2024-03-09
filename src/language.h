@@ -32,7 +32,7 @@ typedef struct
             {15, "hlt", 3, 0x0, 0x0}, \
     }
 
-enum Sentance_type
+enum Sentence_type
 {
     EMPTY,
     COMMENT,
