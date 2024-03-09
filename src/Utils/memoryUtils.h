@@ -5,7 +5,7 @@
 #define EXIT_ON_MEM_ALLOC_FAIL                                       \
     do                                                               \
     {                                                                \
-        fprintf(stderr, "Error. Memory allocating failed. Exit.\n"); \
+        fprintf(stdout, "Error. Memory allocating failed. Exit.\n"); \
         exit(ERR_MEMORY_ALLOCATION_ERROR);                           \
     } while (0);
 

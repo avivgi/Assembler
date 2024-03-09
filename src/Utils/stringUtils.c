@@ -21,7 +21,7 @@ int read_line(FILE *file, char **buffer)
     *buffer = malloc(MAX_LINE_LENGTH);
     if (!(*buffer))
     {
-        fprintf(stderr, "Error: Memory reallocation error. Existing\n");
+        fprintf(stdout, "Error: Memory reallocation error. Existing\n");
         free(*buffer);
         exit(1);
     }
@@ -36,7 +36,7 @@ int read_line(FILE *file, char **buffer)
             temp = realloc(*buffer, size);
             if (!temp)
             {
-                fprintf(stderr, "Error: Memory reallocation error. Existing\n");
+                fprintf(stdout, "Error: Memory reallocation error. Existing\n");
                 free(*buffer);
                 exit(1);
             }

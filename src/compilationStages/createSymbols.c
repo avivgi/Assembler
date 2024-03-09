@@ -94,7 +94,7 @@ int add_int_array_to_assembly(Assembly_code **assembly_code,
     result = parse_string_into_int_array((const char *)(line_params).parsed_params[2], &arr, ",", &array_size, symbols, symbol_count);
     if (result != 0)
     {
-        fprintf(stderr, "Error! Not a number\n");
+        fprintf(stdout, "Error! Not a number\n");
         free(arr);
         return ERR_VARIABLE_ISNT_INTEGER;
     }
@@ -171,7 +171,7 @@ int parse_string_into_int_array(const char *buffer,
                 temp = getLabelAddress(token, symbols, symbol_count);
             else /* just text*/
             {
-                fprintf(stderr, "Variable %s is not an integer or a data label.\n", token);
+                fprintf(stdout, "Variable %s is not an integer or a data label.\n", token);
                 free(buffer_c);
                 return ERR_VARIABLE_ISNT_INTEGER;
             }

@@ -18,7 +18,7 @@ int preCompile(const char *arg)
     char *fileName = (char *)calloc(strlen(arg) + 4, sizeof(char));
     if (!fileName)
     {
-        fprintf(stderr, "Failed allocating memory, existing.\n");
+        fprintf(stdout, "Failed allocating memory, existing.\n");
         free(fileName);
         exit(1);
     }
@@ -26,7 +26,7 @@ int preCompile(const char *arg)
     strcat(fileName, ".as");
     if ((source = fopen(fileName, "r")) == NULL)
     {
-        fprintf(stderr, "Error! Failed open file %s\n", fileName);
+        fprintf(stdout, "Error! Failed open file %s\n", fileName);
         free(fileName);
         exit(1);
     }
@@ -34,7 +34,7 @@ int preCompile(const char *arg)
     strcat(fileName, ".am");
     if ((destination = fopen(fileName, "w+")) == NULL)
     {
-        fprintf(stderr, "Error! Failed open file %s\n", fileName);
+        fprintf(stdout, "Error! Failed open file %s\n", fileName);
         free(fileName);
         exit(1);
     }
@@ -75,7 +75,7 @@ int preCompile(const char *arg)
 
                 if (list_of_macros[number_of_macros - 1].command_line == NULL)
                 {
-                    fprintf(stderr, "Memory allocation failed.\n");
+                    fprintf(stdout, "Memory allocation failed.\n");
                     free(list_of_macros);
                     free(fileName);
                     free(line);

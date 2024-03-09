@@ -39,14 +39,14 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
 
         if ((errno == ERANGE) || (errno != 0 && value == 0))
         {
-            fprintf(stderr, "Define parameter isn't a number\n");
+            fprintf(stdout, "Define parameter isn't a number\n");
             free(param);
             free(define_string);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         if (endptr == (*line_params)[*line_params_count - 1].parsed_params[3])
         {
-            fprintf(stderr, "No digits were found\n");
+            fprintf(stdout, "No digits were found\n");
             free(define_string);
             free(param);
             return ERR_VARIABLE_ISNT_INTEGER;

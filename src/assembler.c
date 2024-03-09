@@ -17,7 +17,7 @@ int main(int argc, char *argv[])
     int i = 1;
     if (filesCount < 1)
     {
-        fprintf(stderr, "\nNo arguments recieved. Existing.\n");
+        fprintf(stdout, "\nNo arguments recieved. Existing.\n");
         exit(1);
     }
     while (--argc)

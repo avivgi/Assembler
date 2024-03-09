@@ -40,7 +40,7 @@ int compileFirstStage(const char *filename,
 
     if (!fullFileName)
     {
-        fprintf(stderr, "Failed allocating memory, existing.\n");
+        fprintf(stdout, "Failed allocating memory, existing.\n");
         exit(1);
     }
     strcpy(fullFileName, filename);
@@ -48,7 +48,7 @@ int compileFirstStage(const char *filename,
 
     if ((source = fopen(fullFileName, "r")) == NULL)
     {
-        fprintf(stderr, "Error! Failed open file %s\n", fullFileName);
+        fprintf(stdout, "Error! Failed open file %s\n", fullFileName);
         free(fullFileName);
         exit(1);
     }
@@ -101,7 +101,7 @@ int compileFirstStage(const char *filename,
         }
         if (result == ERR_WORD_NOT_FOUND)
         {
-            fprintf(stderr, "Error. Didn't find command name: %s\n",
+            fprintf(stdout, "Error. Didn't find command name: %s\n",
                     (*line_params)[*line_params_count - 1].parsed_params[0]);
             continue;
         }
