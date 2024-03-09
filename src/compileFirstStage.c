@@ -32,7 +32,7 @@ int compileFirstStage(const char *filename,
     int instruction_count = 0;
     FILE *source;
     int i = 0;
-    As_Command assember_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
+    As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     /*FILE *destination;*/
     /* char first_param[MAX_PARAM_SIZE];*/
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
@@ -93,7 +93,7 @@ int compileFirstStage(const char *filename,
         for (i = 0; i < NUM_OF_COMMANDS_IN_LANGUAGE; i++)
         {
             if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0],
-                       (assember_commands[i].command_name)) == 0)
+                       (assembler_commands[i].command_name)) == 0)
             {
                 result = SYMBOL_WAS_FOUND;
                 break;
