@@ -9,6 +9,12 @@
 #include "datamodel.h"
 #include "Utils/printUtils.h"
 
+/**
+ * Compiles the given file.
+ *
+ * @param filename The name of the file to compile.
+ * @return Returns an integer indicating the success or failure of the compilation process.
+ */
 int compile(const char *filename)
 {
     Assembly_code *assembly_codes = NULL;

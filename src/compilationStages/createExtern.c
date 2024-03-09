@@ -16,6 +16,16 @@
 #include "../global_constants.h"
 #include "../Utils/memoryUtils.h"
 
+/**
+ * Function to create an extern symbol.
+ * @param symbols The array of symbols.
+ * @param symbol_count The number of symbols in the array.
+ * @param line_params The array of line parameters.
+ * @param line_params_count The number of line parameters in the array.
+ * @param instruction_count The number of instructions.
+ * @param data_count The number of data.
+ * @return 0 if the symbol was created, an error code otherwise.
+ */
 int createExtern(Symbol **symbols, size_t *symbol_count, Line_params **line_params, size_t *line_params_count, int *instruction_count, int *data_count)
 {
     int str_len = 0;

@@ -2,6 +2,14 @@
 #include "datamodel.h"
 #include <string.h>
 
+/**
+ * Checks if a label exists in the symbol table.
+ *
+ * @param label The label to search for.
+ * @param symbol_table The symbol table to search in.
+ * @param symbol_count The number of symbols in the symbol table.
+ * @return 1 if the label exists in the symbol table, 0 otherwise.
+ */
 int isLabelExist(char *label, Symbol *symbol_table, int symbol_count)
 {
     int i;
@@ -15,6 +23,14 @@ int isLabelExist(char *label, Symbol *symbol_table, int symbol_count)
     return 0;
 }
 
+/**
+ * Gets the address of a label in the symbol table.
+ *
+ * @param label The label to search for.
+ * @param symbol_table The symbol table to search in.
+ * @param symbol_count The number of symbols in the symbol table.
+ * @return The address of the label in the symbol table.
+ */
 int getLabelAddress(char *label, Symbol *symbol_table, int symbol_count)
 {
     int i;

@@ -11,6 +11,18 @@
 #include "../Utils/stringUtils.h"
 #include "../datamodel.h"
 
+/**
+ * Function to create a symbol.
+ * @param symbols The array of symbols.
+ * @param symbol_count The number of symbols in the array.
+ * @param line_params The array of line parameters.
+ * @param line_params_count The number of line parameters in the array.
+ * @param instruction_count The number of instructions in the array.
+ * @param data_count data counter .
+ * @param assembly_code The array of assembly code.
+ * @param assembly_code_count The number of assembly code in the array.
+ * @return 0 if the symbol was created, an error code otherwise.
+ */
 int createSymbols(Symbol **symbols,
                   size_t *symbol_count,
                   Line_params **line_params,
@@ -75,7 +87,17 @@ int createSymbols(Symbol **symbols,
     return SYMBOL_WAS_FOUND;
 }
 
-/* pass array of integers and push them into assembly_code table*/
+/**
+ * Function to add an integer array of a .data instruction to the assembly code table.
+ * @param assembly_code The array of assembly code.
+ * @param assembly_code_count The number of assembly code in the array.
+ * @param line_params The line parameters.
+ * @param line_params_count The number of line parameters.
+ * @param data_count The data counter.
+ * @param symbols The array of symbols.
+ * @param symbol_count The number of symbols in the array.
+ * @return 0 if the integer array was added successfully, an error code otherwise.
+ */
 int add_int_array_to_assembly(Assembly_code **assembly_code,
                               size_t *assembly_code_count,
                               Line_params line_params,
@@ -110,37 +132,22 @@ int add_int_array_to_assembly(Assembly_code **assembly_code,
     return 0;
 }
 
-/* pass array of integers and push them into assembly_code table*/
-int add_char_array_to_assembly(Assembly_code **assembly_code,
-                               size_t *assembly_code_count,
-                               Line_params line_params,
-                               size_t *line_params_count,
-                               int *data_count)
-{
-    int i;
-    int result;
-    Assembly_code data_assembly;
-    const char *str = (line_params).parsed_params[2];
-    size_t str_len = strlen(str);
-
-    data_assembly.address = *data_count;
-    for (i = 0; i < str_len; i++)
-    {
-        if (str[i] == 34) /* " sign" */
-            continue;
-        data_assembly.binary_code = (int)str[i];
-        push((void **)assembly_code, assembly_code_count, sizeof(Assembly_code), &data_assembly);
-        (*data_count)++;
-    }
-
-    data_assembly.binary_code = '\0';
-    push((void **)assembly_code, assembly_code_count, sizeof(Assembly_code), &data_assembly);
-    (*data_count)++;
-
-    return 0;
-}
-
-/*this function parses a string using a delimier, convert the items into integers if possible and returns array of integers. if it cannot convert into integer one of the item it returns error */
+/**
+ * @brief Parses a string into an integer array.
+ *
+ * This function takes a string buffer and splits it into tokens using the specified delimiters.
+ * Each token is later converted to an integer and stored in the result_array.
+ * If a token is not a valid integer, it checks if it is a defined label and retrieves its address.
+ * If the token is neither a valid integer nor a defined label, an error is returned.
+ *
+ * @param buffer The string buffer to parse.
+ * @param result_array A pointer to the integer array where the parsed integers will be stored.
+ * @param delimiters The delimiters used to split the string buffer into tokens.
+ * @param count A pointer to the variable that will store the number of parsed integers.
+ * @param symbols An array of Symbol structs representing defined labels.
+ * @param symbol_count The number of symbols in the symbols array.
+ * @return 0 if successful, otherwise an error code.
+ */
 int parse_string_into_int_array(const char *buffer,
                                 int **result_array,
                                 const char *delimitors,
@@ -190,5 +197,43 @@ int parse_string_into_int_array(const char *buffer,
     }
     *count = i;
     free(buffer_c);
+    return 0;
+}
+
+/**
+ * Function to add a character array of a .string instruction to the assembly code table.
+ * @param assembly_code The array of assembly code.
+ * @param assembly_code_count The number of assembly code in the array.
+ * @param line_params The line parameters.
+ * @param line_params_count The number of line parameters.
+ * @param data_count The data counter.
+ * @return 0 if the character array was added successfully, an error code otherwise.
+ */
+int add_char_array_to_assembly(Assembly_code **assembly_code,
+                               size_t *assembly_code_count,
+                               Line_params line_params,
+                               size_t *line_params_count,
+                               int *data_count)
+{
+    int i;
+    int result;
+    Assembly_code data_assembly;
+    const char *str = (line_params).parsed_params[2];
+    size_t str_len = strlen(str);
+
+    data_assembly.address = *data_count;
+    for (i = 0; i < str_len; i++)
+    {
+        if (str[i] == 34) /* " sign" */
+            continue;
+        data_assembly.binary_code = (int)str[i];
+        push((void **)assembly_code, assembly_code_count, sizeof(Assembly_code), &data_assembly);
+        (*data_count)++;
+    }
+
+    data_assembly.binary_code = '\0';
+    push((void **)assembly_code, assembly_code_count, sizeof(Assembly_code), &data_assembly);
+    (*data_count)++;
+
     return 0;
 }

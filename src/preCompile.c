@@ -5,6 +5,18 @@
 #include "Utils/stringUtils.h"
 #include "global_constants.h"
 
+/**
+ * Precompiles the given file.
+ *step 1 - read line
+ *step 2 - check if the line is a macro
+ *step 3 - if the line is a macro, add it to the list of macros
+ *step 4 - if the line is a macro, read the macro and add it to the list of macros
+ *step 5 - if the line is a macro, continue to the next line
+ *step 6 - if the line is not a macro, print it to the destination file
+ * @param arg The name of the file to precompile.
+ * @return Returns an integer indicating the success or failure of the precompilation process.
+ */
+
 int preCompile(const char *arg)
 {
     macro *list_of_macros = NULL;
