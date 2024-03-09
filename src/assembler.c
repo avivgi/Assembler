@@ -20,7 +20,7 @@ int main(int argc, char *argv[])
         fprintf(stdout, "\nNo arguments recieved. Existing.\n");
         exit(1);
     }
-    while (--argc)
+    while (filesCount--)
         handleSourceFile(argv[i++]);
 
     exit(0);
