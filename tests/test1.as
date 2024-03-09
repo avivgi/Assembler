@@ -1,17 +1,16 @@
-.define sz = 2
-.define abc = 4444
-.define szff = 2
-.define ab44c = 4444
-.define l6grfgdfen = 4
-.define len = 4
-.define len1= 4
-.define len23 =4
-.define len=4 
-.define len33=4 
-.define lenX=4fcc
-.define 3lenX=4fcc
-.define len5=4 ddddd
-LABEL1: Aviv hamatok
-mystring: .string "avner"
-myint: .data 5
-
+.define sz = 2 MAIN: LOOP:
+L1:
+mov r3, LIST[sz] jmp L1
+mcr m_mcr
+cmp r3, #sz bne END
+endmcr
+prn #-5
+mov STR[5], STR[2] sub r1, r4
+m_mcr
+inc K
+bne LOOP
+END: hlt .define len = 4
+STR:
+LIST: .data K:
+.string “abcdef” 6, -9, len
+.data 22
