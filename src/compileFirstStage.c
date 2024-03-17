@@ -21,25 +21,13 @@
  * @param filename The name of the file to compile.
  * @return Returns an integer indicating the success or failure of the compilation process.
  */
-int compileFirstStage(const char *filename,
-                      Symbol **symbols,
-                      size_t *symbol_count,
-                      Assembly_code **assembly_codes,
-                      size_t *assembly_code_count,
-                      Line_params **line_params,
-                      size_t *line_params_count,
-                      Reference_address **entries,
-                      size_t *entry_count,
-                      Reference_address **externals,
-                      size_t *externals_count)
+int compileFirstStage(const char *filename, Data_model *data_model, Line_params **line_params, size_t *line_params_count)
 {
     char *buffer = NULL;
     int result = 0;
     int error_flag = 0;
     // int is_symbol = 0;
     // int str_len = 0;
-    int data_count = 0;
-    int instruction_count = 0;
     FILE *source;
     int i = 0;
     As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
@@ -68,29 +56,22 @@ int compileFirstStage(const char *filename,
 
         parse_line(line_params, line_params_count, buffer, "\t\n\f\r ");
 
-        /* step 3 && 4 - if type== define*/
+        /* step 3 && 4 - if type== define put define in mdefine table*/
         if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".define") == 0)
         {
-            result = createDefineSymbol(symbols, symbol_count, line_params, line_params_count, &buffer);
+            result = createDefineSymbol(data_model, line_params, line_params_count, &buffer);
             error_flag += result;
             continue;
         }
 
-        /* printf("symbol_count %s\t", (*symbols)[*symbol_count - 1].name);
-         fflush(stdout);
-
-         printf("%s\t", command);
-         printf("%s\n", first_param);*/
-
-        /* step 4 - put define in mdefine table.*/
         /* step 5+6  - is sybmol ? */
-        result = createSymbols(symbols, symbol_count, line_params, line_params_count, &instruction_count, &data_count, assembly_codes, assembly_code_count);
+        result = createSymbols(data_model, line_params, line_params_count);
         /* step 7 - is data or string */
         /* step 8 - put symbol in symbol table */
         /* step 9 - identify data/params and put them in mem table (which?) update DC */
         /* step 10 - if extern or entry */
         if (result != 1)
-            result = createExtern(symbols, symbol_count, line_params, line_params_count, &instruction_count, &data_count);
+            result = createExtern(data_model, line_params, line_params_count);
         if (result == 1)
         {
             continue;

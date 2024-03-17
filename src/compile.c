@@ -17,25 +17,23 @@
  */
 int compile(const char *filename)
 {
-    Assembly_code *assembly_codes = NULL;
-    size_t assembly_code_count = 0;
 
-    Symbol *symbols = NULL;
-    size_t symbol_count = 0;
-
-    Reference_address *entries = NULL;
-    size_t entry_count = 0;
-
-    Reference_address *externals = NULL;
-    size_t externals_count = 0;
+    Data_model data_model;
 
     Line_params *line_params = NULL;
     size_t line_params_count = 0;
 
-    compileFirstStage(filename, &symbols, &symbol_count, &assembly_codes, &assembly_code_count, &line_params, &line_params_count, &entries, &entry_count, &externals, &externals_count);
-    compileSecondStage(filename);
+    initDataModel(&data_model);
 
-    print_symbol_table(&symbols, &symbol_count);
-    print_assembly_code_table(&assembly_codes, &assembly_code_count);
+    compileFirstStage(filename, &data_model, &line_params, &line_params_count);
+    compileSecondStage();
+
+    print_symbol_table(&data_model.symbols, &data_model.symbol_count);
+
+    printf("\nPrinting instructions_table table with %lu entries\n", data_model.instruction_count);
+    print_word_entry_table(data_model.instructions_table, data_model.instruction_count);
+
+    printf("\nPrinting data_table table with %lu entries\n", data_model.data_count);
+    print_word_entry_table(data_model.data_table, data_model.data_count);
     return 0;
 }

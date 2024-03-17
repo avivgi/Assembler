@@ -5,6 +5,6 @@
 #include <stdio.h>
 #include "../datamodel.h"
 
-int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **line_params, size_t *line_params_count, char **buffer);
+int createDefineSymbol(Data_model *data_model, Line_params **line_params, size_t *line_params_count, char **buffer);
 
 #endif

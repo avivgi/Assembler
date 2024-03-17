@@ -10,22 +10,47 @@
 void print_symbol_table(Symbol **Symbols, size_t *symbol_count)
 {
     int i;
+    const char *symbolType;
     printf("\nPrinting symbol table with %lu symbols\n", *symbol_count);
 
     for (i = 0; i < *symbol_count; i++)
     {
-        printf("Symbol name: %s\t", (*Symbols)[i].name);
+        printf("Symbol name: %-10s\t", (*Symbols)[i].name);
         printf("Value: %d\t", (*Symbols)[i].value);
-        printf("type: %d\n", (*Symbols)[i].type);
+        switch ((*Symbols)[i].type)
+        {
+        case UNDEFINED:
+            symbolType = "UNDEFINED";
+            break;
+        case MDEFINE:
+            symbolType = "MDEFINE";
+            break;
+        case CODE:
+            symbolType = "CODE";
+            break;
+        case DATA:
+            symbolType = "DATA";
+            break;
+        case ENTRY:
+            symbolType = "ENTRY";
+            break;
+        case EXTERN:
+            symbolType = "EXTERN";
+            break;
+        default:
+            symbolType = "UNKNOWN";
+            break;
+        }
+        printf("type: %d: %s\n", (*Symbols)[i].type, symbolType);
     }
 }
-void print_assembly_code_table(Assembly_code **Assembly_codes, size_t *assembly_code_count)
+
+void print_word_entry_table(Word_entry *table, size_t size)
 {
     int i;
-    printf("\nPrinting assembly_code table with %lu assembly_codes\n", *assembly_code_count);
-    for (i = 0; i < *assembly_code_count; i++)
+    for (i = 0; i < size; i++)
     {
-        printf("Address: %d\t", (*Assembly_codes)[i].address);
-        printf("Machine Code: %d\n", (*Assembly_codes)[i].binary_code);
+        printf("Address: %d\t", i);
+        printf("Machine Code: %d\n", (table)[i].dValue);
     }
 }

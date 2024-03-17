@@ -2,6 +2,7 @@
 #define __LANGUAGE__
 #define NUM_OF_COMMANDS_IN_LANGUAGE 16
 #define NUNMER_OF_REGISTERS 8
+#define CODE_START_ADDRESS 100
 
 typedef struct
 {

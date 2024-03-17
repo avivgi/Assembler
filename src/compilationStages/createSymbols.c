@@ -12,26 +12,32 @@
 #include "../datamodel.h"
 
 /**
- * Function to create a symbol.
+ * Function to evaluate if there are symbols and create them.
  * @param symbols The array of symbols.
  * @param symbol_count The number of symbols in the array.
  * @param line_params The array of line parameters.
  * @param line_params_count The number of line parameters in the array.
  * @param instruction_count The number of instructions in the array.
- * @param data_count data counter .
+ * @param data_count data counter.
  * @param assembly_code The array of assembly code.
  * @param assembly_code_count The number of assembly code in the array.
  * @return 0 if the symbol was created, an error code otherwise.
  */
-int createSymbols(Symbol **symbols,
-                  size_t *symbol_count,
+int createSymbols(Data_model *data_model,
                   Line_params **line_params,
-                  size_t *line_params_count,
-                  int *instruction_count,
-                  int *data_count,
-                  Assembly_code **assembly_code,
-                  size_t *assembly_code_count)
+                  size_t *line_params_count)
 {
+    /*
+    Symbol can be:
+    LABEL: .data 1,2,3,4 // LABEL is a symbol. Symbol type is .data
+    LABEL: .string "abc" // LABEL is a symbol. Symbol type is .data
+    LABEL: mov r1, r2 // LABEL is a symbol. Symbol type is CODE
+
+    symbols can also be: (not implemented in this function)
+    LABEL1: .entry LABEL2 // LABEL2 is a symbol, LABEL1 is not a symbol and is redundant. Symbol type is .entry
+    LABEL1: .extern LABEL2 // LABEL2 is a symbol, LABEL1 is not a symbol and is redundant Symbol type is .extern
+    */
+
     int str_len = 0;
     // int is_symbol = 0;
     Symbol new_symbol;
@@ -48,6 +54,7 @@ int createSymbols(Symbol **symbols,
         return ERR_WORD_NOT_FOUND;
     }
 
+    /*detect type LABEL: */
     if ((*line_params)[*line_params_count - 1].parsed_params[0][str_len - 1] != ':')
     {
         free(label_name);
@@ -57,32 +64,34 @@ int createSymbols(Symbol **symbols,
     str_len--;
     // is_symbol = 1;
 
-    if ((legalLabel(label_name, symbols, *symbol_count)) != 0)
+    if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count)) != 0)
         return ERR_LABEL_OR_NAME_IS_TAKEN;
 
     /*check if data or string*/
+    /*detect type LABEL: .data */
+
     if (strcmp((*line_params)[*line_params_count - 1].parsed_params[1], ".data") == 0)
     {
         new_symbol.type = DATA;
-        new_symbol.value = *data_count;
+        new_symbol.value = data_model->data_count;
 
-        add_int_array_to_assembly(assembly_code, assembly_code_count, *(*line_params + (*line_params_count - 1)), line_params_count, data_count, *symbols, *symbol_count);
+        add_int_array_to_data_table(data_model, (*line_params)[*line_params_count - 1], (int)(*line_params)[*line_params_count - 1].param_count);
     }
+    /*detect type LABEL: .string */
     else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[1], ".string") == 0)
     {
         new_symbol.type = DATA;
-        new_symbol.value = *data_count;
-        add_char_array_to_assembly(assembly_code, assembly_code_count, *(*line_params + *line_params_count - 1), line_params_count, data_count);
+        new_symbol.value = data_model->data_count;
+        add_char_array_to_assembly(data_model, *(*line_params + *line_params_count - 1), line_params_count);
     }
     else
     {
+        /*fallback to type LABEL: code*/
         new_symbol.type = CODE;
-        new_symbol.value = *instruction_count;
-        /* fix to reflect size of instruction*/
-        (*instruction_count)++;
+        new_symbol.value = data_model->data_count + CODE_START_ADDRESS;
     }
     strcpy(new_symbol.name, label_name);
-    push((void **)symbols, symbol_count, sizeof(Symbol), &new_symbol);
+    push((void **)&data_model->symbols, &data_model->symbol_count, sizeof(Symbol), &new_symbol);
     free(label_name);
     return SYMBOL_WAS_FOUND;
 }
@@ -98,36 +107,36 @@ int createSymbols(Symbol **symbols,
  * @param symbol_count The number of symbols in the array.
  * @return 0 if the integer array was added successfully, an error code otherwise.
  */
-int add_int_array_to_assembly(Assembly_code **assembly_code,
-                              size_t *assembly_code_count,
-                              Line_params line_params,
-                              size_t *line_params_count,
-                              int *data_count,
-                              Symbol *symbols,
-                              size_t symbol_count)
+int add_int_array_to_data_table(Data_model *data_model,
+                                Line_params line_params,
+                                int param_count)
 {
     int i;
-    int result;
+    int param = 2;
     int *arr = NULL;
 
     size_t array_size = 0;
-    Assembly_code data_assembly;
+    //  size_t total_array_size = 0;
 
-    result = parse_string_into_int_array((const char *)(line_params).parsed_params[2], &arr, ",", &array_size, symbols, symbol_count);
-    if (result != 0)
+    Word_entry data_entry;
+
+    while (param < param_count)
     {
-        fprintf(stdout, "Error! Not a number\n");
-        free(arr);
-        return ERR_VARIABLE_ISNT_INTEGER;
-    }
+        array_size = parse_string_into_int_array(data_model, (line_params).parsed_params[param], &arr, ",");
+        if (array_size == 0)
+        {
+            fprintf(stdout, "Error! Not a number\n");
+            free(arr);
+            return ERR_VARIABLE_ISNT_INTEGER;
+        }
 
-    for (i = 0; i < array_size; i++)
-    {
-        data_assembly.address = (*data_count)++;
-        data_assembly.binary_code = arr[i];
-        push((void **)assembly_code, assembly_code_count, sizeof(Assembly_code), &data_assembly);
+        for (i = 0; i < array_size; i++)
+        {
+            data_entry.dValue = arr[i];
+            push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
+        }
+        param++;
     }
-
     free(arr);
     return 0;
 }
@@ -148,56 +157,59 @@ int add_int_array_to_assembly(Assembly_code **assembly_code,
  * @param symbol_count The number of symbols in the symbols array.
  * @return 0 if successful, otherwise an error code.
  */
-int parse_string_into_int_array(const char *buffer,
+
+int parse_string_into_int_array(Data_model *data_model,
+                                char *buffer,
                                 int **result_array,
-                                const char *delimitors,
-                                size_t *count,
-                                Symbol *symbols,
-                                size_t symbol_count)
+                                const char *delimiters)
 {
     char *token;
     int i = 0;
     int temp;
-    // int result;
     char *buffer_c = NULL;
+
+    // Duplicate the input buffer
     buffer_c = strdup(buffer);
     if (buffer_c == NULL)
         EXIT_ON_MEM_ALLOC_FAIL
 
-    token = strtok(buffer_c, delimitors);
-    if (!token)
+    // Tokenize the buffer
+    printf("Getting buffer_c: %s\n", buffer_c);
+    token = strtok(buffer_c, delimiters);
+    while (token)
     {
-        free(buffer_c);
-        EXIT_ON_MEM_ALLOC_FAIL
-    }
-    while (!token)
-    {
-        if (!is_number(token, &temp)) /* a literal*/
+        if (!is_number(token, &temp)) // Check if the token is a number
         {
-            if (isLabelExist(token, symbols, symbol_count)) /* a define*/
-                temp = getLabelAddress(token, symbols, symbol_count);
-            else /* just text*/
+            // Check if the token is a label
+            if (isLabelExist(token, data_model->symbols, data_model->symbol_count))
+                temp = getLabelAddress(token, data_model->symbols, data_model->symbol_count);
+            else
             {
                 fprintf(stdout, "Variable %s is not an integer or a data label.\n", token);
                 free(buffer_c);
                 return ERR_VARIABLE_ISNT_INTEGER;
             }
         }
-        /* integer resolved, allocate*/
-        (*result_array) = realloc((*result_array), (i + 1) * sizeof(int));
-        if ((*result_array) == NULL)
+
+        // Reallocate memory for the result array
+        *result_array = realloc(*result_array, (i + 1) * sizeof(int));
+        if (*result_array == NULL)
         {
             free(buffer_c);
-            free(token);
-            EXIT_ON_MEM_ALLOC_FAIL
+            return -1; // Memory allocation failed
         }
 
+        // Store the integer in the result array
         (*result_array)[i++] = temp;
-        token = strtok(NULL, delimitors);
+
+        // Get the next token
+        token = strtok(NULL, delimiters);
     }
-    *count = i;
+
+    // Free the duplicated buffer
     free(buffer_c);
-    return 0;
+
+    return i; // Success
 }
 
 /**
@@ -209,31 +221,30 @@ int parse_string_into_int_array(const char *buffer,
  * @param data_count The data counter.
  * @return 0 if the character array was added successfully, an error code otherwise.
  */
-int add_char_array_to_assembly(Assembly_code **assembly_code,
-                               size_t *assembly_code_count,
+int add_char_array_to_assembly(Data_model *data_model,
                                Line_params line_params,
-                               size_t *line_params_count,
-                               int *data_count)
+                               size_t *line_params_count)
 {
     int i;
     //  int result;
-    Assembly_code data_assembly;
+    Word_entry data_entry;
+
     const char *str = (line_params).parsed_params[2];
     size_t str_len = strlen(str);
 
-    data_assembly.address = *data_count;
+    // data_entry.address = data_model->data_count;
     for (i = 0; i < str_len; i++)
     {
         if (str[i] == 34) /* " sign" */
             continue;
-        data_assembly.binary_code = (int)str[i];
-        push((void **)assembly_code, assembly_code_count, sizeof(Assembly_code), &data_assembly);
-        (*data_count)++;
+        data_entry.dValue = (int)str[i];
+        push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
+        // (*data_count)++;
     }
 
-    data_assembly.binary_code = '\0';
-    push((void **)assembly_code, assembly_code_count, sizeof(Assembly_code), &data_assembly);
-    (*data_count)++;
+    data_entry.dValue = '\0';
+    push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
+    // (*data_count)++;
 
     return 0;
 }

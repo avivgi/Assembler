@@ -9,7 +9,7 @@
 #include "../Utils/memoryUtils.h"
 
 /**
- * Function to create a define symbol.
+ * Function to create a .define symbol.
  * @param symbols The array of symbols.
  * @param symbol_count The number of symbols in the array.
  * @param line_params The array of line parameters.
@@ -17,7 +17,7 @@
  * @param buffer The buffer to parse.
  * @return 0 if the symbol was created, an error code otherwise.
  */
-int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **line_params, size_t *line_params_count, char **buffer)
+int createDefineSymbol(Data_model *data_model, Line_params **line_params, size_t *line_params_count, char **buffer)
 {
     Symbol new_symbol;
     int value;
@@ -33,7 +33,7 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
 
     /* printf("###%s### -> %s\n", (*line_params)[*line_params_count - 1].parsed_params[0], (*line_params)[*line_params_count - 1].parsed_params[1]);*/
 
-    if ((legalLabel((*line_params)[*line_params_count - 1].parsed_params[0], symbols, *symbol_count)) == 0)
+    if ((legalLabel((*line_params)[*line_params_count - 1].parsed_params[0], &data_model->symbols, data_model->symbol_count)) == 0)
     {
         new_symbol.type = MDEFINE;
         strcpy(new_symbol.name, (*line_params)[*line_params_count - 1].parsed_params[0]);
@@ -61,7 +61,7 @@ int createDefineSymbol(Symbol **symbols, size_t *symbol_count, Line_params **lin
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         new_symbol.value = value;
-        push((void **)symbols, symbol_count, sizeof(Symbol), &new_symbol);
+        push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
     }
     else
     {

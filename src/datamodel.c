@@ -44,3 +44,13 @@ int getLabelAddress(char *label, Symbol *symbol_table, int symbol_count)
     }
     return 0;
 }
+
+void initDataModel(Data_model *data_model)
+{
+    data_model->symbol_count = 0;
+    data_model->symbols = NULL;
+    data_model->instruction_count = 0;
+    data_model->instructions_table = NULL;
+    data_model->data_count = 0;
+    data_model->data_table = NULL;
+}

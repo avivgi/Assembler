@@ -26,7 +26,7 @@
  * @param data_count The number of data.
  * @return 0 if the symbol was created, an error code otherwise.
  */
-int createExtern(Symbol **symbols, size_t *symbol_count, Line_params **line_params, size_t *line_params_count, int *instruction_count, int *data_count)
+int createExtern(Data_model *data_model, Line_params **line_params, size_t *line_params_count)
 {
     int str_len = 0;
     Symbol new_symbol;
@@ -42,7 +42,7 @@ int createExtern(Symbol **symbols, size_t *symbol_count, Line_params **line_para
         return ERR_WORD_NOT_FOUND;
     }
 
-    if ((legalLabel(label_name, symbols, *symbol_count)) != 0)
+    if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count)) != 0)
         return ERR_LABEL_OR_NAME_IS_TAKEN;
 
     if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".extern") == 0)
@@ -50,19 +50,19 @@ int createExtern(Symbol **symbols, size_t *symbol_count, Line_params **line_para
         new_symbol.type = EXTERN; /*(~extern~)*/
         new_symbol.value = 0;     /*unclear what the value should be*/
         strcpy(new_symbol.name, label_name);
-        push((void **)symbols, symbol_count, sizeof(Symbol), &new_symbol);
+        push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
         free(label_name);
         return SYMBOL_WAS_FOUND;
     }
-    else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".entry") == 0)
-    {
-        new_symbol.type = ENTRY;
-        new_symbol.value = 0; /*unclear what the value should be*/
-        strcpy(new_symbol.name, label_name);
-        push((void **)symbols, symbol_count, sizeof(Symbol), &new_symbol);
-        free(label_name);
-        return SYMBOL_WAS_FOUND;
-    }
+    // else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".entry") == 0)
+    // {
+    //     new_symbol.type = ENTRY;
+    //     new_symbol.value = 0; /*unclear what the value should be*/
+    //     strcpy(new_symbol.name, label_name);
+    //     push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
+    //     free(label_name);
+    //     return SYMBOL_WAS_FOUND;
+    // }
 
     free(label_name);
     return ERR_WORD_NOT_FOUND;
