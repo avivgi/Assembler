@@ -11,9 +11,10 @@
 #include "Utils/memoryUtils.h"
 #include "language.h"
 #include "Utils/languageUtils.h"
+#include "global_constants.h"
 #include "compilationStages/createDefineSymbol.h"
-#include "compilationStages/createSymbols.h"
-#include "compilationStages/createExtern.h"
+#include "compilationStages/labels.h"
+#include "compilationStages/externs.h"
 
 /**
  * Compiles the given file.
@@ -26,7 +27,6 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     char *buffer = NULL;
     int result = 0;
     int error_flag = 0;
-
     FILE *source;
     int i = 0;
     As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
@@ -47,7 +47,7 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     {
         fprintf(stdout, "Error! Failed open file %s\n", fullFileName);
         free(fullFileName);
-        exit(1);
+        exit(ERR_OPEN_FILE);
     }
 
     while (read_line(source, &buffer))
@@ -63,18 +63,27 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
             continue;
         }
 
-        /* step 5+6  - is sybmol ? */
-        result = createSymbols(data_model, line_params, line_params_count);
+        /* step 5+6  - labels   */
+        result = labels(data_model, line_params, line_params_count);
+        if (result == LABEL_WAS_FOUND)
+            continue;
+        if (result == ERR_LABEL_OR_NAME_IS_TAKEN)
+            error_flag += 1;
+
         /* step 7 - is data or string */
         /* step 8 - put symbol in symbol table */
         /* step 9 - identify data/params and put them in mem table (which?) update DC */
         /* step 10 - if extern or entry */
-        if (result != 1)
-            result = createExtern(data_model, line_params, line_params_count);
-        if (result == 1)
-        {
+
+        result = externs(data_model, line_params, line_params_count);
+
+        if (result == EXTERN_FOUND_AND_ADDED_WITH_ERRORS)
+            error_flag += 1;
+
+        if (result == EXTERN_FOUND_AND_ADDED_WITH_ERRORS || result == EXTERN_FOUND_AND_ADDED)
             continue;
-        }
+
+        /* else - not extern*/
 
         /* step 11 - if extern put in etx table*/
         /* step 12 - if symbol put in symbol table*/
@@ -85,7 +94,7 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
             if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0],
                        (assembler_commands[i].command_name)) == 0)
             {
-                result = SYMBOL_WAS_FOUND;
+                result = LABEL_WAS_FOUND;
                 break;
             }
         }
@@ -107,5 +116,5 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     free(fullFileName);
     fclose(source);
     /* fclose(destination);*/
-    return 0;
+    return error_flag;
 }

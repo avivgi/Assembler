@@ -4,7 +4,7 @@
 #include <limits.h>
 #include <ctype.h>
 #include <string.h>
-#include "createSymbols.h"
+#include "labels.h"
 #include "../Utils/stringUtils.h"
 #include "../Utils/languageUtils.h"
 #include "../global_constants.h"
@@ -25,9 +25,9 @@ char *strdup(const char *s);
  * @param assembly_code_count The number of assembly code in the array.
  * @return 0 if the symbol was created, an error code otherwise.
  */
-int createSymbols(Data_model *data_model,
-                  Line_params **line_params,
-                  size_t *line_params_count)
+int labels(Data_model *data_model,
+           Line_params **line_params,
+           size_t *line_params_count)
 {
     /*
     Symbol can be:
@@ -53,14 +53,14 @@ int createSymbols(Data_model *data_model,
     if (str_len < 2)
     {
         free(label_name);
-        return ERR_WORD_NOT_FOUND;
+        return INFO_NOT_LABAL;
     }
 
     /*detect type LABEL: */
     if ((*line_params)[*line_params_count - 1].parsed_params[0][str_len - 1] != ':')
     {
         free(label_name);
-        return ERR_WORD_NOT_FOUND;
+        return INFO_NOT_LABAL;
     }
     label_name[str_len - 1] = '\0';
     str_len--;
@@ -86,6 +86,11 @@ int createSymbols(Data_model *data_model,
         new_symbol.value = data_model->data_count;
         add_char_array_to_assembly(data_model, *(*line_params + *line_params_count - 1), line_params_count);
     }
+    else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[1], ".extern") == 0)
+    {
+        printf("INFO: Label (%s) before .extern. Ignoring this label. Continue.\n", label_name);
+        return INFO_LABEL_BEFORE_EXTERN;
+    }
     else
     {
         /*fallback to type LABEL: code*/
@@ -95,7 +100,7 @@ int createSymbols(Data_model *data_model,
     strcpy(new_symbol.name, label_name);
     push((void **)&data_model->symbols, &data_model->symbol_count, sizeof(Symbol), &new_symbol);
     free(label_name);
-    return SYMBOL_WAS_FOUND;
+    return LABEL_WAS_FOUND;
 }
 
 /**
@@ -227,7 +232,6 @@ int add_char_array_to_assembly(Data_model *data_model,
     Word_entry data_entry;
 
     const char *str = (line_params).parsed_params[2];
-    printf("Getting str: %s\n", str);
     size_t str_len = strlen(str);
 
     for (i = 0; i < str_len; i++)

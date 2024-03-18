@@ -30,8 +30,8 @@ int preCompile(const char *arg)
     char *fileName = (char *)calloc(strlen(arg) + 4, sizeof(char));
     if (!fileName)
     {
-        fprintf(stdout, "Failed allocating memory, existing.\n");
         free(fileName);
+        fprintf(stdout, "Failed allocating memory, existing.\n");
         exit(1);
     }
     strcpy(fileName, arg);
@@ -57,6 +57,8 @@ int preCompile(const char *arg)
     {
         is_macro = 0;
         parse_command(line, check_for_macro, macro_name);
+        if (check_for_macro[0] == ';')
+            continue;
         if (strcmp(check_for_macro, "mcr") == 0) /*beggining of a macro*/
         {
             is_macro = 1;
