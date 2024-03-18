@@ -29,7 +29,6 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     int result = 0;
     int error_flag = 0;
     FILE *source;
-    int i = 0;
     /*FILE *destination;*/
     /* char first_param[MAX_PARAM_SIZE];*/
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
