@@ -3,6 +3,7 @@
 #include <errno.h>
 #include <limits.h>
 #include <ctype.h>
+#include <string.h>
 #include "createSymbols.h"
 #include "../Utils/stringUtils.h"
 #include "../Utils/languageUtils.h"

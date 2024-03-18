@@ -9,8 +9,8 @@ typedef struct
     int index;
     char command_name[4];
     int command_type;
-    unsigned char allowed_source_operand_adderss_type : 4;
-    unsigned char allowed_target_operand_adderss_type : 4;
+    char allowed_source_operand_adderss_type : 4;
+    char allowed_target_operand_adderss_type : 4;
 } As_Command;
 
 #define AS_COMMAND_LIST               \
