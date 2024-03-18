@@ -21,7 +21,6 @@ int commands(Data_model *data_model, Line_params **line_params, size_t *line_par
     As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     int i;
     int result = ERR_WORD_NOT_FOUND;
-    int error_flag = 0;
 
     for (i = 0; i < NUM_OF_COMMANDS_IN_LANGUAGE; i++)
     {
