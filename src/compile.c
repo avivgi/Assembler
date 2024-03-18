@@ -30,10 +30,10 @@ int compile(const char *filename)
 
     print_symbol_table(&data_model.symbols, &data_model.symbol_count);
 
-    printf("\nPrinting instructions_table table with %d entries\n", data_model.instruction_count);
+    printf("\nPrinting instructions_table table with %lu entries\n", data_model.instruction_count);
     print_word_entry_table(data_model.instructions_table, data_model.instruction_count);
 
-    printf("\nPrinting data_table table with %d entries\n", data_model.data_count);
+    printf("\nPrinting data_table table with %lu entries\n", data_model.data_count);
     print_word_entry_table(data_model.data_table, data_model.data_count);
     return 0;
 }
