@@ -9,6 +9,7 @@
 #include "../datamodel.h"
 #include "memoryUtils.h"
 #include "../datamodel.h"
+char *strdup(const char *s);
 
 /**
  * @brief Reads a line from a file and places it in the given buffer.

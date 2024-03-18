@@ -11,6 +11,7 @@
 #include "../Utils/memoryUtils.h"
 #include "../Utils/stringUtils.h"
 #include "../datamodel.h"
+char *strdup(const char *s);
 
 /**
  * Function to evaluate if there are symbols and create them.

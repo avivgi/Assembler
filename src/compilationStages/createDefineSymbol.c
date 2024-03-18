@@ -7,6 +7,7 @@
 #include "../Utils/languageUtils.h"
 #include "../global_constants.h"
 #include "../Utils/memoryUtils.h"
+char *strdup(const char *s);
 
 /**
  * Function to create a .define symbol.

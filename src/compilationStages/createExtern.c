@@ -1,20 +1,21 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <limits.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <limits.h>
 #include "createSymbols.h"
+
+#include "../Utils/stringUtils.h"
+#include "../Utils/languageUtils.h"
+#include "../global_constants.h"
+#include "../Utils/memoryUtils.h"
 #include "../Utils/stringUtils.h"
 #include "../Utils/languageUtils.h"
 #include "../global_constants.h"
 #include "../Utils/memoryUtils.h"
 
-#include <stdlib.h>
-#include <errno.h>
-#include <limits.h>
-#include "createSymbols.h"
-#include "../Utils/stringUtils.h"
-#include "../Utils/languageUtils.h"
-#include "../global_constants.h"
-#include "../Utils/memoryUtils.h"
+char *strdup(const char *s);
 
 /**
  * Function to create an extern symbol.
