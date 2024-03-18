@@ -54,10 +54,10 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
             return ERR_LABEL_OR_NAME_IS_TAKEN;
         }
     }
-    // /*for (i = 0; i < macro_amount;i++){
-    //     if(strcmp(label_name, (macro_names[i])) != 0){
-    //         return ERR_LABEL_OR_NAME_IS_TAKEN; ~illegal~}
-    // }*/
+    /*for (i = 0; i < macro_amount;i++){
+        if(strcmp(label_name, (macro_names[i])) != 0){
+            return ERR_LABEL_OR_NAME_IS_TAKEN; ~illegal~}
+    }*/
 
     if (strcmp(label_name, ".data") == 0)
     {

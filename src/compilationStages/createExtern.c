@@ -54,15 +54,19 @@ int createExtern(Data_model *data_model, Line_params **line_params, size_t *line
         free(label_name);
         return SYMBOL_WAS_FOUND;
     }
-    // else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".entry") == 0)
-    // {
-    //     new_symbol.type = ENTRY;
-    //     new_symbol.value = 0; /*unclear what the value should be*/
-    //     strcpy(new_symbol.name, label_name);
-    //     push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
-    //     free(label_name);
-    //     return SYMBOL_WAS_FOUND;
-    // }
+    /*
+    else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".entry") == 0)
+    {
+        new_symbol.type = ENTRY;
+        new_symbol.value = 0; /*unclear what the value should be*/
+
+    /*
+    strcpy(new_symbol.name, label_name);
+    push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
+    free(label_name);
+    return SYMBOL_WAS_FOUND;
+    }
+    */
 
     free(label_name);
     return ERR_WORD_NOT_FOUND;

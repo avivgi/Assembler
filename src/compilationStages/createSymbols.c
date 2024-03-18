@@ -39,7 +39,7 @@ int createSymbols(Data_model *data_model,
     */
 
     int str_len = 0;
-    // int is_symbol = 0;
+    /* int is_symbol = 0; */
     Symbol new_symbol;
     char *label_name;
 
@@ -62,7 +62,7 @@ int createSymbols(Data_model *data_model,
     }
     label_name[str_len - 1] = '\0';
     str_len--;
-    // is_symbol = 1;
+    /* is_symbol = 1; */
 
     if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count)) != 0)
         return ERR_LABEL_OR_NAME_IS_TAKEN;
@@ -116,7 +116,7 @@ int add_int_array_to_data_table(Data_model *data_model,
     int *arr = NULL;
 
     size_t array_size = 0;
-    //  size_t total_array_size = 0;
+    /*  size_t total_array_size = 0; */
 
     Word_entry data_entry;
 
@@ -168,19 +168,19 @@ int parse_string_into_int_array(Data_model *data_model,
     int temp;
     char *buffer_c = NULL;
 
-    // Duplicate the input buffer
+    /* Duplicate the input buffer */
     buffer_c = strdup(buffer);
     if (buffer_c == NULL)
         EXIT_ON_MEM_ALLOC_FAIL
 
-    // Tokenize the buffer
+    /* Tokenize the buffer */
     printf("Getting buffer_c: %s\n", buffer_c);
     token = strtok(buffer_c, delimiters);
     while (token)
     {
-        if (!is_number(token, &temp)) // Check if the token is a number
+        if (!is_number(token, &temp)) /* Check if the token is a number */
         {
-            // Check if the token is a label
+            /* Check if the token is a label */
             if (isLabelExist(token, data_model->symbols, data_model->symbol_count))
                 temp = getLabelAddress(token, data_model->symbols, data_model->symbol_count);
             else
@@ -191,25 +191,21 @@ int parse_string_into_int_array(Data_model *data_model,
             }
         }
 
-        // Reallocate memory for the result array
         *result_array = realloc(*result_array, (i + 1) * sizeof(int));
         if (*result_array == NULL)
         {
             free(buffer_c);
-            return -1; // Memory allocation failed
+            EXIT_ON_MEM_ALLOC_FAIL
         }
 
-        // Store the integer in the result array
         (*result_array)[i++] = temp;
 
-        // Get the next token
         token = strtok(NULL, delimiters);
     }
 
-    // Free the duplicated buffer
     free(buffer_c);
 
-    return i; // Success
+    return i;
 }
 
 /**
@@ -226,25 +222,24 @@ int add_char_array_to_assembly(Data_model *data_model,
                                size_t *line_params_count)
 {
     int i;
-    //  int result;
     Word_entry data_entry;
 
     const char *str = (line_params).parsed_params[2];
     size_t str_len = strlen(str);
 
-    // data_entry.address = data_model->data_count;
+    /* data_entry.address = data_model->data_count; */
     for (i = 0; i < str_len; i++)
     {
         if (str[i] == 34) /* " sign" */
             continue;
         data_entry.dValue = (int)str[i];
         push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
-        // (*data_count)++;
+        /*(*data_count)++; */
     }
 
     data_entry.dValue = '\0';
     push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
-    // (*data_count)++;
+    /* (*data_count)++;*/
 
     return 0;
 }

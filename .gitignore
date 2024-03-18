@@ -1,3 +1,4 @@
 obj/*
 bin/*
 tests/*.am
+.DS_Store
