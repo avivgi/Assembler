@@ -238,12 +238,11 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     /* end of init new Line Params*/
     i = 0;
     token = strtok(buffer_c, delimitors);
-    sprintf((*line_params)[*line_params_count].parsed_params[i++], "%s", token);
-
+    snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
     while (token != NULL)
     {
         token = strtok(NULL, delimitors);
-        sprintf((*line_params)[*line_params_count].parsed_params[i++], "%s", token);
+        snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
     }
 
     (*line_params)[*line_params_count].param_count = i - 1;
