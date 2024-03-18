@@ -74,9 +74,8 @@ int externs(Data_model *data_model, Line_params **line_params, size_t *line_para
         push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
         found_label = true;
         i++;
+        free(label_name);
     }
-
-    // free(label_name);
 
     return found_label
                ? (error_flag ? EXTERN_FOUND_AND_ADDED_WITH_ERRORS : EXTERN_FOUND_AND_ADDED)

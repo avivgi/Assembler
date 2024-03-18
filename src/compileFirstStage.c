@@ -15,6 +15,7 @@
 #include "compilationStages/createDefineSymbol.h"
 #include "compilationStages/labels.h"
 #include "compilationStages/externs.h"
+#include "compilationStages/commands.h"
 
 /**
  * Compiles the given file.
@@ -29,7 +30,6 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     int error_flag = 0;
     FILE *source;
     int i = 0;
-    As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     /*FILE *destination;*/
     /* char first_param[MAX_PARAM_SIZE];*/
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
@@ -74,6 +74,8 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
         /* step 8 - put symbol in symbol table */
         /* step 9 - identify data/params and put them in mem table (which?) update DC */
         /* step 10 - if extern or entry */
+        /* step 11 - if extern put in etx table*/
+        /* step 12 - if symbol put in symbol table*/
 
         result = externs(data_model, line_params, line_params_count);
 
@@ -83,29 +85,18 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
         if (result == EXTERN_FOUND_AND_ADDED_WITH_ERRORS || result == EXTERN_FOUND_AND_ADDED)
             continue;
 
-        /* else - not extern*/
-
-        /* step 11 - if extern put in etx table*/
-        /* step 12 - if symbol put in symbol table*/
+        /* not extern, a command*/
         /* step 13 - lookup operation in table*/
-        result = ERR_WORD_NOT_FOUND;
-        for (i = 0; i < NUM_OF_COMMANDS_IN_LANGUAGE; i++)
-        {
-            if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0],
-                       (assembler_commands[i].command_name)) == 0)
-            {
-                result = LABEL_WAS_FOUND;
-                break;
-            }
-        }
-        if (result == ERR_WORD_NOT_FOUND)
-        {
-            fprintf(stdout, "Error. Didn't find command name: %s\n",
-                    (*line_params)[*line_params_count - 1].parsed_params[0]);
-            continue;
-        }
         /* step 14 - calculate L , build binary code of first word*/
         /* step 15 - IC = IC + L . goto #2*/
+
+        result = commands(data_model, line_params, line_params_count);
+        if (result == ERR_WORD_NOT_FOUND)
+        {
+            error_flag += 1;
+            continue;
+        }
+
         /* printf("\n%d\n", result);*/
     }
 
