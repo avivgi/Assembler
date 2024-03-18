@@ -9,8 +9,12 @@
 #include "../datamodel.h"
 #include "memoryUtils.h"
 #include "../datamodel.h"
+
 char *strdup(const char *s);
+#ifndef snprintf
 void snprintf(char *str, int len, ...);
+#endif
+
 /**
  * @brief Reads a line from a file and places it in the given buffer.
  *
