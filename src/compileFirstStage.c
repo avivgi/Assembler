@@ -26,6 +26,7 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     char *buffer = NULL;
     int result = 0;
     int error_flag = 0;
+
     FILE *source;
     int i = 0;
     As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;

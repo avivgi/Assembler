@@ -1,16 +1,19 @@
 #ifndef __LANGUAGE__
 #define __LANGUAGE__
-#define NUM_OF_COMMANDS_IN_LANGUAGE 16
+
 #define NUNMER_OF_REGISTERS 8
 #define CODE_START_ADDRESS 100
+
+#define COMMAND_LENGTH 3
+#define NUM_OF_COMMANDS_IN_LANGUAGE 16
 
 typedef struct
 {
     int index;
-    char command_name[4];
+    char command_name[COMMAND_LENGTH + 1];
     int command_type;
-    char allowed_source_operand_adderss_type : 4;
-    char allowed_target_operand_adderss_type : 4;
+    char allowed_source_operand_adderss_type;
+    char allowed_target_operand_adderss_type;
 } As_Command;
 
 #define AS_COMMAND_LIST               \
