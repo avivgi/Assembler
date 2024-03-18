@@ -11,7 +11,7 @@ void print_symbol_table(Symbol **Symbols, size_t *symbol_count)
 {
     int i;
     const char *symbolType;
-    printf("\nPrinting symbol table with %lu symbols\n", *symbol_count);
+    printf("\nPrinting symbol table with %lu symbols\n", (long unsigned int)*symbol_count);
 
     for (i = 0; i < *symbol_count; i++)
     {

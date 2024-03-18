@@ -4,8 +4,8 @@
 #include <limits.h>
 #include <stdlib.h>
 #include <ctype.h>
-#include "../global_constants.h"
 #include "stringUtils.h"
+#include "../global_constants.h"
 #include "../datamodel.h"
 #include "memoryUtils.h"
 #include "../datamodel.h"
@@ -238,12 +238,12 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     /* end of init new Line Params*/
     i = 0;
     token = strtok(buffer_c, delimitors);
-    snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
+    sprintf((*line_params)[*line_params_count].parsed_params[i++], "%s", token);
 
     while (token != NULL)
     {
         token = strtok(NULL, delimitors);
-        snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
+        sprintf((*line_params)[*line_params_count].parsed_params[i++], "%s", token);
     }
 
     (*line_params)[*line_params_count].param_count = i - 1;
