@@ -227,13 +227,14 @@ int add_char_array_to_assembly(Data_model *data_model,
     Word_entry data_entry;
 
     const char *str = (line_params).parsed_params[2];
+    printf("Getting str: %s\n", str);
     size_t str_len = strlen(str);
 
-    /* data_entry.address = data_model->data_count; */
     for (i = 0; i < str_len; i++)
     {
         if (str[i] == 34) /* " sign" */
             continue;
+        data_entry.address = data_model->data_count;
         data_entry.dValue = (int)str[i];
         push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
         /*(*data_count)++; */

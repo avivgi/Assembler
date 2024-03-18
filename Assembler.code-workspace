@@ -4,35 +4,5 @@
 			"path": "."
 		}
 	],
-	"settings": {
-		"files.associations": {
-			"*.js": "javascriptreact",
-			"stdlib.h": "c",
-			"assembler.h": "c",
-			"__config": "c",
-			"fsutils.h": "c",
-			"precompile.h": "c",
-			"stdio.h": "c",
-			"string.h": "c",
-			"compile.h": "c",
-			"global_constants.h": "c",
-			"stringutils.h": "c",
-			"compilefirststage.h": "c",
-			"compilesecondstage.h": "c",
-			"datamodel.h": "c",
-			"memoryutils.h": "c",
-			"language.h": "c",
-			"sstream": "c",
-			"compilestep3": "c",
-			"__locale": "c",
-			"languageutils.h": "c",
-			"createdefinesymbol.h": "c",
-			"limits.h": "c",
-			"printutils.h": "c",
-			"createsymbols.h": "c",
-			"errno.h": "c",
-			"string": "c",
-			"string_view": "c"
-		}
-	}
+	"settings": {}
 }
