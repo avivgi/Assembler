@@ -10,7 +10,7 @@
 #include "memoryUtils.h"
 #include "../datamodel.h"
 char *strdup(const char *s);
-
+void snprintf(char *str, int len, ...);
 /**
  * @brief Reads a line from a file and places it in the given buffer.
  *
