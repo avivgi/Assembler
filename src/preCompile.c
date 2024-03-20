@@ -5,6 +5,8 @@
 #include "Utils/stringUtils.h"
 #include "global_constants.h"
 
+#define INITIAL_COMMAND_LINE_SIZE 2
+
 /**
  * Precompiles the given file.
  *step 1 - read line
@@ -16,7 +18,6 @@
  * @param arg The name of the file to precompile.
  * @return Returns an integer indicating the success or failure of the precompilation process.
  */
-
 int preCompile(const char *arg)
 {
     macro *list_of_macros = NULL;
@@ -30,8 +31,7 @@ int preCompile(const char *arg)
     char *fileName = (char *)calloc(strlen(arg) + 4, sizeof(char));
     if (!fileName)
     {
-        free(fileName);
-        fprintf(stdout, "Failed allocating memory, existing.\n");
+        fprintf(stdout, "Failed allocating memory, exiting.\n");
         exit(1);
     }
     strcpy(fileName, arg);
@@ -52,14 +52,13 @@ int preCompile(const char *arg)
     }
 
     /*start reading the file and looking for macros*/
-    /*parse_command(char *buffer, char *command,char *first_param)*/
     while (read_line(source, &line))
     {
         is_macro = 0;
         parse_command(line, check_for_macro, macro_name);
         if (check_for_macro[0] == ';')
             continue;
-        if (strcmp(check_for_macro, "mcr") == 0) /*beggining of a macro*/
+        if (strcmp(check_for_macro, "mcr") == 0) /*beginning of a macro*/
         {
             is_macro = 1;
             /*need to increase the size of the macro list*/
@@ -67,7 +66,6 @@ int preCompile(const char *arg)
             if (list_of_macros == NULL)
             {
                 perror("Memory allocation failed.\n");
-                free(list_of_macros);
                 free(fileName);
                 fclose(source);
                 fclose(destination);
@@ -75,6 +73,17 @@ int preCompile(const char *arg)
             }
 
             list_of_macros[number_of_macros - 1].number_of_lines = 0;
+            list_of_macros[number_of_macros - 1].command_line = malloc(INITIAL_COMMAND_LINE_SIZE * sizeof(Command_line));
+            if (list_of_macros[number_of_macros - 1].command_line == NULL)
+            {
+                fprintf(stdout, "Memory allocation failed.\n");
+                free(list_of_macros);
+                free(fileName);
+                free(line);
+                fclose(source);
+                fclose(destination);
+                exit(EXIT_FAILURE);
+            }
             strcpy(list_of_macros[number_of_macros - 1].macro_name, macro_name);
 
             /*pulling the content of the macro*/
@@ -82,29 +91,32 @@ int preCompile(const char *arg)
             {
                 if (strcmp(line, "endmcr") == 0)
                     break;
-                list_of_macros[number_of_macros - 1].number_of_lines++;
-                list_of_macros[number_of_macros - 1].command_line =
-                    realloc(list_of_macros[number_of_macros - 1].command_line,
-                            list_of_macros[number_of_macros - 1].number_of_lines * sizeof(Command_line));
 
-                if (list_of_macros[number_of_macros - 1].command_line == NULL)
+                if (list_of_macros[number_of_macros - 1].number_of_lines >= INITIAL_COMMAND_LINE_SIZE)
                 {
-                    fprintf(stdout, "Memory allocation failed.\n");
-                    free(list_of_macros);
-                    free(fileName);
-                    free(line);
-                    fclose(source);
-                    fclose(destination);
-                    exit(EXIT_FAILURE);
+                    // If we've reached the initial size, reallocate memory for command lines
+                    list_of_macros[number_of_macros - 1].command_line = realloc(list_of_macros[number_of_macros - 1].command_line,
+                                                                                (list_of_macros[number_of_macros - 1].number_of_lines * 2) * sizeof(Command_line));
+                    if (list_of_macros[number_of_macros - 1].command_line == NULL)
+                    {
+                        fprintf(stdout, "Memory allocation failed.\n");
+                        free(list_of_macros);
+                        free(fileName);
+                        free(line);
+                        fclose(source);
+                        fclose(destination);
+                        exit(EXIT_FAILURE);
+                    }
                 }
-                strcpy(list_of_macros[number_of_macros - 1].command_line[list_of_macros[number_of_macros - 1].number_of_lines - 1], line);
+                strcpy(list_of_macros[number_of_macros - 1].command_line[list_of_macros[number_of_macros - 1].number_of_lines], line);
+                list_of_macros[number_of_macros - 1].number_of_lines++;
             } /*end of macro*/
             continue;
         }
 
         /*check if the line is a macro*/
         for (j = 0; j < number_of_macros; j++)
-        { /*fix for a macro that is inside a label*/
+        {
             if (strcmp(line, list_of_macros[j].macro_name) == 0)
             {
                 for (i = 0; i < list_of_macros[j].number_of_lines; i++)
@@ -117,6 +129,11 @@ int preCompile(const char *arg)
             fprintf(destination, "%s\n", line);
     }
 
+    // Free allocated memory
+    for (i = 0; i < number_of_macros; i++)
+    {
+        free(list_of_macros[i].command_line);
+    }
     free(list_of_macros);
     free(fileName);
     free(line);
