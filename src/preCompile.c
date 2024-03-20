@@ -4,6 +4,7 @@
 #include "preCompile.h"
 #include "Utils/stringUtils.h"
 #include "global_constants.h"
+#include "Utils/memoryUtils.h"
 
 #define INITIAL_COMMAND_LINE_SIZE 2
 
@@ -30,17 +31,15 @@ int preCompile(const char *arg)
 
     char *fileName = (char *)calloc(strlen(arg) + 4, sizeof(char));
     if (!fileName)
-    {
-        fprintf(stdout, "Failed allocating memory, exiting.\n");
-        exit(1);
-    }
+        EXIT_ON_MEM_ALLOC_FAIL
+
     strcpy(fileName, arg);
     strcat(fileName, ".as");
     if ((source = fopen(fileName, "r")) == NULL)
     {
         fprintf(stdout, "Error! Failed open file %s\n", fileName);
         free(fileName);
-        exit(1);
+        return (ERR_OPEN_FILE);
     }
     strcpy(fileName, arg);
     strcat(fileName, ".am");
@@ -48,7 +47,7 @@ int preCompile(const char *arg)
     {
         fprintf(stdout, "Error! Failed open file %s\n", fileName);
         free(fileName);
-        exit(1);
+        return (ERR_OPEN_FILE);
     }
 
     /*start reading the file and looking for macros*/
@@ -60,29 +59,26 @@ int preCompile(const char *arg)
             continue;
         if (strcmp(check_for_macro, "mcr") == 0) /*beginning of a macro*/
         {
-            is_macro = 1;
             /*need to increase the size of the macro list*/
             list_of_macros = realloc(list_of_macros, (++number_of_macros) * sizeof(macro));
             if (list_of_macros == NULL)
             {
-                perror("Memory allocation failed.\n");
                 free(fileName);
                 fclose(source);
                 fclose(destination);
-                exit(EXIT_FAILURE);
+                EXIT_ON_MEM_ALLOC_FAIL
             }
 
             list_of_macros[number_of_macros - 1].number_of_lines = 0;
             list_of_macros[number_of_macros - 1].command_line = malloc(INITIAL_COMMAND_LINE_SIZE * sizeof(Command_line));
             if (list_of_macros[number_of_macros - 1].command_line == NULL)
             {
-                fprintf(stdout, "Memory allocation failed.\n");
                 free(list_of_macros);
                 free(fileName);
                 free(line);
                 fclose(source);
                 fclose(destination);
-                exit(EXIT_FAILURE);
+                EXIT_ON_MEM_ALLOC_FAIL
             }
             strcpy(list_of_macros[number_of_macros - 1].macro_name, macro_name);
 
@@ -94,18 +90,16 @@ int preCompile(const char *arg)
 
                 if (list_of_macros[number_of_macros - 1].number_of_lines >= INITIAL_COMMAND_LINE_SIZE)
                 {
-                    // If we've reached the initial size, reallocate memory for command lines
                     list_of_macros[number_of_macros - 1].command_line = realloc(list_of_macros[number_of_macros - 1].command_line,
                                                                                 (list_of_macros[number_of_macros - 1].number_of_lines * 2) * sizeof(Command_line));
                     if (list_of_macros[number_of_macros - 1].command_line == NULL)
                     {
-                        fprintf(stdout, "Memory allocation failed.\n");
                         free(list_of_macros);
                         free(fileName);
                         free(line);
                         fclose(source);
                         fclose(destination);
-                        exit(EXIT_FAILURE);
+                        EXIT_ON_MEM_ALLOC_FAIL
                     }
                 }
                 strcpy(list_of_macros[number_of_macros - 1].command_line[list_of_macros[number_of_macros - 1].number_of_lines], line);
@@ -129,7 +123,6 @@ int preCompile(const char *arg)
             fprintf(destination, "%s\n", line);
     }
 
-    // Free allocated memory
     for (i = 0; i < number_of_macros; i++)
     {
         free(list_of_macros[i].command_line);
