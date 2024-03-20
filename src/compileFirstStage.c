@@ -16,6 +16,7 @@
 #include "compilationStages/labels.h"
 #include "compilationStages/externs.h"
 #include "compilationStages/commands.h"
+#include "compilationStages/updateDataSymbols.h"
 
 /**
  * Compiles the given file.
@@ -96,12 +97,19 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
 
         /* printf("\n%d\n", result);*/
     }
+    /*step 16- if errors stop*/
+    if (error_flag != 0)
+        return error_flag;
+    /*step 17- update data with value IC+100 in symbol table*/
+    free(buffer);
+
+    update_data_symbols(
+        data_model->instruction_count,
+        data_model->symbol_count,
+        data_model->symbols);
 
     printf("finish first stage with error %d and result %d\n", error_flag, result);
 
-    /*step 16- if errors stop*/
-    /*step 17- update data with value IC+100 in symbol table*/
-    free(buffer);
     free(fullFileName);
     fclose(source);
     /* fclose(destination);*/
