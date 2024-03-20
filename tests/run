@@ -1,0 +1,32 @@
+#!/bin/bash
+
+cd "$(dirname "$0")"
+# Find all .as files recursively and iterate over them
+find . -type f -name "*.as" | while IFS= read -r file; do
+    file_name="${file%.*}"
+
+    # Compile the assembly file
+    ../bin/assembler "$file_name" >/dev/null
+
+    # Find the directory containing the current .as file
+    file_dir=$(dirname "$file")
+
+    # Find all expected files related to the current .as file
+    expected_files=$(find "$file_dir" -type f -name "$(basename "$file_name").*.expected")
+
+    for expected_file in $expected_files; do
+        expected_ext=$(basename "$expected_file" .expected)
+
+        # Perform the diff with the corresponding expected file
+        if [ -e "$file_dir/$expected_ext" ]; then
+            diff "$file_dir/$expected_ext" "$expected_file" >/dev/null
+            if [[ $? -eq 0 ]]; then
+                echo "$expected_ext: passed"
+            else
+                echo "$expected_ext: failed"
+            fi
+        else
+            echo "Test failed: $expected_ext does not exist"
+        fi
+    done
+done
