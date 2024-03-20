@@ -18,7 +18,7 @@ int main(int argc, char *argv[])
     if (filesCount < 1)
     {
         fprintf(stdout, "\nNo arguments recieved. Existing.\n");
-        exit(1);
+        exit(0);
     }
     while (filesCount--)
         handleSourceFile(argv[i++]);
@@ -28,13 +28,17 @@ int main(int argc, char *argv[])
 
 void handleSourceFile(char *arg)
 {
+    int result;
 
     /*setupMemoryTables();*/
 
-    preCompile(arg);
+    result = preCompile(arg);
+    if (result != 0)
+        return;
 
-    compile(arg);
-
+    result = compile(arg);
+    if (result != 0)
+        return;
     /* evalCounters();
 
 printSymbolTable();

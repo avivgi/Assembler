@@ -29,7 +29,7 @@ int read_line(FILE *file, char **buffer)
     int c;
     char *temp;
 
-    *buffer = (char *)malloc(MAX_LINE_LENGTH * sizeof(char));
+    *buffer = malloc(MAX_LINE_LENGTH * sizeof(char));
     if (!(*buffer))
         EXIT_ON_MEM_ALLOC_FAIL
 
@@ -38,7 +38,7 @@ int read_line(FILE *file, char **buffer)
         if (c == '\n' || c == EOF)
         {
             (*buffer)[len] = '\0';
-            return 1; // Return 1 if newline or EOF is encountered
+            return 1;
         }
 
         (*buffer)[len++] = (char)c;
@@ -56,16 +56,13 @@ int read_line(FILE *file, char **buffer)
         }
     }
 
-    // Check if any characters were read
     if (len > 0)
     {
         (*buffer)[len] = '\0';
-        return 1; // Return 1 if characters were read
+        return 1;
     }
     else
-    {
-        return 0; // Return 0 if EOF reached and no characters were read
-    }
+        return 0;
 }
 
 /**
@@ -85,6 +82,24 @@ void clean_white_space(char **buffer)
         r++;
     }
     *w = '\0';
+}
+
+/**
+ * @brief Gets the length of a string without white spaces.
+ *
+ * @param s The string to get the length of.
+ * @return Returns the length of the string without white spaces.
+ */
+int string_length_without_white_spaces(const char *s)
+{
+    int length = 0;
+    while (*s)
+    {
+        if (!isspace(*s))
+            length++;
+        s++;
+    }
+    return length;
 }
 
 /**
@@ -244,6 +259,10 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
         (*line_params)[*line_params_count].parsed_params[i] = malloc((MAX_PARAM_SIZE + 1) * sizeof(char));
         if ((*line_params)[*line_params_count].parsed_params[i] == NULL)
         {
+            for (i = 0; i < MAX_PARAM_COUNT; i++)
+            {
+                free((*line_params)[*line_params_count].parsed_params[i]);
+            }
             free(buffer_c);
             EXIT_ON_MEM_ALLOC_FAIL
         }
@@ -309,23 +328,19 @@ int is_number(const char *s, int *result)
     char *end;
     long val;
     if (s == NULL)
-    {
         return 0;
-    }
+
     errno = 0;
     val = strtol(s, &end, 10);
     if (errno == ERANGE || val > INT_MAX || val < INT_MIN)
-    {
         return 0;
-    }
+
     if (end == s)
-    {
         return 0;
-    }
+
     if (*end != '\0')
-    {
         return 0;
-    }
+
     *result = (int)val;
     return 1;
 }

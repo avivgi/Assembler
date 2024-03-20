@@ -54,6 +54,9 @@ int preCompile(const char *arg)
     while (read_line(source, &line))
     {
         is_macro = 0;
+        if (string_length_without_white_spaces(line) < 3)
+            continue;
+
         parse_command(line, check_for_macro, macro_name);
         if (check_for_macro[0] == ';')
             continue;

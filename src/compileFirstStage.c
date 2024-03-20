@@ -32,13 +32,10 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     /*FILE *destination;*/
     /* char first_param[MAX_PARAM_SIZE];*/
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
-    /* step 2 - read line */
 
     if (!fullFileName)
-    {
-        fprintf(stdout, "Failed allocating memory, existing.\n");
-        exit(1);
-    }
+        EXIT_ON_MEM_ALLOC_FAIL
+
     strcpy(fullFileName, filename);
     strcat(fullFileName, ".am");
 
@@ -46,9 +43,10 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     {
         fprintf(stdout, "Error! Failed open file %s\n", fullFileName);
         free(fullFileName);
-        exit(ERR_OPEN_FILE);
+        return (ERR_OPEN_FILE);
     }
 
+    /* step 2 - read line */
     while (read_line(source, &buffer))
     {
 
@@ -103,6 +101,7 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
 
     /*step 16- if errors stop*/
     /*step 17- update data with value IC+100 in symbol table*/
+    free(buffer);
     free(fullFileName);
     fclose(source);
     /* fclose(destination);*/

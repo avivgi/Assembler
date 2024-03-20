@@ -1,0 +1,20 @@
+#!/bin/bash
+
+find . -type f -name "*.as" | while IFS= read -r file; do
+    file_name="${file%.*}"
+    ../bin/assembler "$file_name" > /dev/null
+    expected_files=$(find . -type f -name "$(basename "$file_name").*.expected")
+    for expected_file in $expected_files; do
+        expected_ext=$(basename "$expected_file" .expected)
+        if [ -e "$expected_ext" ]; then
+            diff "$expected_ext" "$expected_ext.expected" > /dev/null
+            if [[ $? -eq 0 ]]; then
+                echo "$expected_ext: passed"
+            else
+                echo "$expected_ext: failed"
+            fi
+        else
+            echo "Test failed: $generated_file does not exist"
+        fi
+    done
+done
