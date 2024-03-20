@@ -9,30 +9,31 @@
 
 typedef struct
 {
+    int index;
     char command_name[COMMAND_LENGTH + 1];
     int command_type;
     char allowed_source_operand_adderss_type;
     char allowed_target_operand_adderss_type;
 } As_Command;
 
-#define AS_COMMAND_LIST           \
-    {                             \
-        {"mov", 2, 0xF, 0x7},     \
-            {"cmp", 2, 0xF, 0xF}, \
-            {"add", 2, 0xF, 0x7}, \
-            {"sub", 2, 0xF, 0x7}, \
-            {"not", 2, 0x0, 0x7}, \
-            {"clr", 2, 0x0, 0x7}, \
-            {"lea", 2, 0x3, 0x7}, \
-            {"inc", 1, 0x0, 0x7}, \
-            {"dec", 1, 0x0, 0x7}, \
-            {"jmp", 1, 0x0, 0x5}, \
-            {"bne", 1, 0x0, 0x5}, \
-            {"red", 1, 0x0, 0x7}, \
-            {"prn", 1, 0x0, 0xF}, \
-            {"jsr", 1, 0x0, 0x5}, \
-            {"rts", 0, 0x0, 0x0}, \
-            {"hlt", 0, 0x0, 0x0}, \
+#define AS_COMMAND_LIST               \
+    {                                 \
+        {0, "mov", 2, 0xF, 0x7},      \
+            {1, "cmp", 2, 0xF, 0xF},  \
+            {2, "add", 2, 0xF, 0x7},  \
+            {3, "sub", 2, 0xF, 0x7},  \
+            {4, "not", 2, 0x0, 0x7},  \
+            {5, "clr", 2, 0x0, 0x7},  \
+            {6, "lea", 2, 0x3, 0x7},  \
+            {7, "inc", 1, 0x0, 0x7},  \
+            {8, "dec", 1, 0x0, 0x7},  \
+            {9, "jmp", 1, 0x0, 0x5},  \
+            {10, "bne", 1, 0x0, 0x5}, \
+            {11, "red", 1, 0x0, 0x7}, \
+            {12, "prn", 1, 0x0, 0xF}, \
+            {13, "jsr", 1, 0x0, 0x5}, \
+            {14, "rts", 0, 0x0, 0x0}, \
+            {15, "hlt", 0, 0x0, 0x0}, \
     }
 
 enum Sentence_type
