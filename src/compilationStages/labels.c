@@ -181,7 +181,7 @@ int parse_string_into_int_array(Data_model *data_model,
         EXIT_ON_MEM_ALLOC_FAIL
 
     /* Tokenize the buffer */
-    printf("Getting buffer_c: %s\n", buffer_c);
+
     token = strtok(buffer_c, delimiters);
     while (token)
     {

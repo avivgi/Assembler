@@ -4,19 +4,28 @@
 #include <string.h>
 #include <errno.h>
 #include <limits.h>
-
+#include <stdio.h>
 #include "printUtils.h"
 
-void print_symbol_table(Symbol **Symbols, size_t *symbol_count)
+void print_symbol_table(Symbol **Symbols, size_t *symbol_count, const char *filename)
 {
+    FILE *dest;
+    char fullFileName[40];
     int i;
     const char *symbolType;
-    printf("\nPrinting symbol table with %lu symbols\n", (long unsigned int)*symbol_count);
+
+    strcpy(fullFileName, filename);
+    strcat(fullFileName, ".symbol");
+
+    dest = fopen(fullFileName, "w");
+
+    printf("\nPrinting symbol table with %zu symbols\n", *symbol_count);
 
     for (i = 0; i < *symbol_count; i++)
     {
-        printf("Symbol name: %-10s\t", (*Symbols)[i].name);
-        printf("Value: %d\t", (*Symbols)[i].value);
+        fprintf(dest, "Symbol name: %-10s\t", (*Symbols)[i].name);
+        fprintf(dest, "Value: %d\t", (*Symbols)[i].value);
+
         switch ((*Symbols)[i].type)
         {
         case UNDEFINED:
@@ -41,16 +50,28 @@ void print_symbol_table(Symbol **Symbols, size_t *symbol_count)
             symbolType = "UNKNOWN";
             break;
         }
-        printf("type: %d: %s\n", (*Symbols)[i].type, symbolType);
+        fprintf(dest, "type: %d: %s\n", (*Symbols)[i].type, symbolType);
     }
+
+    fclose(dest);
 }
 
-void print_word_entry_table(Word_entry *table, size_t size)
+void print_word_entry_table(Word_entry *table, size_t size, const char *filename, const char *table_name)
 {
+    FILE *dest;
+    char fullFileName[40];
     int i;
+
+    strcpy(fullFileName, filename);
+    strcat(fullFileName, ".");
+    strcat(fullFileName, table_name);
+
+    dest = fopen(fullFileName, "w");
+
     for (i = 0; i < size; i++)
     {
-        printf("Address: %d\t", i);
-        printf("Machine Code: %d\n", (table)[i].dValue);
+        fprintf(dest, "Address: %d\t", i);
+        fprintf(dest, "Machine Code: %d\n", (table)[i].dValue);
     }
+    fclose(dest);
 }

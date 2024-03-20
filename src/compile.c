@@ -26,12 +26,12 @@ int compile(const char *filename)
     compileFirstStage(filename, &data_model, &line_params, &line_params_count);
     compileSecondStage();
 
-    print_symbol_table(&data_model.symbols, &data_model.symbol_count);
+    print_symbol_table(&data_model.symbols, &data_model.symbol_count, filename);
 
     printf("\nPrinting instructions_table table with %lu entries\n", (unsigned long)data_model.instruction_count);
-    print_word_entry_table(data_model.instructions_table, data_model.instruction_count);
+    print_word_entry_table(data_model.instructions_table, data_model.instruction_count, filename, "instruction");
 
     printf("\nPrinting data_table table with %lu entries\n", (unsigned long)data_model.data_count);
-    print_word_entry_table(data_model.data_table, data_model.data_count);
+    print_word_entry_table(data_model.data_table, data_model.data_count, filename, "data");
     return 0;
 }
