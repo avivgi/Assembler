@@ -29,22 +29,24 @@ int read_line(FILE *file, char **buffer)
     int c;
     char *temp;
 
-    *buffer = malloc(MAX_LINE_LENGTH);
+    *buffer = (char *)malloc(MAX_LINE_LENGTH * sizeof(char));
     if (!(*buffer))
-    {
-        fprintf(stdout, "Error: Memory reallocation error. Existing\n");
-        free(*buffer);
-        exit(1);
-    }
+        EXIT_ON_MEM_ALLOC_FAIL
 
-    while ((c = fgetc(file)) != EOF && c != '\n')
+    while ((c = fgetc(file)) != EOF)
     {
+        if (c == '\n' || c == EOF)
+        {
+            (*buffer)[len] = '\0';
+            return 1; // Return 1 if newline or EOF is encountered
+        }
+
         (*buffer)[len++] = (char)c;
 
         if (len == size - 1)
         {
             size *= 2;
-            temp = realloc(*buffer, size);
+            temp = realloc(*buffer, size * sizeof(char));
             if (!temp)
             {
                 free(*buffer);
@@ -54,8 +56,16 @@ int read_line(FILE *file, char **buffer)
         }
     }
 
-    (*buffer)[len] = '\0';
-    return (c == EOF) ? 0 : 1;
+    // Check if any characters were read
+    if (len > 0)
+    {
+        (*buffer)[len] = '\0';
+        return 1; // Return 1 if characters were read
+    }
+    else
+    {
+        return 0; // Return 0 if EOF reached and no characters were read
+    }
 }
 
 /**
