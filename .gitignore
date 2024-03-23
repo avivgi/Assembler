@@ -2,3 +2,15 @@ obj/*
 bin/*
 tests/*.am
 .DS_Store
+Assembler.code-workspace
+.vscode/launch.json
+tests/*.symbol
+tests/*.data
+tests/*.instruction
+tests/given/ps.instruction
+tests/given/ps.symbol
+tests/given/ps.data
+tests/test1.am
+tests/runtest
+tests/test1.am
+tests/test2.am
