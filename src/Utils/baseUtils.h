@@ -1,59 +1,9 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "memoryUtils.h"
-#include "global_constants.h"
-#include "datamodel.h"
-/* convert an integer from any base to another base (up to hex) */
-/* use it:  char *result = convertBase(num, fromBase, toBase);*/
-char *convertBase(int num, int fromBase, int toBase)
-{
-    char hexDigits[] = "0123456789ABCDEF";
-    int index = 0, i;
-    char *finalResult = NULL;
-    char *result = (char *)malloc(32 * sizeof(char));
-    if (result == NULL)
-        EXIT_ON_MEM_ALLOC_FAIL
+#ifndef BASEUTILS_H
+#define BASEUTILS_H
 
-    if (num < 0)
-    {
-        result[index++] = '-';
-        num = -num;
-    }
+#include "../datamodel.h"
 
-    if (num == 0)
-    {
-        result[index++] = '0';
-    }
+char *convertBase(int num, int fromBase, int toBase);
+int int_to_word(Word word, int num);
 
-    while (num != 0 && index < 32)
-    {
-        result[index++] = hexDigits[num % toBase];
-        num /= toBase;
-    }
-
-    finalResult = (char *)malloc((index + 1) * sizeof(char));
-    if (!finalResult)
-        EXIT_ON_MEM_ALLOC_FAIL
-
-    /* Copy the result string in reverse order to finalResult */
-    for (i = 0; i < index; i++)
-    {
-        finalResult[i] = result[index - i - 1];
-    }
-
-    finalResult[index] = '\0';
-    free(result);
-    return finalResult;
-}
-
-/**
- * @brief
- *
- * @param num
- * @return Word*
- */
-int int_to_word(Word word, int num)
-{
-
-    return 0;
-}
+#endif
