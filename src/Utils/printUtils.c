@@ -60,7 +60,7 @@ void print_word_entry_table(Word_entry *table, size_t size, const char *filename
 {
     FILE *dest;
     char fullFileName[40];
-    int i;
+    int i, j;
 
     strcpy(fullFileName, filename);
     strcat(fullFileName, ".");
@@ -71,7 +71,20 @@ void print_word_entry_table(Word_entry *table, size_t size, const char *filename
     for (i = 0; i < size; i++)
     {
         fprintf(dest, "Address: %d\t", i);
-        fprintf(dest, "Machine Code: %d\n", (table)[i].dValue);
+        fprintf(dest, "value: %d\t word: ", (table)[i].dValue);
+        for (j = 0; j < 14; j++)
+        {
+            fprintf(dest, "%c", (table)[i].word[j] ? '1' : '0');
+        }
+        fprintf(dest, "\n");
     }
     fclose(dest);
+}
+void print_word(Word word)
+{
+    int i;
+    for (i = 0; i < 14; i++)
+    {
+        printf("%c", word[i] ? '1' : '0');
+    }
 }

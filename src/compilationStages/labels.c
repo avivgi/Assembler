@@ -11,6 +11,9 @@
 #include "../Utils/memoryUtils.h"
 #include "../Utils/stringUtils.h"
 #include "../datamodel.h"
+#include "../Utils/baseUtils.h"
+#include "../Utils/printUtils.h"
+
 char *strdup(const char *s);
 
 /**
@@ -139,7 +142,9 @@ int add_int_array_to_data_table(Data_model *data_model,
 
         for (i = 0; i < array_size; i++)
         {
+            data_entry.address = data_model->data_count;
             data_entry.dValue = arr[i];
+            int_to_word(&data_entry.word, data_entry.dValue);
             push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
         }
         param++;
@@ -240,11 +245,14 @@ int add_char_array_to_assembly(Data_model *data_model,
             continue;
         data_entry.address = data_model->data_count;
         data_entry.dValue = (int)str[i];
+        int_to_word(&data_entry.word, data_entry.dValue);
         push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
         /*(*data_count)++; */
     }
 
     data_entry.dValue = '\0';
+    int_to_word(&data_entry.word, 0);
+
     push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
     /* (*data_count)++;*/
 
