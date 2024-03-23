@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include "memoryUtils.h"
 #include "global_constants.h"
+#include "datamodel.h"
 /* convert an integer from any base to another base (up to hex) */
 /* use it:  char *result = convertBase(num, fromBase, toBase);*/
 char *convertBase(int num, int fromBase, int toBase)
@@ -43,4 +44,16 @@ char *convertBase(int num, int fromBase, int toBase)
     finalResult[index] = '\0';
     free(result);
     return finalResult;
+}
+
+/**
+ * @brief
+ *
+ * @param num
+ * @return Word*
+ */
+int int_to_word(Word word, int num)
+{
+
+    return 0;
 }

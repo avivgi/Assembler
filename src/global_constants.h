@@ -25,6 +25,7 @@
 #define EXTERN_FOUND_AND_ADDED_WITH_ERRORS -13
 #define EXTERN_FOUND_AND_ADDED 0
 #define NOT_EXTERN -15
+#define ERR_NUMBER_OPERANDS_FOR_COMMAND -16
 
 #define false 0
 #define true 1
