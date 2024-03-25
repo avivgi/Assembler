@@ -38,7 +38,7 @@ int preCompile(const char *arg)
     if ((source = fopen(fileName, "r")) == NULL)
     {
         fprintf(stdout, "Error! Failed open file %s\n", fileName);
-        free(fileName);
+        safe_free(1, fileName);
         return (ERR_OPEN_FILE);
     }
     strcpy(fileName, arg);
@@ -46,7 +46,8 @@ int preCompile(const char *arg)
     if ((destination = fopen(fileName, "w+")) == NULL)
     {
         fprintf(stdout, "Error! Failed open file %s\n", fileName);
-        free(fileName);
+        safe_free(1, fileName);
+        fclose(source);
         return (ERR_OPEN_FILE);
     }
 
@@ -66,7 +67,7 @@ int preCompile(const char *arg)
             list_of_macros = realloc(list_of_macros, (++number_of_macros) * sizeof(macro));
             if (list_of_macros == NULL)
             {
-                free(fileName);
+                safe_free(2, fileName, line);
                 fclose(source);
                 fclose(destination);
                 EXIT_ON_MEM_ALLOC_FAIL
@@ -76,9 +77,7 @@ int preCompile(const char *arg)
             list_of_macros[number_of_macros - 1].command_line = malloc(INITIAL_COMMAND_LINE_SIZE * sizeof(Command_line));
             if (list_of_macros[number_of_macros - 1].command_line == NULL)
             {
-                free(list_of_macros);
-                free(fileName);
-                free(line);
+                safe_free(3, fileName, line, list_of_macros);
                 fclose(source);
                 fclose(destination);
                 EXIT_ON_MEM_ALLOC_FAIL
@@ -97,9 +96,7 @@ int preCompile(const char *arg)
                                                                                 (list_of_macros[number_of_macros - 1].number_of_lines * 2) * sizeof(Command_line));
                     if (list_of_macros[number_of_macros - 1].command_line == NULL)
                     {
-                        free(list_of_macros);
-                        free(fileName);
-                        free(line);
+                        safe_free(3, fileName, line, list_of_macros);
                         fclose(source);
                         fclose(destination);
                         EXIT_ON_MEM_ALLOC_FAIL
@@ -126,13 +123,7 @@ int preCompile(const char *arg)
             fprintf(destination, "%s\n", line);
     }
 
-    for (i = 0; i < number_of_macros; i++)
-    {
-        free(list_of_macros[i].command_line);
-    }
-    free(list_of_macros);
-    free(fileName);
-    free(line);
+    safe_free(3, fileName, line, list_of_macros);
     fclose(source);
     fclose(destination);
     return 0;

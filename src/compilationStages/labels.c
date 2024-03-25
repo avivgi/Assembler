@@ -55,14 +55,14 @@ int labels(Data_model *data_model,
     str_len = strlen(label_name);
     if (str_len < 2)
     {
-        free(label_name);
+        safe_free(1, label_name);
         return INFO_NOT_LABAL;
     }
 
     /*detect type LABEL: */
     if ((*line_params)[*line_params_count - 1].parsed_params[0][str_len - 1] != ':')
     {
-        free(label_name);
+        safe_free(1, label_name);
         return INFO_NOT_LABAL;
     }
     label_name[str_len - 1] = '\0';
@@ -102,7 +102,7 @@ int labels(Data_model *data_model,
     }
     strcpy(new_symbol.name, label_name);
     push((void **)&data_model->symbols, &data_model->symbol_count, sizeof(Symbol), &new_symbol);
-    free(label_name);
+    safe_free(1, label_name);
     return LABEL_WAS_FOUND;
 }
 
@@ -136,7 +136,7 @@ int add_int_array_to_data_table(Data_model *data_model,
         if (array_size == 0)
         {
             fprintf(stdout, "Error! Not a number\n");
-            free(arr);
+            safe_free(1, arr);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
 
@@ -149,7 +149,7 @@ int add_int_array_to_data_table(Data_model *data_model,
         }
         param++;
     }
-    free(arr);
+    safe_free(1, arr);
     return 0;
 }
 
@@ -198,7 +198,7 @@ int parse_string_into_int_array(Data_model *data_model,
             else
             {
                 fprintf(stdout, "Variable %s is not an integer or a data label.\n", token);
-                free(buffer_c);
+                safe_free(1, buffer_c);
                 return ERR_VARIABLE_ISNT_INTEGER;
             }
         }
@@ -206,7 +206,7 @@ int parse_string_into_int_array(Data_model *data_model,
         *result_array = realloc(*result_array, (i + 1) * sizeof(int));
         if (*result_array == NULL)
         {
-            free(buffer_c);
+            safe_free(1, buffer_c);
             EXIT_ON_MEM_ALLOC_FAIL
         }
 
@@ -215,8 +215,7 @@ int parse_string_into_int_array(Data_model *data_model,
         token = strtok(NULL, delimiters);
     }
 
-    free(buffer_c);
-
+    safe_free(1, buffer_c);
     return i;
 }
 

@@ -42,7 +42,6 @@ int createDefineSymbol(Data_model *data_model, Line_params **line_params, size_t
         param = strdup((*line_params)[*line_params_count - 1].parsed_params[1]);
         if (param == NULL)
         {
-            free(define_string);
             EXIT_ON_MEM_ALLOC_FAIL
         }
         value = (int)strtol(param, &endptr, 10);
@@ -50,15 +49,13 @@ int createDefineSymbol(Data_model *data_model, Line_params **line_params, size_t
         if ((errno == ERANGE) || (errno != 0 && value == 0))
         {
             fprintf(stdout, "Define parameter isn't a number\n");
-            free(param);
-            free(define_string);
+            safe_free(2, param, define_string);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         if (endptr == (*line_params)[*line_params_count - 1].parsed_params[3])
         {
             fprintf(stdout, "No digits were found\n");
-            free(define_string);
-            free(param);
+            safe_free(2, define_string, param);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         new_symbol.value = value;
@@ -68,7 +65,7 @@ int createDefineSymbol(Data_model *data_model, Line_params **line_params, size_t
     {
         return ERR_LABEL_OR_NAME_IS_TAKEN;
     }
-    free(define_string);
-    free(param);
+    safe_free(2, define_string, param);
+
     return 0;
 }

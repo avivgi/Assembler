@@ -43,13 +43,17 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     if ((source = fopen(fullFileName, "r")) == NULL)
     {
         fprintf(stdout, "Error! Failed open file %s\n", fullFileName);
-        free(fullFileName);
+        safe_free(1, fullFileName);
         return (ERR_OPEN_FILE);
     }
 
     /* step 2 - read line */
     while (read_line(source, &buffer))
     {
+        *line_params = malloc(sizeof(Line_params));
+        if (!(*line_params))
+            EXIT_ON_MEM_ALLOC_FAIL
+        *line_params_count = 0;
 
         parse_line(line_params, line_params_count, buffer, "\t\n\f\r ");
 
@@ -99,19 +103,28 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     }
     /*step 16- if errors stop*/
     if (error_flag != 0)
+    {
+        safe_free_array((void **)(*line_params)[*line_params_count - 1].parsed_params, (*line_params)[*line_params_count - 1].param_count);
+        safe_free(3, *line_params, buffer, fullFileName);
+
+        if (source == NULL)
+            fclose(source);
+
         return error_flag;
+    }
     /*step 17- update data with value IC+100 in symbol table*/
-    free(buffer);
 
     update_data_symbols(
         data_model->instruction_count,
         data_model->symbol_count,
         data_model->symbols);
 
-    printf("finish first stage with error %d and result %d\n", error_flag, result);
+    printf("Finished first stage for %s with error %d and result %d\n", filename, error_flag, result);
 
-    free(fullFileName);
-    fclose(source);
-    /* fclose(destination);*/
+    safe_free_array((void **)(*line_params)[*line_params_count - 1].parsed_params, (*line_params)[*line_params_count - 1].param_count);
+    safe_free(3, *line_params, buffer, fullFileName);
+    if (source == NULL)
+        fclose(source);
+
     return error_flag;
 }

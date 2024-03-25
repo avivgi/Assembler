@@ -37,10 +37,7 @@ int getLabelAddress(char *label, Symbol *symbol_table, int symbol_count)
     for (i = 0; i < symbol_count; i++)
     {
         if (strcmp(symbol_table[i].name, label) == 0)
-        {
-            printf("label %s found at %d\n", label, symbol_table[i].value);
             return symbol_table[i].value;
-        }
     }
     return 0;
 }

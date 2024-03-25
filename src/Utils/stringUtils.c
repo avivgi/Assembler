@@ -49,7 +49,7 @@ int read_line(FILE *file, char **buffer)
             temp = realloc(*buffer, size * sizeof(char));
             if (!temp)
             {
-                free(*buffer);
+                safe_free(1, buffer);
                 EXIT_ON_MEM_ALLOC_FAIL
             }
             *buffer = temp;
@@ -220,19 +220,22 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     char *token;
     int i;
     char *buffer_c = strdup(buffer);
+    *line_params_count = 0;
     if (buffer_c == NULL)
+    {
         EXIT_ON_MEM_ALLOC_FAIL
-
+    }
     /* init new Line Params*/
 
     /* Allocate memory for a new Line_params struct */
-    *line_params = realloc(*line_params, (*line_params_count + 1) * sizeof(Line_params));
-    if (*line_params == NULL)
-    {
-        free(buffer_c);
-        EXIT_ON_MEM_ALLOC_FAIL
-    }
-
+    /*
+        *line_params = realloc(*line_params, (*line_params_count + 1) * sizeof(Line_params));
+        if (*line_params == NULL)
+        {
+            free(buffer_c);
+            EXIT_ON_MEM_ALLOC_FAIL
+        }
+    */
     /* Initialize the new Line_params struct */
     (*line_params)[*line_params_count].line_type = -1;
 
@@ -241,15 +244,7 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
         .parsed_params = malloc(MAX_PARAM_COUNT * sizeof(char *));
     if ((*line_params)[*line_params_count].parsed_params == NULL)
     {
-        free(buffer_c);
-        EXIT_ON_MEM_ALLOC_FAIL
-    }
-
-    /* Allocate memory for param_type array */
-    (*line_params)[*line_params_count].param_type = malloc(MAX_PARAM_COUNT * sizeof(int));
-    if ((*line_params)[*line_params_count].param_type == NULL)
-    {
-        free(buffer_c);
+        safe_free(1, buffer_c);
         EXIT_ON_MEM_ALLOC_FAIL
     }
 
@@ -259,11 +254,8 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
         (*line_params)[*line_params_count].parsed_params[i] = malloc((MAX_PARAM_SIZE + 1) * sizeof(char));
         if ((*line_params)[*line_params_count].parsed_params[i] == NULL)
         {
-            for (i = 0; i < MAX_PARAM_COUNT; i++)
-            {
-                free((*line_params)[*line_params_count].parsed_params[i]);
-            }
-            free(buffer_c);
+            safe_free_array((void **)(*line_params)[*line_params_count].parsed_params, (*line_params)[*line_params_count].param_count);
+            safe_free(1, buffer_c);
             EXIT_ON_MEM_ALLOC_FAIL
         }
     }
@@ -279,7 +271,10 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     }
 
     (*line_params)[*line_params_count].param_count = i - 1;
+    /*
     (*line_params_count)++;
+    */
+    (*line_params_count) = 1;
 
     /*
         printf("Contents of parsed_params:\n ");

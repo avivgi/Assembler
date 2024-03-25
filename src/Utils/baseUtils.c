@@ -43,7 +43,7 @@ char *convertBase(int num, int fromBase, int toBase)
     }
 
     finalResult[index] = '\0';
-    free(result);
+    safe_free(1, result);
     return finalResult;
 }
 

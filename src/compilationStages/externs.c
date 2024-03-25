@@ -74,7 +74,7 @@ int externs(Data_model *data_model, Line_params **line_params, size_t *line_para
         push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
         found_label = true;
         i++;
-        free(label_name);
+        safe_free(1, label_name);
     }
 
     return found_label
