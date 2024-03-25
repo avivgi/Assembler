@@ -31,7 +31,6 @@ typedef struct
 typedef struct
 {
     char **parsed_params;
-    // int *param_type;
     int param_count;
     int line_type;
 } Line_params;
