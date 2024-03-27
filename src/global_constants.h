@@ -26,6 +26,8 @@
 #define EXTERN_FOUND_AND_ADDED 0
 #define NOT_EXTERN -15
 #define ERR_NUMBER_OPERANDS_FOR_COMMAND -16
+#define ERR_INVALID_ADDRESSING -17
+#define ERR_WRONG_TYPE_OF_ADDRESSING -18
 
 #define false 0
 #define true 1
