@@ -10,47 +10,61 @@
 #define MAX_PATH_LENGTH 4096
 #define MAX_FILENAME_LENGTH 256
 
-int compile_assembly_file(char *filename) {
-   pid_t pid = fork();
-   filename[strlen(filename) - 3] = '\0'; // Remove the .as extension
-   if (pid == -1) {
-       // Fork failed
-       perror("fork");
-       return -1;
-   } else if (pid == 0) {
-       // Child process executes the assembler
+int compile_assembly_file(char *filename)
+{
+    pid_t pid = fork();
+    filename[strlen(filename) - 3] = '\0'; // Remove the .as extension
+    if (pid == -1)
+    {
+        // Fork failed
+        perror("fork");
+        return -1;
+    }
+    else if (pid == 0)
+    {
+        // Child process executes the assembler
 
-       //silent stdout
-         freopen("/dev/null", "w", stdout);
-       execl("../bin/assembler", "assembler", filename, (char *)NULL);
-       
-       perror("execl");  // If execl returns, it means an error occurred
-        //resume stdout
+        // silent stdout
+        freopen("/dev/null", "w", stdout);
+        execl("../bin/assembler", "assembler", filename, (char *)NULL);
+
+        perror("execl"); // If execl returns, it means an error occurred
+        // resume stdout
         freopen("/dev/tty", "w", stdout);
-   } else {
-       // Parent process waits for the child to finish
-       int status;
-       waitpid(pid, &status, 0);
+    }
+    else
+    {
+        // Parent process waits for the child to finish
+        int status;
+        waitpid(pid, &status, 0);
 
-       // Check the exit status of the assembler
-       if (WIFEXITED(status)) {
-           int exit_code = WEXITSTATUS(status);
-           if (exit_code == 0) {
-            //    printf("Assembler exited gracefully.\n");
-               return 0;
-           } else {
-               printf("Error by assembler (progrematic) %s crashed with error code: %d\n", filename, exit_code);
-               return 1;
-           }
-       } else if (WIFSIGNALED(status)) {
-           printf("CRASH! %s crashed with error code: %d\n", filename, WTERMSIG(status));
-           return 1;
-       } else {
-           printf("Assembler exited abnormally.\n");
-           return 1;
-       }
-   }
-   return 0;
+        // Check the exit status of the assembler
+        if (WIFEXITED(status))
+        {
+            int exit_code = WEXITSTATUS(status);
+            if (exit_code == 0)
+            {
+                //    printf("Assembler exited gracefully.\n");
+                return 0;
+            }
+            else
+            {
+                printf("Error by assembler (progrematic) %s crashed with error code: %d\n", filename, exit_code);
+                return 1;
+            }
+        }
+        else if (WIFSIGNALED(status))
+        {
+            printf("CRASH! %s crashed with error code: %d\n", filename, WTERMSIG(status));
+            return 1;
+        }
+        else
+        {
+            printf("Assembler exited abnormally.\n");
+            return 1;
+        }
+    }
+    return 0;
 }
 
 int match_pattern(const char *pattern, const char *str)
