@@ -4,11 +4,29 @@
 #include <dirent.h>
 #include <unistd.h>
 #include <sys/wait.h>
-#include <fnmatch.h>
 #include <libgen.h>
 
 #define MAX_PATH_LENGTH 4096
 #define MAX_FILENAME_LENGTH 256
+
+int match_pattern(const char *pattern, const char *str)
+{
+    while (*pattern)
+    {
+        if (*pattern == '*')
+        {
+            if (!*++pattern)
+                return 1; // Pattern ends with '*'; it matches anything.
+            while (*str)
+                if (match_pattern(pattern, str++))
+                    return 1;
+            return 0;
+        }
+        if (*pattern++ != *str++)
+            return 0;
+    }
+    return !*str && !*pattern;
+}
 
 void compile_assembly_file(const char *filename)
 {
@@ -63,7 +81,7 @@ void process_directory(const char *dir_path)
                             struct dirent *file_entry;
                             while ((file_entry = readdir(file_dir)) != NULL)
                             {
-                                if (fnmatch(expected_files_pattern, file_entry->d_name, 0) == 0)
+                                if (match_pattern(expected_files_pattern, file_entry->d_name))
                                 {
                                     char expected_file_path[MAX_PATH_LENGTH];
                                     sprintf(expected_file_path, "%s/%s", dir_path, file_entry->d_name);
@@ -115,7 +133,8 @@ void process_directory(const char *dir_path)
                     }
                 }
             }
-            else if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 && strcmp(entry->d_name, "..") != 0)
+            else if (entry->d_type == DT_DIR && strcmp(entry->d_name, ".") != 0 &&
+                     strcmp(entry->d_name, "..") != 0)
             {
                 char sub_dir_path[MAX_PATH_LENGTH];
                 sprintf(sub_dir_path, "%s/%s", dir_path, entry->d_name);

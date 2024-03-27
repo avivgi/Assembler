@@ -1,9 +1,11 @@
 #ifndef __DATA_MODEL__
 #define __DATA_MODEL__
+#include <stdint.h>
 #include "global_constants.h"
 
 #define BITS_IN_WORD 14
-typedef char Word[BITS_IN_WORD];
+
+typedef int16_t Word;
 
 enum Symbol_type
 {
