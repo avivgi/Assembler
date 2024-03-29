@@ -6,6 +6,7 @@
 #define MAX_PARAM_SIZE 31
 #define MAX_PROGRAM_LENGTH 1000
 #define MAX_PARAM_COUNT 40
+#define NUM_OF_RESIGTERS 8
 
 /*messages*/
 #define LABEL_WAS_FOUND 1
@@ -28,6 +29,7 @@
 #define ERR_NUMBER_OPERANDS_FOR_COMMAND -16
 #define ERR_INVALID_ADDRESSING -17
 #define ERR_WRONG_TYPE_OF_ADDRESSING -18
+#define ERR_MISSING_COMMA -19
 
 #define false 0
 #define true 1
