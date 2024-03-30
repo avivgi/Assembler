@@ -4,6 +4,6 @@
 #include <stdio.h>
 #include "../datamodel.h"
 
-void update_data_symbols(size_t instruction_count, size_t symbol_count, Symbol *symbol_table);
+void update_data_address(Data_model *data_model);
 
 #endif

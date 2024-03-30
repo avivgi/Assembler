@@ -70,7 +70,7 @@ void print_word_entry_table(Word_entry *table, size_t size, const char *filename
 
     for (i = 0; i < size; i++)
     {
-        fprintf(dest, "Address: %d\t", i);
+        fprintf(dest, "Address: %d\t", (table)[i].address);
         fprintf(dest, "value: %d\t word: ", (table)[i].dValue);
         print_word(dest, (table)[i].word);
         fprintf(dest, "\n");

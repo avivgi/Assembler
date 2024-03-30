@@ -103,10 +103,7 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     /*step 17- update data with value IC+100 in symbol table*/
     free(buffer);
 
-    update_data_symbols(
-        data_model->instruction_count,
-        data_model->symbol_count,
-        data_model->symbols);
+    update_data_address(data_model);
 
     printf("finish first stage with error %d and result %d\n", error_flag, result);
 
