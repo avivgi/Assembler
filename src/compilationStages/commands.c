@@ -116,8 +116,13 @@ int commands(Data_model *data_model, Line_params **line_params, size_t *line_par
         int operands_count = 0;
 
         /* break word */
-        operands_count = parse_string_into_strings_array(data_model, &(*line_params)[*line_params_count - 1].parsed_params[word], &arr, ",");
+        operands_count = parse_string_into_string_array(data_model, (*line_params)[*line_params_count - 1].parsed_params[word], &arr, ",");
         /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+
+        if (operands_count == 0)
+        {
+            printf("the if is temporary code");
+        }
 
         if ((*line_params)[*line_params_count - 1].param_count == word + 1) /* both operands in 1 word */
         {
