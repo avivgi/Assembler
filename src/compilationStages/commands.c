@@ -16,19 +16,19 @@
 #include "../Utils/memoryUtils.h"
 
 char *strdup(const char *s);
-
-int check_addressing(Word *word);
+int check_addressing(char **word);
 int write_bits_in_word(Word *word, int write_value, int value_len, int first_index);
+
 int commands(Data_model *data_model, Line_params **line_params, size_t *line_params_count)
 {
     As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     int i;
+    Word_entry instruction_entry;
+    int addressing_target = ERR_INVALID_ADDRESSING;
+    int addressing_source = ERR_INVALID_ADDRESSING;
     int result = ERR_WORD_NOT_FOUND;
     int word = 0;
-    Word_entry instruction_entry;
     instruction_entry.word = 0;
-    int addressing_target;
-    int addressing_source;
 
     /* check if first word is label*/
     if ((*line_params)[*line_params_count - 1].parsed_params[word][strlen((*line_params)[*line_params_count - 1].parsed_params[word]) - 1] == ':')
@@ -67,9 +67,9 @@ int commands(Data_model *data_model, Line_params **line_params, size_t *line_par
         instruction_entry.dValue = result;
 
         fprintf(stdout, "\n@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-        fprintf(stdout, "\nword value before: %s\n", instruction_entry.word);
+        fprintf(stdout, "\nword value before: %d\n", instruction_entry.word);
         write_bits_in_word(&instruction_entry.word, result, 4, 6);
-        fprintf(stdout, "\nword value after: %s\n", instruction_entry.word);
+        fprintf(stdout, "\nword value after: %d\n", instruction_entry.word);
 
         push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &instruction_entry);
     }
@@ -89,7 +89,7 @@ int commands(Data_model *data_model, Line_params **line_params, size_t *line_par
         }
 
         /* check address type */
-        addressing_target = check_addressing((*line_params)[*line_params_count - 1].parsed_params[word]);
+        addressing_target = check_addressing(&(*line_params)[*line_params_count - 1].parsed_params[word]);
         if (addressing_target < 0)
         {
             fprintf(stdout, "Error. Invalid target addressing\n");
@@ -112,6 +112,13 @@ int commands(Data_model *data_model, Line_params **line_params, size_t *line_par
 
     else if (assembler_commands[i].command_type == 2)
     {
+        char **arr = NULL;
+        int operands_count = 0;
+
+        /* break word */
+        operands_count = parse_string_into_strings_array(data_model, &(*line_params)[*line_params_count - 1].parsed_params[word], &arr, ",");
+        /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+
         if ((*line_params)[*line_params_count - 1].param_count == word + 1) /* both operands in 1 word */
         {
             if ((*line_params)[*line_params_count - 1].parsed_params[word][0] == ',' || (*line_params)[*line_params_count - 1].parsed_params[word][strlen((*line_params)[*line_params_count - 1].parsed_params[word]) - 1] == ',' || strchr((*line_params)[*line_params_count - 1].parsed_params[word], ',') != strrchr((*line_params)[*line_params_count - 1].parsed_params[word], ','))
@@ -147,7 +154,7 @@ int commands(Data_model *data_model, Line_params **line_params, size_t *line_par
                 return ERR_MISSING_COMMA;
             }
 
-            addressing_source = check_addressing((*line_params)[*line_params_count - 1].parsed_params[word]);
+            addressing_source = check_addressing(&(*line_params)[*line_params_count - 1].parsed_params[word]);
             if (addressing_source < 0)
             {
                 fprintf(stdout, "Error. Invalid source addressing\n");
@@ -181,15 +188,15 @@ int write_bits_in_word(Word *word, int write_value, int value_len, int first_ind
 
     for (i = value_len; i > 0; i--)
     {
-        temp << 1;
+        temp <<= 1;
         if (write_value & 1u << (i - 1))
         {
             temp = temp | 1u;
         }
     }
 
-    temp << first_index;
-    word = *((int *)word) | temp;
+    temp <<= first_index;
+    *word = (*word) | temp;
 
     return *word;
 }
@@ -200,13 +207,13 @@ int write_bits_in_word(Word *word, int write_value, int value_len, int first_ind
  * @param word a string represent the opernad
  * @return int the type of addressing
  */
-int check_addressing(Word *word)
+int check_addressing(char **word)
 {
     int i;
     char registers[NUM_OF_RESIGTERS][2] = RESIGTERS;
 
     /* immediate  */
-    if (word[0] == '#')
+    if ((*word)[0] == '#')
     {
         /*check if its defined or everything is numbers */
 
@@ -228,7 +235,7 @@ int check_addressing(Word *word)
     /* direct register */
     for (i = 0; i < NUM_OF_RESIGTERS; i++)
     {
-        if (!(strcmp(word, registers[i])))
+        if (!(strcmp(*word, registers[i])))
         {
             return 3;
         }
