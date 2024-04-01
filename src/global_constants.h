@@ -1,6 +1,8 @@
 #ifndef __GLOBAL_CONSTANTS__
 #define __GLOBAL_CONSTANTS__
 
+#define DEBUG 1
+
 /*General*/
 #define MAX_LINE_LENGTH 81
 #define MAX_PARAM_SIZE 31
