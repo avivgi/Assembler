@@ -47,6 +47,7 @@ int labels(Data_model *data_model,
     /* int is_symbol = 0; */
     Symbol new_symbol;
     char *label_name;
+    int result = 0;
 
     label_name = strdup((*line_params)[*line_params_count - 1].parsed_params[0]);
 
@@ -79,8 +80,8 @@ int labels(Data_model *data_model,
     {
         new_symbol.type = DATA;
         new_symbol.value = data_model->data_count;
-
         add_int_array_to_data_table(data_model, (*line_params)[*line_params_count - 1], (int)(*line_params)[*line_params_count - 1].param_count);
+        result = LABEL_DATA_WAS_FOUND;
     }
     /*detect type LABEL: .string */
     else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[1], ".string") == 0)
@@ -88,6 +89,7 @@ int labels(Data_model *data_model,
         new_symbol.type = DATA;
         new_symbol.value = data_model->data_count;
         add_char_array_to_assembly(data_model, *(*line_params + *line_params_count - 1), line_params_count);
+        result = LABEL_DATA_WAS_FOUND;
     }
     else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[1], ".extern") == 0)
     {
@@ -99,11 +101,12 @@ int labels(Data_model *data_model,
         /*fallback to type LABEL: code*/
         new_symbol.type = CODE;
         new_symbol.value = data_model->data_count + CODE_START_ADDRESS;
+        result = LABEL_CODE_WAS_FOUND;
     }
     strcpy(new_symbol.name, label_name);
     push((void **)&data_model->symbols, &data_model->symbol_count, sizeof(Symbol), &new_symbol);
     free(label_name);
-    return LABEL_WAS_FOUND;
+    return result;
 }
 
 /**

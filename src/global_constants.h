@@ -11,7 +11,8 @@
 #define NUM_OF_RESIGTERS 8
 
 /*messages*/
-#define LABEL_WAS_FOUND 1
+#define LABEL_DATA_WAS_FOUND 1
+#define LABEL_CODE_WAS_FOUND 2
 /*Error types*/
 #define ERR_ILLEGAL_COMMA -1
 #define ERR_COMMAND_NOT_FOUND -2

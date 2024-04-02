@@ -63,10 +63,10 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
 
         /* step 5+6  - labels   */
         result = labels(data_model, line_params, line_params_count);
-        if (result == LABEL_WAS_FOUND)
-            continue;
         if (result == ERR_LABEL_OR_NAME_IS_TAKEN)
             error_flag += 1;
+        if (result == LABEL_DATA_WAS_FOUND)
+            continue;
 
         /* step 7 - is data or string */
         /* step 8 - put symbol in symbol table */
