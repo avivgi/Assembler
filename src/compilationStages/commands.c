@@ -15,7 +15,6 @@
 #include "../global_constants.h"
 #include "../Utils/memoryUtils.h"
 
-char *strdup(const char *s);
 int check_addressing(char **word);
 int write_bits_in_word(Word *word, int write_value, int value_len, int first_index);
 
@@ -66,10 +65,7 @@ int commands(Data_model *data_model, Line_params **line_params, size_t *line_par
         instruction_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
         instruction_entry.dValue = result;
 
-        fprintf(stdout, "\n@@@@@@@@@@@@@@@@@@@@@@@@@@\n");
-        fprintf(stdout, "\nword value before: %d\n", instruction_entry.word);
         write_bits_in_word(&instruction_entry.word, result, 4, 6);
-        fprintf(stdout, "\nword value after: %d\n", instruction_entry.word);
 
         push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &instruction_entry);
     }
@@ -200,9 +196,7 @@ int write_bits_in_word(Word *word, int write_value, int value_len, int first_ind
         }
     }
 
-    temp <<= first_index;
-    *word = (*word) | temp;
-
+    *word = (*word) | temp << first_index;
     return *word;
 }
 
