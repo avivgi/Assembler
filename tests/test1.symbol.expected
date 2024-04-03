@@ -1,5 +1,3 @@
-Symbol name: W         	Value: 0	type: 5: EXTERN
-Symbol name: X         	Value: 0	type: 5: EXTERN
 Symbol name: sz        	Value: 2	type: 1: MDEFINE
 Symbol name: MAIN      	Value: 100	type: 2: CODE
 Symbol name: LOOP      	Value: 100	type: 2: CODE
@@ -8,6 +6,4 @@ Symbol name: END       	Value: 100	type: 2: CODE
 Symbol name: len       	Value: 4	type: 1: MDEFINE
 Symbol name: STR       	Value: 100	type: 3: DATA
 Symbol name: LIST      	Value: 107	type: 3: DATA
-Symbol name: LIST2     	Value: 111	type: 3: DATA
-Symbol name: K         	Value: 114	type: 3: DATA
-Symbol name: L3        	Value: 0	type: 5: EXTERN
+Symbol name: K         	Value: 110	type: 3: DATA

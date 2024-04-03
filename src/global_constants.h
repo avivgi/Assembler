@@ -1,14 +1,18 @@
 #ifndef __GLOBAL_CONSTANTS__
 #define __GLOBAL_CONSTANTS__
 
+#define DEBUG 1
+
 /*General*/
 #define MAX_LINE_LENGTH 81
 #define MAX_PARAM_SIZE 31
 #define MAX_PROGRAM_LENGTH 1000
 #define MAX_PARAM_COUNT 40
+#define NUM_OF_RESIGTERS 8
 
 /*messages*/
-#define LABEL_WAS_FOUND 1
+#define LABEL_DATA_WAS_FOUND 1
+#define LABEL_CODE_WAS_FOUND 2
 /*Error types*/
 #define ERR_ILLEGAL_COMMA -1
 #define ERR_COMMAND_NOT_FOUND -2
@@ -26,6 +30,10 @@
 #define EXTERN_FOUND_AND_ADDED 0
 #define NOT_EXTERN -15
 #define ERR_NUMBER_OPERANDS_FOR_COMMAND -16
+#define ERR_INVALID_ADDRESSING -17
+#define ERR_WRONG_TYPE_OF_ADDRESSING -18
+#define ERR_MISSING_COMMA -19
+#define EER_MISSING_ARRAY_INDEX -20
 
 #define false 0
 #define true 1

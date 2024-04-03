@@ -49,25 +49,11 @@ char *convertBase(int num, int fromBase, int toBase)
 
 int int_to_word(Word *word, int num)
 {
-    int i;
-
     if (num > 2048 || num < -2048)
     {
         printf("Number is too large unable to convert.\n");
         return -1;
     }
-    /* If num is negative, convert it to its binary representation using two's complement */
-    if (num < 0)
-    {
-        num = -num;
-        num = ~num + 1;
-    }
-
-    /* Convert num to binary and store it in the array word */
-    for (i = 13; i >= 0; i--)
-    {
-        (*word)[i] = num & 1;
-        num >>= 1;
-    }
+    *word = num;
     return 0;
 }

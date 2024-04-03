@@ -339,3 +339,62 @@ int is_number(const char *s, int *result)
     *result = (int)val;
     return 1;
 }
+/**
+ * @brief Parses a string into a string array.
+ *
+ * This function takes a string buffer and splits it into tokens using the specified delimiters.
+ * Each token is stored in the result_array as a string.
+ *
+ * @param buffer The string buffer to parse.
+ * @param result_array A pointer to the string array where the parsed strings will be stored.
+ * @param delimiters The delimiters used to split the string buffer into tokens.
+ * @return The number of parsed strings.
+ */
+int parse_string_into_string_array(Data_model *data_model, char *buffer, char ***result_array, const char *delimiters)
+{
+    char *token;
+    int i = 0, j = 0;
+    char *buffer_c = NULL;
+
+    /* Duplicate the input buffer */
+    buffer_c = strdup(buffer);
+    if (buffer_c == NULL)
+        EXIT_ON_MEM_ALLOC_FAIL;
+
+    /* Initialize result_array */
+    *result_array = NULL;
+
+    /* Tokenize the buffer */
+    token = strtok(buffer_c, delimiters);
+    while (token)
+    {
+        *result_array = realloc(*result_array, (i + 1) * sizeof(char *));
+        if (*result_array == NULL)
+        {
+            free(buffer_c);
+            for (j = 0; j < i; j++)
+            {
+                free((*result_array)[j]);
+            }
+            EXIT_ON_MEM_ALLOC_FAIL;
+        }
+
+        (*result_array)[i] = strdup(token);
+        if ((*result_array)[i] == NULL)
+        {
+            for (j = 0; j < i; j++)
+            {
+                free((*result_array)[j]);
+            }
+            free(buffer_c);
+            EXIT_ON_MEM_ALLOC_FAIL;
+        }
+
+        i++;
+        token = strtok(NULL, delimiters);
+    }
+
+    free(buffer_c);
+
+    return i;
+}

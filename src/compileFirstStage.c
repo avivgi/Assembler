@@ -67,10 +67,10 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
 
         /* step 5+6  - labels   */
         result = labels(data_model, line_params, line_params_count);
-        if (result == LABEL_WAS_FOUND)
-            continue;
         if (result == ERR_LABEL_OR_NAME_IS_TAKEN)
             error_flag += 1;
+        if (result == LABEL_DATA_WAS_FOUND)
+            continue;
 
         /* step 7 - is data or string */
         /* step 8 - put symbol in symbol table */
@@ -114,10 +114,7 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     }
     /*step 17- update data with value IC+100 in symbol table*/
 
-    update_data_symbols(
-        data_model->instruction_count,
-        data_model->symbol_count,
-        data_model->symbols);
+    update_data_address(data_model);
 
     printf("Finished first stage for %s with error %d and result %d\n", filename, error_flag, result);
 
