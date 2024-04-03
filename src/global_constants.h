@@ -33,6 +33,7 @@
 #define ERR_INVALID_ADDRESSING -17
 #define ERR_WRONG_TYPE_OF_ADDRESSING -18
 #define ERR_MISSING_COMMA -19
+#define EER_MISSING_ARRAY_INDEX -20
 
 #define false 0
 #define true 1
