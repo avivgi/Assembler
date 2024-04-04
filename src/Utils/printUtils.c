@@ -193,7 +193,7 @@ void print_instruction_table(Data_model data_model, const char *filename)
         return;
     }
     /* File header*/
-    fprintf(dest, "%zu %zu\n", data_model.instruction_count, data_model.data_count);
+    fprintf(dest, "%lu %lu\n", (unsigned long)data_model.instruction_count, (unsigned long)data_model.data_count);
 
     print_assembly_line(dest, data_model.instructions_table, data_model.instruction_count);
     print_assembly_line(dest, data_model.data_table, data_model.data_count);

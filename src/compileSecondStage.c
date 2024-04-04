@@ -18,6 +18,7 @@
 #include "compilationStages/externs.h"
 #include "compilationStages/commands.h"
 #include "compilationStages/updateDataSymbols.h"
+char *strdup(const char *s);
 
 /**
  * Compiles the given file.
