@@ -5,3 +5,10 @@ bin/*
 **/*.instruction
 **/*.symbol
 **/*.am
+**/*.data.ob
+**/*.data.ob
+**/*.instruction.ob
+**/*.ob
+**/*.ext
+**/*.ent
+**/*.am

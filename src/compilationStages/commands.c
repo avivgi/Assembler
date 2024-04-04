@@ -320,7 +320,7 @@ int check_addressing(char **word, Data_model *data_model)
         }
     }
 
-    free(num);
+    safe_free(1, num);
     return result;
 }
 

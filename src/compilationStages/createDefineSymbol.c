@@ -59,7 +59,6 @@ int createDefineSymbol(Data_model *data_model, Line_params *line_params, size_t 
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         new_symbol.value = value;
-        printf("Define symbol: %s, value: %d\n", new_symbol.name, new_symbol.value);
         push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
     }
     else

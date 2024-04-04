@@ -91,7 +91,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
         /* step 14 - calculate L , build binary code of first word*/
         /* step 15 - IC = IC + L . goto #2*/
 
-        /*  result = commands(data_model, line_params, line_params_count); */
+        result = commands(data_model, &line_params, line_params_count);
         if (result == ERR_WORD_NOT_FOUND)
         {
             error_flag += 1;
@@ -100,7 +100,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
 
         /* printf("\n%d\n", result);*/
         safe_free_array((void *)(line_params).parsed_params, (line_params).param_count);
-        safe_free(3, line_params, buffer);
+        safe_free(1, buffer);
     }
     update_data_address(data_model);
     printf("Finished first stage for %s with error %d and result %d\n", filename, error_flag, result);
