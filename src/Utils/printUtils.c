@@ -32,8 +32,6 @@ void print_symbol_table(Symbol **Symbols, size_t *symbol_count, const char *file
 
     dest = fopen(fullFileName, "w");
 
-    printf("\nPrinting symbol table with %d symbols\n", (int)*symbol_count);
-
     for (i = 0; i < *symbol_count; i++)
     {
         fprintf(dest, "Symbol name: %-10s\t", (*Symbols)[i].name);
@@ -187,6 +185,7 @@ void print_instruction_table(Data_model data_model, const char *filename)
 {
     FILE *dest;
     char fullFileName[100];
+    strcpy(fullFileName, filename);
     strcat(fullFileName, ".ob");
     if ((dest = fopen(fullFileName, "w")) == NULL)
     {
@@ -216,14 +215,13 @@ void print_instruction_table(Data_model data_model, const char *filename)
 void print_assembly_line(FILE *dest, Word_entry *word_entry, size_t size)
 {
     int i;
-
     for (i = 0; i < size; i++)
     {
         fprintf(dest, "%04d ", word_entry[i].address);
         if (DEBUG)
         {
             print_word(dest, word_entry[i].word);
-            fprintf(dest, " ");
+            fprintf(dest, " %d ", word_entry[i].dValue);
         }
         fprintf(dest, "%s\n", encrypt_word(word_entry[i].word));
     }

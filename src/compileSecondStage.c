@@ -31,7 +31,7 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     int error_flag = 0;
     FILE *source;
     char *buffer = NULL;
-
+    /*    int L = 0; */
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
 
     if (!fullFileName)
@@ -47,27 +47,50 @@ int compileSecondStage(const char *filename, Data_model *data_model)
         return (ERR_OPEN_FILE);
     }
 
+    /*step 1*/
+
+    /* resume this after promoting IC correctly
+    data_model->instruction_count = 0;
+     */
+
     /* step 2 - read line */
     while (read_line(source, &buffer))
     {
+        char *entry_label_name = NULL;
         size_t line_params_count = 0;
-        Line_params **line_params = (Line_params **)calloc(1, sizeof(Line_params *));
+        Line_params line_params;
+        parse_line(&line_params, &line_params_count, buffer, "\t\n\f\r ");
 
-        if (!line_params)
+        /*step 3-4 if first word is label, skip it, if this is .strinf .extern or .data continue*/
+        if (is_label_data_extern_string(line_params, line_params_count) == 1)
+            continue;
+
+        /* step 5-6 is it .entry label? if so mark symbols as entry*/
+        entry_label_name = strdup(get_label_entry(*data_model, line_params, line_params_count));
+        if (entry_label_name == NULL)
             EXIT_ON_MEM_ALLOC_FAIL
 
-        parse_line(*line_params, &line_params_count, buffer, "\t\n\f\r ");
+        if (strcmp(entry_label_name, "0") != 0) /* this is a valid entry symbol */
+        {
+            update_entry_symbol(data_model, entry_label_name);
+            continue;
+        }
+        safe_free(1, entry_label_name);
 
-        free(buffer);
+        /* step 7 update 2nd - 4th operands */
+        result = updateOperands(data_model, &line_params, line_params_count);
+        /*step 8 - IC = IC + L*/
 
-        update_data_address(data_model);
-
-        printf("finish first stage with error %d and result %d\n", error_flag, result);
-
-        free(fullFileName);
-        fclose(source);
-        /* fclose(destination);*/
-        return error_flag;
+        /* resume this when really promoring ic*/
+        /*         if (result == 1)
+                     data_model->instruction_count += 1;
+          */
     }
-    return 0;
+    /*step 9 - free line_params*/
+    if (DEBUG)
+        printf("Finished second stage for %s with error %d and result %d\n", filename, error_flag, result);
+
+    fclose(source);
+    safe_free(2, buffer, fullFileName);
+    return error_flag;
 }

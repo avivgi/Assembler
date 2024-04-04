@@ -32,8 +32,6 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     int result = 0;
     int error_flag = 0;
     FILE *source;
-    /*FILE *destination;*/
-    /* char first_param[MAX_PARAM_SIZE];*/
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
 
     if (!fullFileName)
@@ -102,24 +100,20 @@ int compileFirstStage(const char *filename, Data_model *data_model)
         safe_free_array((void *)(line_params).parsed_params, (line_params).param_count);
         safe_free(1, buffer);
     }
-    update_data_address(data_model);
     printf("Finished first stage for %s with error %d and result %d\n", filename, error_flag, result);
 
     /*step 16- if errors stop*/
     if (error_flag != 0)
     {
-        if (source == NULL)
-        {
-            fclose(source);
-        }
+        fclose(source);
         safe_free(1, fullFileName);
         return error_flag;
     }
-    safe_free(1, fullFileName);
 
     /*step 17- update data with value IC+100 in symbol table*/
-    if (source == NULL)
-        fclose(source);
+    update_data_address(data_model);
 
+    safe_free(1, fullFileName);
+    fclose(source);
     return error_flag;
 }

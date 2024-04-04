@@ -22,4 +22,7 @@ int parse_string_into_int_array(Data_model *data_model,
                                 int **result_array,
                                 const char *delimiters);
 
+int is_label_data_extern_string(Line_params line_params, size_t line_params_count);
+char *get_label_entry(Data_model data_model, Line_params line_params, size_t line_params_count);
+void update_entry_symbol(Data_model *data_model, char *entry_label_name);
 #endif

@@ -368,3 +368,10 @@ int is_define(char *label, Symbol *symbol_table, int symbol_count)
     }
     return EER_LABEL_NOT_MDEFINE;
 }
+
+/* should update operands on 2nd pass. return 0 in success and something else on errors*/
+int updateOperands(Data_model *data_model, Line_params *line_params, size_t line_params_count)
+{
+
+    return 1;
+}

@@ -17,22 +17,23 @@
 int compile(const char *filename)
 {
     Data_model data_model;
+    int result;
 
     initDataModel(&data_model);
 
-    compileFirstStage(filename, &data_model);
-    /* compileSecondStage(filename, &data_model);*/
+    result = compileFirstStage(filename, &data_model);
+    result += compileSecondStage(filename, &data_model);
 
     if (DEBUG)
     {
         print_symbol_table(&data_model.symbols, &data_model.symbol_count, filename);
-
-        printf("\nPrinting instructions_table table with %lu entries\n", (unsigned long)data_model.instruction_count);
         print_word_entry_table(data_model.instructions_table, data_model.instruction_count, filename, "instruction");
-
-        printf("\nPrinting data_table table with %lu entries\n", (unsigned long)data_model.data_count);
         print_word_entry_table(data_model.data_table, data_model.data_count, filename, "data");
+        printf("Result after two phases: %d\n", result);
     }
+
+    /*if result == 0*/
+
     print_instruction_table(data_model, filename);
     print_entry_and_extern_table(data_model, filename, ENTRY);
     print_entry_and_extern_table(data_model, filename, EXTERN);

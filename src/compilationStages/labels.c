@@ -53,6 +53,7 @@ int labels(Data_model *data_model,
 
     if (label_name == NULL)
         EXIT_ON_MEM_ALLOC_FAIL
+
     str_len = strlen(label_name);
     if (str_len < 2)
     {
@@ -253,4 +254,53 @@ int add_char_array_to_assembly(Data_model *data_model,
     data_entry.word = data_entry.dValue;
     push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
     return 0;
+}
+
+int is_label_data_extern_string(Line_params line_params, size_t line_params_count)
+{
+    char *param0 = line_params.parsed_params[0];
+    char *param1 = line_params.parsed_params[1];
+    return strcmp(param0, ".data") == 0 || strcmp(param0, ".string") == 0 || strcmp(param0, ".extern") == 0 ||
+                   strcmp(param1, ".data") == 0 || strcmp(param1, ".string") == 0 || strcmp(param1, ".extern") == 0
+               ? 1
+               : 0;
+}
+int is_label_entry(Line_params line_params, size_t line_params_count)
+{
+    char *param0 = line_params.parsed_params[0];
+    char *param1 = line_params.parsed_params[1];
+
+    return strcmp(param0, ".entry") == 0 || strcmp(param1, ".entry") == 0
+               ? 1
+               : 0;
+}
+
+char *get_label_entry(Data_model data_model, Line_params line_params, size_t line_params_count)
+{
+    int param;
+    char *param0 = line_params.parsed_params[0];
+    char *param1 = line_params.parsed_params[1];
+
+    if (strcmp(param0, ".entry") == 0)
+        param = 0;
+    else if (strcmp(param1, ".entry") == 0)
+        param = 1;
+    else
+        return "0";
+
+    if (param == line_params_count)
+        return "0";
+
+    return isLabelExist(line_params.parsed_params[param + 1], data_model.symbols, data_model.symbol_count) ? line_params.parsed_params[param + 1] : "0";
+}
+
+void update_entry_symbol(Data_model *data_model, char *entry_label_name)
+{
+    size_t i;
+    for (i = 0; i < data_model->symbol_count; i++)
+    {
+        if (strcmp(data_model->symbols[i].name, entry_label_name) == 0)
+            data_model->symbols[i]
+                .type = ENTRY;
+    }
 }
