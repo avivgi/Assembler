@@ -196,7 +196,7 @@ int parse_string_into_int_array(Data_model *data_model,
         if (!is_number(token, &temp)) /* Check if the token is a number */
         {
             /* Check if the token is a label */
-            if (isLabelExist(token, data_model->symbols, data_model->symbol_count))
+            if (isLabelExist(token, data_model->symbols, data_model->symbol_count) >= 0)
                 temp = getLabelAddress(token, data_model->symbols, data_model->symbol_count);
             else
             {
