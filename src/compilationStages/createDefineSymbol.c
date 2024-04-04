@@ -18,7 +18,7 @@ char *strdup(const char *s);
  * @param buffer The buffer to parse.
  * @return 0 if the symbol was created, an error code otherwise.
  */
-int createDefineSymbol(Data_model *data_model, Line_params **line_params, size_t *line_params_count, char **buffer)
+int createDefineSymbol(Data_model *data_model, Line_params *line_params, size_t line_params_count, char **buffer)
 {
     Symbol new_symbol;
     int value;
@@ -29,17 +29,17 @@ int createDefineSymbol(Data_model *data_model, Line_params **line_params, size_t
     clean_white_space(&define_string);
 
     /*redo parsing of last line, now with = as a seperator*/
-    (*line_params_count)--;
-    parse_line(line_params, line_params_count, define_string, "=");
+    (line_params_count)--;
+    parse_line(line_params, &line_params_count, define_string, "=");
 
     /* printf("###%s### -> %s\n", (*line_params)[*line_params_count - 1].parsed_params[0], (*line_params)[*line_params_count - 1].parsed_params[1]);*/
 
-    if ((legalLabel((*line_params)[*line_params_count - 1].parsed_params[0], &data_model->symbols, data_model->symbol_count)) == 0)
+    if ((legalLabel((*line_params).parsed_params[0], &data_model->symbols, data_model->symbol_count)) == 0)
     {
         new_symbol.type = MDEFINE;
-        strcpy(new_symbol.name, (*line_params)[*line_params_count - 1].parsed_params[0]);
+        strcpy(new_symbol.name, (*line_params).parsed_params[0]);
 
-        param = strdup((*line_params)[*line_params_count - 1].parsed_params[1]);
+        param = strdup((*line_params).parsed_params[1]);
         if (param == NULL)
         {
             EXIT_ON_MEM_ALLOC_FAIL
@@ -52,13 +52,14 @@ int createDefineSymbol(Data_model *data_model, Line_params **line_params, size_t
             safe_free(2, param, define_string);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
-        if (endptr == (*line_params)[*line_params_count - 1].parsed_params[3])
+        if (endptr == (*line_params).parsed_params[3])
         {
             fprintf(stdout, "No digits were found\n");
             safe_free(2, define_string, param);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         new_symbol.value = value;
+        printf("Define symbol: %s, value: %d\n", new_symbol.name, new_symbol.value);
         push((void **)&(data_model->symbols), &(data_model->symbol_count), sizeof(Symbol), &new_symbol);
     }
     else

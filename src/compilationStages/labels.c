@@ -29,8 +29,8 @@ char *strdup(const char *s);
  * @return 0 if the symbol was created, an error code otherwise.
  */
 int labels(Data_model *data_model,
-           Line_params **line_params,
-           size_t *line_params_count)
+           Line_params *line_params,
+           size_t line_params_count)
 {
     /*
     Symbol can be:
@@ -49,7 +49,7 @@ int labels(Data_model *data_model,
     char *label_name;
     int result = 0;
 
-    label_name = strdup((*line_params)[*line_params_count - 1].parsed_params[0]);
+    label_name = strdup((*line_params).parsed_params[0]);
 
     if (label_name == NULL)
         EXIT_ON_MEM_ALLOC_FAIL
@@ -61,7 +61,7 @@ int labels(Data_model *data_model,
     }
 
     /*detect type LABEL: */
-    if ((*line_params)[*line_params_count - 1].parsed_params[0][str_len - 1] != ':')
+    if ((*line_params).parsed_params[0][str_len - 1] != ':')
     {
         safe_free(1, label_name);
         return INFO_NOT_LABAL;
@@ -76,22 +76,22 @@ int labels(Data_model *data_model,
     /*check if data or string*/
     /*detect type LABEL: .data */
 
-    if (strcmp((*line_params)[*line_params_count - 1].parsed_params[1], ".data") == 0)
+    if (strcmp((*line_params).parsed_params[1], ".data") == 0)
     {
         new_symbol.type = DATA;
         new_symbol.value = data_model->data_count;
-        add_int_array_to_data_table(data_model, (*line_params)[*line_params_count - 1], (int)(*line_params)[*line_params_count - 1].param_count);
+        add_int_array_to_data_table(data_model, (*line_params), (int)(*line_params).param_count);
         result = LABEL_DATA_WAS_FOUND;
     }
     /*detect type LABEL: .string */
-    else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[1], ".string") == 0)
+    else if (strcmp((*line_params).parsed_params[1], ".string") == 0)
     {
         new_symbol.type = DATA;
         new_symbol.value = data_model->data_count;
-        add_char_array_to_assembly(data_model, *(*line_params + *line_params_count - 1), line_params_count);
+        add_char_array_to_assembly(data_model, (*line_params), line_params_count);
         result = LABEL_DATA_WAS_FOUND;
     }
-    else if (strcmp((*line_params)[*line_params_count - 1].parsed_params[1], ".extern") == 0)
+    else if (strcmp((*line_params).parsed_params[1], ".extern") == 0)
     {
         printf("INFO: Label (%s) before .extern. Ignoring this label. Continue.\n", label_name);
         return INFO_LABEL_BEFORE_EXTERN;
@@ -147,7 +147,7 @@ int add_int_array_to_data_table(Data_model *data_model,
         {
             data_entry.address = data_model->data_count;
             data_entry.dValue = arr[i];
-            int_to_word(&data_entry.word, data_entry.dValue);
+            data_entry.word = data_entry.dValue;
             push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
         }
         param++;
@@ -161,7 +161,6 @@ int add_int_array_to_data_table(Data_model *data_model,
  *
  * This function takes a string buffer and splits it into tokens using the specified delimiters.
  * Each token is later converted to an integer and stored in the result_array.
- * If a token is not a valid integer, it checks if it is a defined label and retrieves its address.
  * If the token is neither a valid integer nor a defined label, an error is returned.
  *
  * @param buffer The string buffer to parse.
@@ -188,15 +187,13 @@ int parse_string_into_int_array(Data_model *data_model,
     if (buffer_c == NULL)
         EXIT_ON_MEM_ALLOC_FAIL
 
-    /* Tokenize the buffer */
-
     token = strtok(buffer_c, delimiters);
     while (token)
     {
         if (!is_number(token, &temp)) /* Check if the token is a number */
         {
             /* Check if the token is a label */
-            if (isLabelExist(token, data_model->symbols, data_model->symbol_count))
+            if (isLabelExist(token, data_model->symbols, data_model->symbol_count, UNDEFINED))
                 temp = getLabelAddress(token, data_model->symbols, data_model->symbol_count);
             else
             {
@@ -233,7 +230,7 @@ int parse_string_into_int_array(Data_model *data_model,
  */
 int add_char_array_to_assembly(Data_model *data_model,
                                Line_params line_params,
-                               size_t *line_params_count)
+                               size_t line_params_count)
 {
     int i;
     Word_entry data_entry;
@@ -247,16 +244,13 @@ int add_char_array_to_assembly(Data_model *data_model,
             continue;
         data_entry.address = data_model->data_count;
         data_entry.dValue = (int)str[i];
-        int_to_word(&data_entry.word, data_entry.dValue);
+        data_entry.word = data_entry.dValue;
         push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
-        /*(*data_count)++; */
     }
 
+    data_entry.address = data_model->data_count;
     data_entry.dValue = '\0';
-    int_to_word(&data_entry.word, 0);
-
+    data_entry.word = data_entry.dValue;
     push((void **)&data_model->data_table, &data_model->data_count, sizeof(Word_entry), &data_entry);
-    /* (*data_count)++;*/
-
     return 0;
 }

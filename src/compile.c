@@ -18,13 +18,10 @@ int compile(const char *filename)
 {
     Data_model data_model;
 
-    Line_params *line_params = NULL;
-    size_t line_params_count = 0;
-
     initDataModel(&data_model);
 
-    compileFirstStage(filename, &data_model, &line_params, &line_params_count);
-    compileSecondStage();
+    compileFirstStage(filename, &data_model);
+    /* compileSecondStage(filename, &data_model);*/
 
     if (DEBUG)
     {

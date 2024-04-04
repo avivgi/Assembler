@@ -215,7 +215,7 @@ int parse_command(char *buffer, char *command, char *first_param)
  * @param delimiters The delimiters to use for parsing.
  * @return Returns 0 for success.
  */
-int parse_line(Line_params **line_params, size_t *line_params_count, const char *buffer, char *delimitors)
+int parse_line(Line_params *line_params, size_t *line_params_count, const char *buffer, char *delimitors)
 {
     char *token;
     int i;
@@ -237,12 +237,11 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
         }
     */
     /* Initialize the new Line_params struct */
-    (*line_params)[*line_params_count].line_type = -1;
+    (*line_params).line_type = -1;
 
     /* Allocate memory for parsed_params array of char pointers */
-    (*line_params)[*line_params_count]
-        .parsed_params = malloc(MAX_PARAM_COUNT * sizeof(char *));
-    if ((*line_params)[*line_params_count].parsed_params == NULL)
+    (*line_params).parsed_params = malloc(MAX_PARAM_COUNT * sizeof(char *));
+    if ((*line_params).parsed_params == NULL)
     {
         safe_free(1, buffer_c);
         EXIT_ON_MEM_ALLOC_FAIL
@@ -251,10 +250,10 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     /* Allocate memory for each char pointer in parsed_params */
     for (i = 0; i < MAX_PARAM_COUNT; i++)
     {
-        (*line_params)[*line_params_count].parsed_params[i] = malloc((MAX_PARAM_SIZE + 1) * sizeof(char));
-        if ((*line_params)[*line_params_count].parsed_params[i] == NULL)
+        (*line_params).parsed_params[i] = malloc((MAX_PARAM_SIZE + 1) * sizeof(char));
+        if ((*line_params).parsed_params[i] == NULL)
         {
-            safe_free_array((void **)(*line_params)[*line_params_count].parsed_params, (*line_params)[*line_params_count].param_count);
+            safe_free_array((void **)(*line_params).parsed_params, (*line_params).param_count);
             safe_free(1, buffer_c);
             EXIT_ON_MEM_ALLOC_FAIL
         }
@@ -263,14 +262,14 @@ int parse_line(Line_params **line_params, size_t *line_params_count, const char 
     /* end of init new Line Params*/
     i = 0;
     token = strtok(buffer_c, delimitors);
-    snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
+    snprintf((*line_params).parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
     while (token != NULL)
     {
         token = strtok(NULL, delimitors);
-        snprintf((*line_params)[*line_params_count].parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
+        snprintf((*line_params).parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
     }
 
-    (*line_params)[*line_params_count].param_count = i - 1;
+    (*line_params).param_count = i - 1;
     /*
     (*line_params_count)++;
     */

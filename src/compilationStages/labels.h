@@ -6,8 +6,8 @@
 #include "../datamodel.h"
 
 int labels(Data_model *data_model,
-           Line_params **line_params,
-           size_t *line_params_count);
+           Line_params *line_params,
+           size_t line_params_count);
 
 int add_int_array_to_data_table(Data_model *data_model,
                                 Line_params line_params,
@@ -15,7 +15,7 @@ int add_int_array_to_data_table(Data_model *data_model,
 
 int add_char_array_to_assembly(Data_model *data_model,
                                Line_params line_params,
-                               size_t *line_params_count);
+                               size_t line_params_count);
 
 int parse_string_into_int_array(Data_model *data_model,
                                 char *buffer,

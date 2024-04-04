@@ -17,6 +17,7 @@
 #include "compilationStages/externs.h"
 #include "compilationStages/commands.h"
 #include "compilationStages/updateDataSymbols.h"
+#include "Utils/printUtils.h"
 
 /**
  * Compiles the given file.
@@ -24,8 +25,9 @@
  * @param filename The name of the file to compile.
  * @return Returns an integer indicating the success or failure of the compilation process.
  */
-int compileFirstStage(const char *filename, Data_model *data_model, Line_params **line_params, size_t *line_params_count)
+int compileFirstStage(const char *filename, Data_model *data_model)
 {
+
     char *buffer = NULL;
     int result = 0;
     int error_flag = 0;
@@ -50,23 +52,20 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
     /* step 2 - read line */
     while (read_line(source, &buffer))
     {
-        *line_params = malloc(sizeof(Line_params));
-        if (!(*line_params))
-            EXIT_ON_MEM_ALLOC_FAIL
-        *line_params_count = 0;
-
-        parse_line(line_params, line_params_count, buffer, "\t\n\f\r ");
+        size_t line_params_count = 0;
+        Line_params line_params;
+        parse_line(&line_params, &line_params_count, buffer, "\t\n\f\r ");
 
         /* step 3 && 4 - if type== define put define in mdefine table*/
-        if (strcmp((*line_params)[*line_params_count - 1].parsed_params[0], ".define") == 0)
+        if (strcmp((line_params).parsed_params[0], ".define") == 0)
         {
-            result = createDefineSymbol(data_model, line_params, line_params_count, &buffer);
+            result = createDefineSymbol(data_model, &line_params, line_params_count, &buffer);
             error_flag += result;
             continue;
         }
 
         /* step 5+6  - labels   */
-        result = labels(data_model, line_params, line_params_count);
+        result = labels(data_model, &line_params, line_params_count);
         if (result == ERR_LABEL_OR_NAME_IS_TAKEN)
             error_flag += 1;
         if (result == LABEL_DATA_WAS_FOUND)
@@ -79,7 +78,7 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
         /* step 11 - if extern put in etx table*/
         /* step 12 - if symbol put in symbol table*/
 
-        result = externs(data_model, line_params, line_params_count);
+        result = externs(data_model, &line_params, line_params_count);
 
         if (result == EXTERN_FOUND_AND_ADDED_WITH_ERRORS)
             error_flag += 1;
@@ -92,7 +91,7 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
         /* step 14 - calculate L , build binary code of first word*/
         /* step 15 - IC = IC + L . goto #2*/
 
-        result = commands(data_model, line_params, line_params_count);
+        /*  result = commands(data_model, line_params, line_params_count); */
         if (result == ERR_WORD_NOT_FOUND)
         {
             error_flag += 1;
@@ -100,26 +99,25 @@ int compileFirstStage(const char *filename, Data_model *data_model, Line_params 
         }
 
         /* printf("\n%d\n", result);*/
+        safe_free_array((void *)(line_params).parsed_params, (line_params).param_count);
+        safe_free(3, line_params, buffer);
     }
+    update_data_address(data_model);
+    printf("Finished first stage for %s with error %d and result %d\n", filename, error_flag, result);
+
     /*step 16- if errors stop*/
     if (error_flag != 0)
     {
-        safe_free_array((void **)(*line_params)[*line_params_count - 1].parsed_params, (*line_params)[*line_params_count - 1].param_count);
-        safe_free(3, *line_params, buffer, fullFileName);
-
         if (source == NULL)
+        {
             fclose(source);
-
+        }
+        safe_free(1, fullFileName);
         return error_flag;
     }
+    safe_free(1, fullFileName);
+
     /*step 17- update data with value IC+100 in symbol table*/
-
-    update_data_address(data_model);
-
-    printf("Finished first stage for %s with error %d and result %d\n", filename, error_flag, result);
-
-    safe_free_array((void **)(*line_params)[*line_params_count - 1].parsed_params, (*line_params)[*line_params_count - 1].param_count);
-    safe_free(3, *line_params, buffer, fullFileName);
     if (source == NULL)
         fclose(source);
 

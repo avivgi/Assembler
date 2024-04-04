@@ -10,14 +10,15 @@
  * @param symbol_count The number of symbols in the symbol table.
  * @return 1 if the label exists in the symbol table, 0 otherwise.
  */
-int isLabelExist(char *label, Symbol *symbol_table, int symbol_count)
+
+int isLabelExist(char *label, Symbol *symbol_table, int symbol_count, enum Symbol_type symbol_type)
 {
     int i;
     for (i = 0; i < symbol_count; i++)
     {
         if (strcmp(symbol_table[i].name, label) == 0)
         {
-            return 1;
+            return (enum Symbol_type)symbol_table[i].type == symbol_type || symbol_type == UNDEFINED ? 1 : 0;
         }
     }
     return 0;

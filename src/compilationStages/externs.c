@@ -27,7 +27,7 @@ char *strdup(const char *s);
  * @param data_count The number of data.
  * @return 0 if the symbol was created, an error code otherwise.
  */
-int externs(Data_model *data_model, Line_params **line_params, size_t *line_params_count)
+int externs(Data_model *data_model, Line_params *line_params, size_t *line_params_count)
 {
 
     /*
@@ -43,9 +43,9 @@ int externs(Data_model *data_model, Line_params **line_params, size_t *line_para
     Bool found_label = false;
     int i = 0;
 
-    while (i < (*line_params)[*line_params_count - 1].param_count && result == -1)
+    while (i < (*line_params).param_count && result == -1)
     {
-        if (strcmp((*line_params)[*line_params_count - 1].parsed_params[i], ".extern") == 0)
+        if (strcmp((*line_params).parsed_params[i], ".extern") == 0)
             result = i;
         i++;
     }
@@ -54,9 +54,9 @@ int externs(Data_model *data_model, Line_params **line_params, size_t *line_para
 
     i = result + 1;
     /* found an .extern, now loading all labels after it*/
-    while (i < (*line_params)[*line_params_count - 1].param_count)
+    while (i < (*line_params).param_count)
     {
-        label_name = strdup((*line_params)[*line_params_count - 1].parsed_params[i]);
+        label_name = strdup((*line_params).parsed_params[i]);
         if (label_name == NULL)
             EXIT_ON_MEM_ALLOC_FAIL
 
