@@ -58,7 +58,7 @@ typedef struct
     size_t symbol_count;
 } Data_model;
 
-int isLabelExist(char *label, Symbol *symbol_table, int symbol_count, enum Symbol_type symbol_type);
+int isLabelExist(char *label, Symbol *symbol_table, int symbol_count);
 int getLabelAddress(char *label, Symbol *symbol_table, int symbol_count);
 void initDataModel(Data_model *data_model);
 

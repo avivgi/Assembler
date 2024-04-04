@@ -11,17 +11,17 @@
  * @return 1 if the label exists in the symbol table, 0 otherwise.
  */
 
-int isLabelExist(char *label, Symbol *symbol_table, int symbol_count, enum Symbol_type symbol_type)
+int isLabelExist(char *label, Symbol *symbol_table, int symbol_count)
 {
     int i;
     for (i = 0; i < symbol_count; i++)
     {
         if (strcmp(symbol_table[i].name, label) == 0)
         {
-            return (enum Symbol_type)symbol_table[i].type == symbol_type || symbol_type == UNDEFINED ? 1 : 0;
+            return i;
         }
     }
-    return 0;
+    return EER_LABEL_NOT_FOUND;
 }
 
 /**

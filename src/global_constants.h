@@ -34,6 +34,9 @@
 #define ERR_WRONG_TYPE_OF_ADDRESSING -18
 #define ERR_MISSING_COMMA -19
 #define EER_MISSING_ARRAY_INDEX -20
+#define SYNTAX_ERROR -21
+#define EER_LABEL_NOT_FOUND -22
+#define EER_LABEL_NOT_MDEFINE -23
 
 #define false 0
 #define true 1
