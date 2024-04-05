@@ -297,8 +297,6 @@ char *get_label_entry(Data_model data_model, Line_params line_params, size_t lin
     if (param == line_params_count)
         return "0";
 
-    printf("param + 1: %s\n", line_params.parsed_params[param + 1]);
-    printf("%d\n", isLabelExist(line_params.parsed_params[param + 1], data_model.symbols, data_model.symbol_count));
     return isLabelExist(line_params.parsed_params[param + 1], data_model.symbols, data_model.symbol_count) != EER_LABEL_NOT_FOUND ? line_params.parsed_params[param + 1] : "0";
 }
 
