@@ -56,6 +56,7 @@ typedef struct
     size_t externals_count;
     Symbol *symbols;
     size_t symbol_count;
+    int line_number;
 } Data_model;
 
 int isLabelExist(char *label, Symbol *symbol_table, int symbol_count);

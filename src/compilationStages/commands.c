@@ -46,8 +46,8 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
     }
     if (result == ERR_WORD_NOT_FOUND)
     {
-        fprintf(stdout, "Error. Didn't find command name: %s\n",
-                (*line_params).parsed_params[word]);
+        fprintf(stdout, "Error. Didn't find command name: %s in line %d\n",
+                (*line_params).parsed_params[word], data_model->line_number);
         return ERR_WORD_NOT_FOUND;
     }
 
@@ -57,7 +57,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
     {
         if ((*line_params).param_count != word)
         {
-            fprintf(stdout, "Error. Number of opperands is illegal in line %lu\n", line_params_count); /* line number in am file */
+            fprintf(stdout, "Error. Number of opperands is illegal in line %d\n", data_model->line_number); /* line number in am file */
             return ERR_NUMBER_OPERANDS_FOR_COMMAND;
         }
 
@@ -102,7 +102,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
                         else
                         {
                             /* error */
-                            printf("Syntax Error. Index in word+1 but word+2 isn't just \"]\" \n");
+                            fprintf(stderr, "Syntax Error. Index in word+1 but word+2 isn't just \"]\" in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -118,7 +118,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
                     else
                     {
                         /* error */
-                        printf("Syntax Error. Index in word but word+1 isn't just \"]\" \n");
+                        fprintf(stderr, "Syntax Error. Index in word but word+1 isn't just \"]\" in line %d\n", data_model->line_number);
                         return SYNTAX_ERROR;
                     }
                 }
@@ -126,7 +126,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
             else
             {
                 /* syntax error number of operands / unnecessary white chars  */
-                printf("Syntax Error. There are illegal white chars\n");
+                fprintf(stderr, "Syntax Error. There are illegal white chars in line %d\n", data_model->line_number);
                 return SYNTAX_ERROR;
             }
         }
@@ -140,7 +140,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
 
         if (!(assembler_commands[result].allowed_target_operand_adderss_type & 1u << addressing_target))
         {
-            fprintf(stdout, "Error. Wrong type of addressing of target\n");
+            fprintf(stdout, "Error. Wrong type of addressing of target in line %d\n", data_model->line_number);
             return ERR_WRONG_TYPE_OF_ADDRESSING;
         }
 
@@ -167,14 +167,14 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
 
         if (operands_count == 0)
         {
-            printf("the if is temporary code");
+            fprintf(stderr, "the if is temporary code in line %d\n", data_model->line_number);
         }
 
         if ((*line_params).param_count == word + 1) /* both operands in 1 word */
         {
             if ((*line_params).parsed_params[word][0] == ',' || (*line_params).parsed_params[word][strlen((*line_params).parsed_params[word]) - 1] == ',' || strchr((*line_params).parsed_params[word], ',') != strrchr((*line_params).parsed_params[word], ','))
             {
-                fprintf(stdout, "Error. Number of opperands is illegal\n");
+                fprintf(stdout, "Error. Number of opperands is illegal in line %d\n", data_model->line_number);
                 return ERR_NUMBER_OPERANDS_FOR_COMMAND;
             }
 
@@ -186,7 +186,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
             {
                 if ((*line_params).parsed_params[word + 1][0] != ',')
                 {
-                    fprintf(stdout, "Error. Missing comma between operands\n");
+                    fprintf(stdout, "Error. Missing comma between operands in line %d\n", data_model->line_number);
                     return ERR_MISSING_COMMA;
                 }
                 else /* comma with second operand legally */
@@ -201,20 +201,20 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         {
             if (!(strcmp((*line_params).parsed_params[word + 1], ",")))
             {
-                fprintf(stdout, "Error. Missing comma between operands\n");
+                fprintf(stdout, "Error. Missing comma between operands in line %d\n", data_model->line_number);
                 return ERR_MISSING_COMMA;
             }
 
             addressing_source = check_addressing(&(*line_params).parsed_params[word], data_model);
             if (addressing_source < 0)
             {
-                fprintf(stdout, "Error. Invalid source addressing\n");
+                fprintf(stdout, "Error. Invalid source addressing in line %d\n", data_model->line_number);
                 return ERR_INVALID_ADDRESSING;
             }
 
             if (!(assembler_commands[result].allowed_source_operand_adderss_type & 1u << addressing_source))
             {
-                fprintf(stdout, "Error. Wrong type of source addressing of target\n");
+                fprintf(stdout, "Error. Wrong type of source addressing of target in line %d\n", data_model->line_number);
                 return ERR_WRONG_TYPE_OF_ADDRESSING;
             }
         }
@@ -277,7 +277,7 @@ int check_addressing(char **word, Data_model *data_model)
         }
         else
         {
-            printf("Immediate addressing is missing a number\n");
+            fprintf(stderr, "Immediate addressing is missing a number in line %d\n", data_model->line_number);
             result = ERR_INVALID_ADDRESSING;
         }
 
@@ -358,16 +358,16 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
     {
         if (is_number((*word) + 1, num))
         {
-            printf("0 number is: %d\n", *num);
+            fprintf(stderr, "0 number is: %d\n", *num);
         }
         else if ((i = is_define((*word) + 1, data_model->symbols, data_model->symbol_count)) >= 0)
         {
             *num = data_model->symbols[i].value;
-            printf("0 number is define: %d\n", *num);
+            fprintf(stderr, "0 number is define: %d\n", *num);
         }
         else
         {
-            printf("Error in addressing type 0\n");
+            fprintf(stderr, "Error in addressing type 0\n");
             safe_free(1, num);
             return result;
         }
@@ -382,7 +382,7 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
     /* 1 direct */
     else if (addressing == 1)
     {
-        printf("adding blank word\n");
+        fprintf(stderr, "adding blank word\n");
         operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
         operand_entry.dValue = -1;
         /* setting the ARE bits to 11 */
@@ -421,16 +421,16 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
 
         if (is_number(index, num))
         {
-            printf("2 index is: %d\n", *num);
+            fprintf(stderr, "2 index is: %d\n", *num);
         }
         else if ((i = is_define(index, data_model->symbols, data_model->symbol_count)) >= 0)
         {
             *num = data_model->symbols[i].value;
-            printf("2 index is define: %d\n", *num);
+            fprintf(stderr, "2 index is define: %d\n", *num);
         }
         else
         {
-            printf("Error in addressing type 2\n");
+            fprintf(stderr, "Error in addressing type 2 in line %d\n", data_model->line_number);
             safe_free(2, num, index);
             return result;
         }
@@ -457,7 +457,7 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
                 {
                     if (register_type == 0) /* register_type == 0 target*/
                     {
-                        printf("source register is: %d\n", i);
+                        fprintf(stderr, "source register is: %d\n", i);
                         operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
                         operand_entry.dValue = i;
                         write_bits_in_word(&operand_entry.word, i, 3, 2);
@@ -467,7 +467,7 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
                     }
                     else /* register_type == 1 source*/
                     {
-                        printf("target register is: %d\n", i);
+                        fprintf(stderr, "target register is: %d\n", i);
                         operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
                         operand_entry.dValue = i;
                         write_bits_in_word(&operand_entry.word, i, 3, 5);

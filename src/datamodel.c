@@ -47,4 +47,5 @@ void initDataModel(Data_model *data_model)
     data_model->instructions_table = NULL;
     data_model->data_count = 0;
     data_model->data_table = NULL;
+    data_model->line_number = 0;
 }

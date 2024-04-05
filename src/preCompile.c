@@ -27,6 +27,7 @@ int preCompile(const char *arg)
     char check_for_macro[MAX_PARAM_SIZE];
     char macro_name[MAX_PARAM_SIZE];
     char *line = NULL;
+    int line_number = 0;
     int is_macro = 0;
 
     char *fileName = (char *)calloc(strlen(arg) + 4, sizeof(char));
@@ -54,11 +55,12 @@ int preCompile(const char *arg)
     /*start reading the file and looking for macros*/
     while (read_line(source, &line))
     {
+        line_number++;
         is_macro = 0;
         if (string_length_without_white_spaces(line) < 3)
             continue;
 
-        parse_command(line, check_for_macro, macro_name);
+        parse_command(line, check_for_macro, macro_name, line_number);
         if (check_for_macro[0] == ';')
             continue;
         if (strcmp(check_for_macro, "mcr") == 0) /*beginning of a macro*/

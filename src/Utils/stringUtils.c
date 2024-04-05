@@ -128,7 +128,7 @@ int word_check(const char *list[], int length, char *word)
  * @param first_param Pointer to store the extracted first parameter.
  * @return Returns the result code: 0 for success, or an error code if an error occurred.
  */
-int parse_command(char *buffer, char *command, char *first_param)
+int parse_command(char *buffer, char *command, char *first_param, int line_number)
 {
     int i = 0;
     int j = 0;
@@ -141,7 +141,7 @@ int parse_command(char *buffer, char *command, char *first_param)
     }
     if (buffer[i] == ',')
     {
-        printf("Illegal comma\n");
+        fprintf(stderr, "Error. Illegal comma in line %d.\n", line_number);
         return ERR_ILLEGAL_COMMA;
     }
 
@@ -154,12 +154,12 @@ int parse_command(char *buffer, char *command, char *first_param)
         j++;
         if (buffer[i] == ',')
         {
-            printf("Illegal comma\n");
+            fprintf(stderr, "Error. Illegal comma in line %d.\n", line_number);
             return ERR_ILLEGAL_COMMA;
         }
         if (j == MAX_PARAM_SIZE)
         {
-            printf("Undefined command name\n");
+            fprintf(stderr, "Error. Undefined command name in %d.\n", line_number);
             return ERR_COMMAND_NOT_FOUND;
         }
     }
@@ -167,7 +167,7 @@ int parse_command(char *buffer, char *command, char *first_param)
 
     if (buffer[i] == ',')
     {
-        printf("Undefined command name\n");
+        fprintf(stderr, "Error. Undefined command name in %d.\n", line_number);
         return ERR_ILLEGAL_COMMA;
     }
 
@@ -181,7 +181,7 @@ int parse_command(char *buffer, char *command, char *first_param)
     if (buffer[i] == ',')
     {
         /* aha! found , right after command*/
-        printf("Illegal comma\n");
+        fprintf(stderr, "Error. Illegal comma in %d.\n", line_number);
         return ERR_ILLEGAL_COMMA;
     }
 

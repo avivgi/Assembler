@@ -51,7 +51,7 @@ int int_to_word(Word *word, int num)
 {
     if (num > 2048 || num < -2048)
     {
-        printf("Number is too large unable to convert.\n");
+        fprintf(stderr, "Number is too large unable to convert.\n");
         return -1;
     }
     *word = num;

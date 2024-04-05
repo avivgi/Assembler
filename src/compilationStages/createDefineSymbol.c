@@ -48,13 +48,13 @@ int createDefineSymbol(Data_model *data_model, Line_params *line_params, size_t 
 
         if ((errno == ERANGE) || (errno != 0 && value == 0))
         {
-            fprintf(stdout, "Define parameter isn't a number\n");
+            fprintf(stdout, "Error: Define parameter isn't a number in line %d.\n", data_model->line_number);
             safe_free(2, param, define_string);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         if (endptr == (*line_params).parsed_params[3])
         {
-            fprintf(stdout, "No digits were found\n");
+            fprintf(stdout, "Error: No digits were found in line %d.\n", data_model->line_number);
             safe_free(2, define_string, param);
             return ERR_VARIABLE_ISNT_INTEGER;
         }

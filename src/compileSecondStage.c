@@ -91,10 +91,10 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     }
     /*step 9 - free line_params*/
     if (DEBUG)
-        printf("Finished second stage for %s with error %d and result %d\n", filename, error_flag, result);
+        fprintf(stderr, "Finished second stage for %s with error %d and result %d\n", filename, error_flag, result);
 
     if (error_flag != 0)
-        printf("Compilation terminated after second stage due to errors.\n");
+        fprintf(stderr, "Compilation terminated after second stage due to errors.\n");
 
     fclose(source);
     safe_free(2, buffer, fullFileName);

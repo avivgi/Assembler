@@ -99,7 +99,7 @@ int labels(Data_model *data_model,
     }
     else if (strcmp((*line_params).parsed_params[1], ".extern") == 0)
     {
-        printf("INFO: Label (%s) before .extern. Ignoring this label. Continue.\n", label_name);
+        fprintf(stderr, "INFO: Label (%s) before .extern. in line %d. Ignoring this label. Continue.\n", label_name, data_model->line_number);
         safe_free(1, label_name);
         return INFO_LABEL_BEFORE_EXTERN;
     }
@@ -145,7 +145,7 @@ int add_int_array_to_data_table(Data_model *data_model,
         array_size = parse_string_into_int_array(data_model, (line_params).parsed_params[param], &arr, ",");
         if (array_size == 0)
         {
-            fprintf(stdout, "Error! Not a number\n");
+            fprintf(stdout, "Error! Not a number in line %d.\n", data_model->line_number);
             safe_free(1, arr);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
@@ -204,7 +204,7 @@ int parse_string_into_int_array(Data_model *data_model,
                 temp = getLabelAddress(token, data_model->symbols, data_model->symbol_count);
             else
             {
-                fprintf(stdout, "Variable %s is not an integer or a data label.\n", token);
+                fprintf(stdout, "Variable %s is not an integer or a data label in line %d.\n", token, data_model->line_number);
                 safe_free(1, buffer_c);
                 return ERR_VARIABLE_ISNT_INTEGER;
             }
