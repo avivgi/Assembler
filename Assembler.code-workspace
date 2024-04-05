@@ -4,5 +4,16 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"files.associations": {
+			"*.js": "javascriptreact",
+			"*.ts": "typescriptreact",
+			"updatedatasymbols.h": "c",
+			"commands.h": "c",
+			"stdlib.h": "c",
+			"stringutils.h": "c",
+			"languageutils.h": "c",
+			"createdefinesymbol.h": "c"
+		}
+	}
 }

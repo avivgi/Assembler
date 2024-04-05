@@ -23,6 +23,12 @@ int compile(const char *filename)
 
     result = compileFirstStage(filename, &data_model);
     result += compileSecondStage(filename, &data_model);
+    if (result != 0)
+    {
+        fprintf(stderr, "Compilation terminated due to errors for file: %s.\n", filename);
+        if (!DEBUG)
+            return result;
+    }
 
     if (DEBUG)
     {
@@ -31,8 +37,6 @@ int compile(const char *filename)
         print_word_entry_table(data_model.data_table, data_model.data_count, filename, "data");
         printf("Result after two phases: %d\n", result);
     }
-
-    /*if result == 0*/
 
     print_instruction_table(data_model, filename);
     print_entry_and_extern_table(data_model, filename, ENTRY);

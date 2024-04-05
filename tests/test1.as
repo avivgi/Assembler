@@ -18,7 +18,6 @@ cmp r7, #sz
 endmcr
 STR: .string "abcdef"
 LIST: .data 6, -9, len
-K: .data 22
 m_mcr2
 m_mcr2
 K: .data 22

@@ -108,7 +108,6 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     /*step 16- if errors stop*/
     if (error_flag != 0)
     {
-        printf("Compilation terminated after first stage due to errors.\n");
         fclose(source);
         safe_free(1, fullFileName);
         return error_flag;
