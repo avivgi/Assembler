@@ -69,11 +69,18 @@ int labels(Data_model *data_model,
     }
     label_name[str_len - 1] = '\0';
     str_len--;
-    /* is_symbol = 1; */
+
+    if (strcmp((*line_params).parsed_params[1], ".entry") == 0)
+    {
+        safe_free(1, label_name);
+        return INFO_LABEL_IS_ENTRY;
+    }
 
     if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count)) != 0)
+    {
+        safe_free(1, label_name);
         return ERR_LABEL_OR_NAME_IS_TAKEN;
-
+    }
     /*check if data or string*/
     /*detect type LABEL: .data */
 
@@ -95,6 +102,7 @@ int labels(Data_model *data_model,
     else if (strcmp((*line_params).parsed_params[1], ".extern") == 0)
     {
         printf("INFO: Label (%s) before .extern. Ignoring this label. Continue.\n", label_name);
+        safe_free(1, label_name);
         return INFO_LABEL_BEFORE_EXTERN;
     }
     else

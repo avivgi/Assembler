@@ -37,6 +37,7 @@
 #define SYNTAX_ERROR -21
 #define EER_LABEL_NOT_FOUND -22
 #define EER_LABEL_NOT_MDEFINE -23
+#define INFO_LABEL_IS_ENTRY -24
 
 #define false 0
 #define true 1
