@@ -73,12 +73,12 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         /*char *operand_target = NULL;
         char *index = NULL;
         char *ptr_close = NULL;*/
-        char *ptr_open = NULL;
 
         if ((*line_params).param_count != word + 1)
         {
             /* only array can have white chars / more word as operand */
             /* check if its array and appned */
+            char *ptr_open = NULL;
             if ((ptr_open = strchr((*line_params).parsed_params[word], '[')) != NULL)
             {
                 /* if last char in word is '[' */
@@ -135,7 +135,6 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         addressing_target = check_addressing(&(*line_params).parsed_params[word], data_model);
         if (addressing_target < 0)
         {
-            fprintf(stdout, "Error. Invalid target addressing\n");
             return ERR_INVALID_ADDRESSING;
         }
 
@@ -153,9 +152,8 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         /* push command word */
         push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &instruction_entry);
 
-        /* write the extra word if needed and push */
-
-        /* write the second extra word if needed and push */
+        /* write the extra words and push */
+        handle_addressing(data_model, addressing_target, &(*line_params).parsed_params[word], 0);
     }
 
     else if (assembler_commands[i].command_type == 2)
@@ -260,57 +258,64 @@ int write_bits_in_word(Word *word, int write_value, int value_len, int first_ind
  */
 int check_addressing(char **word, Data_model *data_model)
 {
-    int i;
-    int result = ERR_INVALID_ADDRESSING;
-    char *registers[] = RESIGTERS;
+    int result = 1; /* defualt addressing is direct  */
     int *num = malloc(sizeof(int));
+    char *ptr_open = NULL;
+    char *ptr_close = NULL;
+    char *index = NULL;
 
-    /* immediate  */
+    /* 0 immediate  */
     if ((*word)[0] == '#')
     {
         if (is_number((*word) + 1, num))
         {
             result = 0;
         }
-        else if ((i = is_define((*word) + 1, data_model->symbols, data_model->symbol_count)) >= 0)
+        else if (is_define((*word) + 1, data_model->symbols, data_model->symbol_count) >= 0)
         {
             result = 0;
         }
         else
         {
-            printf("immediate addressin is missing a number\n");
+            printf("Immediate addressing is missing a number\n");
+            result = ERR_INVALID_ADDRESSING;
         }
 
         /*printf("the word %s is immediate number\n", *word);*/
     }
 
-    /* direct */
-    else if (0)
+    /* 2 permenent index */
+    else if ((ptr_open = strchr(*word, '[')) != NULL && (ptr_close = strchr(*word, ']')) != NULL)
     {
-        /* defualt? */
-        result = 1;
-    }
-
-    /* permenent index */
-    else if (strchr(*word, '[') != NULL)
-    {
-        /*
         size_t length;
         length = ptr_close - (ptr_open + 1);
-        index = malloc((length + 1) * sizeof(char)); / need to free !!!!!!!!!! /
+        index = malloc((length + 1) * sizeof(char));
         if (!index)
         {
             EXIT_ON_MEM_ALLOC_FAIL
         }
         strncpy(index, ptr_open + 1, length);
         index[length] = '\0';
-        operand_target = (*line_params).parsed_params[word];
-        */
-        result = 2;
+
+        if (is_number(index, num))
+        {
+            result = 2;
+        }
+        else if (is_define(index, data_model->symbols, data_model->symbol_count) >= 0)
+        {
+            result = 2;
+        }
+        else
+        {
+            result = ERR_INVALID_ADDRESSING;
+        }
+        safe_free(1, index);
     }
 
-    else /* direct register */
+    else /* 3 direct register */
     {
+        int i;
+        char *registers[] = RESIGTERS;
         for (i = 0; i < NUM_OF_RESIGTERS; i++)
         {
             if (!(strcmp(*word, registers[i])))
@@ -324,28 +329,163 @@ int check_addressing(char **word, Data_model *data_model)
     return result;
 }
 
-int handle_addressing(Data_model *data_model, int addressing, Word *word)
+/**
+ * @brief adding insruction words depands on addressing type
+ *
+ * @param data_model
+ * @param addressing addressing type
+ * @param word the operand
+ * @param register_type 2= 2 registers, 1= source, 0= target or not a register
+ * @return int 1 is the handle is successful, otherwise ERR_INVALID_ADDRESSING
+ */
+int handle_addressing(Data_model *data_model, int addressing, char **word, int register_type)
 {
-    /* int i; */
+    int i;
+    int result = ERR_INVALID_ADDRESSING;
+    int *num = malloc(sizeof(int));
+    Word_entry operand_entry;
+    Word_entry index_entry;
+    operand_entry.word = 0;
+    index_entry.word = 0;
 
+    if (!num)
+    {
+        EXIT_ON_MEM_ALLOC_FAIL
+    }
+
+    /* 0 immediate  */
     if (addressing == 0)
     {
-        /* code */
-    }
-    else if (addressing == 1)
-    {
-        /* code */
-    }
-    else if (addressing == 2)
-    {
-        /* code */
-    }
-    else if (addressing == 3)
-    {
-        /* code */
+        if (is_number((*word) + 1, num))
+        {
+            printf("0 number is: %d\n", *num);
+        }
+        else if ((i = is_define((*word) + 1, data_model->symbols, data_model->symbol_count)) >= 0)
+        {
+            *num = data_model->symbols[i].value;
+            printf("0 number is define: %d\n", *num);
+        }
+        else
+        {
+            printf("Error in addressing type 0\n");
+            safe_free(1, num);
+            return result;
+        }
+        operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
+        operand_entry.dValue = *num;
+        write_bits_in_word(&operand_entry.word, *num, 12, 2);
+
+        push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &operand_entry);
+        result = 1;
     }
 
-    return ERR_INVALID_ADDRESSING;
+    /* 1 direct */
+    else if (addressing == 1)
+    {
+        printf("adding blank word\n");
+        operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
+        operand_entry.dValue = -1;
+        /* setting the ARE bits to 11 */
+        write_bits_in_word(&operand_entry.word, 3, 2, 0);
+
+        push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &operand_entry);
+        result = 1;
+    }
+
+    /* 2 permenent index */
+    else if (addressing == 2)
+    {
+        char *ptr_open = NULL;
+        char *ptr_close = NULL;
+        char *index = NULL;
+        size_t length;
+
+        operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
+        operand_entry.dValue = -1;
+        /* setting the ARE bits to 11 */
+        write_bits_in_word(&operand_entry.word, 3, 2, 0);
+
+        push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &operand_entry);
+
+        /* extract index and convert to num */
+        ptr_open = strchr(*word, '[');
+        ptr_close = strchr(*word, ']');
+        length = ptr_close - (ptr_open + 1);
+        index = malloc((length + 1) * sizeof(char));
+        if (!index)
+        {
+            EXIT_ON_MEM_ALLOC_FAIL
+        }
+        strncpy(index, ptr_open + 1, length);
+        index[length] = '\0';
+
+        if (is_number(index, num))
+        {
+            printf("2 index is: %d\n", *num);
+        }
+        else if ((i = is_define(index, data_model->symbols, data_model->symbol_count)) >= 0)
+        {
+            *num = data_model->symbols[i].value;
+            printf("2 index is define: %d\n", *num);
+        }
+        else
+        {
+            printf("Error in addressing type 2\n");
+            safe_free(2, num, index);
+            return result;
+        }
+
+        index_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
+        index_entry.dValue = *num;
+        write_bits_in_word(&index_entry.word, *num, 12, 2);
+
+        push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &index_entry);
+
+        safe_free(1, index);
+        result = 1;
+    }
+
+    /* 3 direct register */
+    else if (addressing == 3)
+    {
+        char *registers[] = RESIGTERS;
+        if (register_type != 2)
+        {
+            for (i = 0; i < NUM_OF_RESIGTERS; i++)
+            {
+                if (!(strcmp(*word, registers[i])))
+                {
+                    if (register_type == 0) /* register_type == 0 target*/
+                    {
+                        printf("source register is: %d\n", i);
+                        operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
+                        operand_entry.dValue = i;
+                        write_bits_in_word(&operand_entry.word, i, 3, 2);
+
+                        push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &operand_entry);
+                        result = 1;
+                    }
+                    else /* register_type == 1 source*/
+                    {
+                        printf("target register is: %d\n", i);
+                        operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
+                        operand_entry.dValue = i;
+                        write_bits_in_word(&operand_entry.word, i, 3, 5);
+
+                        push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &operand_entry);
+                        result = 1;
+                    }
+                }
+            }
+        }
+        else /* register_type == 2 one word for both registers*/
+        {
+            /* code */
+        }
+    }
+
+    safe_free(1, num);
+    return result;
 }
 
 /**
