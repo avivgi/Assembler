@@ -91,6 +91,9 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     if (DEBUG)
         printf("Finished second stage for %s with error %d and result %d\n", filename, error_flag, result);
 
+    if (error_flag != 0)
+        printf("Compilation terminated after second stage due to errors.\n");
+
     fclose(source);
     safe_free(2, buffer, fullFileName);
     return error_flag;
