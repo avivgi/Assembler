@@ -33,6 +33,8 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     FILE *source;
     char *buffer = NULL;
     /*    int L = 0; */
+    size_t line_params_count = 0;
+    Line_params line_params;
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
 
     if (!fullFileName)
@@ -55,14 +57,14 @@ int compileSecondStage(const char *filename, Data_model *data_model)
      */
 
     /* step 2 - read line */
+
     while (read_line(source, &buffer))
     {
         char *entry_label_name = NULL;
-        size_t line_params_count = 0;
-        Line_params line_params;
+
         parse_line(&line_params, &line_params_count, buffer, "\t\n\f\r ");
 
-        /*step 3-4 if first word is label, skip it, if this is .strinf .extern or .data continue*/
+        /*step 3-4 if first word is label, skip it, if this is .string .extern or .data continue*/
         if (is_label_data_extern_string(line_params, line_params_count) == 1)
             continue;
 

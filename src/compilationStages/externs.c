@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <errno.h>
 #include <limits.h>
-#include "labels.h"
+#include "externs.h"
 
 #include "../Utils/stringUtils.h"
 #include "../Utils/languageUtils.h"
@@ -27,7 +27,7 @@ char *strdup(const char *s);
  * @param data_count The number of data.
  * @return 0 if the symbol was created, an error code otherwise.
  */
-int externs(Data_model *data_model, Line_params *line_params, size_t *line_params_count)
+int externs(Data_model *data_model, Line_params *line_params, size_t line_params_count)
 {
 
     /*

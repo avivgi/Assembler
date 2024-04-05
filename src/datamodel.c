@@ -15,12 +15,8 @@ int isLabelExist(char *label, Symbol *symbol_table, int symbol_count)
 {
     int i;
     for (i = 0; i < symbol_count; i++)
-    {
         if (strcmp(symbol_table[i].name, label) == 0)
-        {
             return i;
-        }
-    }
     return EER_LABEL_NOT_FOUND;
 }
 

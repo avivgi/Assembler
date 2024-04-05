@@ -60,7 +60,11 @@ int labels(Data_model *data_model,
         safe_free(1, label_name);
         return INFO_NOT_LABAL;
     }
-
+    if (is_label_entry(*line_params, line_params_count))
+    {
+        safe_free(1, label_name);
+        return LABEL_DATA_WAS_FOUND;
+    }
     /*detect type LABEL: */
     if ((*line_params).parsed_params[0][str_len - 1] != ':')
     {
@@ -69,12 +73,6 @@ int labels(Data_model *data_model,
     }
     label_name[str_len - 1] = '\0';
     str_len--;
-
-    if (strcmp((*line_params).parsed_params[1], ".entry") == 0)
-    {
-        safe_free(1, label_name);
-        return INFO_LABEL_IS_ENTRY;
-    }
 
     if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count)) != 0)
     {
@@ -299,7 +297,9 @@ char *get_label_entry(Data_model data_model, Line_params line_params, size_t lin
     if (param == line_params_count)
         return "0";
 
-    return isLabelExist(line_params.parsed_params[param + 1], data_model.symbols, data_model.symbol_count) ? line_params.parsed_params[param + 1] : "0";
+    printf("param + 1: %s\n", line_params.parsed_params[param + 1]);
+    printf("%d\n", isLabelExist(line_params.parsed_params[param + 1], data_model.symbols, data_model.symbol_count));
+    return isLabelExist(line_params.parsed_params[param + 1], data_model.symbols, data_model.symbol_count) != EER_LABEL_NOT_FOUND ? line_params.parsed_params[param + 1] : "0";
 }
 
 void update_entry_symbol(Data_model *data_model, char *entry_label_name)

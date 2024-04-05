@@ -32,6 +32,9 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     int result = 0;
     int error_flag = 0;
     FILE *source;
+    size_t line_params_count = 0;
+    Line_params line_params;
+
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
 
     if (!fullFileName)
@@ -50,8 +53,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     /* step 2 - read line */
     while (read_line(source, &buffer))
     {
-        size_t line_params_count = 0;
-        Line_params line_params;
+
         parse_line(&line_params, &line_params_count, buffer, "\t\n\f\r ");
 
         /* step 3 && 4 - if type== define put define in mdefine table*/
@@ -98,10 +100,10 @@ int compileFirstStage(const char *filename, Data_model *data_model)
             error_flag += 1;
             continue;
         }
-
-        safe_free_array((void *)(line_params).parsed_params, (line_params).param_count);
-        safe_free(1, buffer);
     }
+
+    safe_free_array((void *)(line_params).parsed_params, (line_params).param_count);
+    safe_free(1, buffer);
     printf("Finished first stage for %s with error %d and result %d\n", filename, error_flag, result);
 
     /*step 16- if errors stop*/
