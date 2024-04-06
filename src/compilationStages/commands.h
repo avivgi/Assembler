@@ -12,4 +12,5 @@ int check_addressing(char **word, Data_model *data_model);
 int is_define(char *label, Symbol *symbol_table, int symbol_count);
 int handle_addressing(Data_model *data_model, int addressing, char **word, int register_type);
 int updateOperands(Data_model *data_model, Line_params *line_params, size_t line_params_count);
+int syntax_check_commands(Data_model *data_model, Line_params *line_params, size_t line_params_count, int word, int operands_number);
 #endif
