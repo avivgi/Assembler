@@ -116,7 +116,9 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
             return SYNTAX_ERROR;
         }
 
+        /* after syntax check the first operand will be in word - 1, and the second in word*/
         word--;
+
         printf("source is %s\n", (*line_params).parsed_params[word]);
         /* check address type for source */
         addressing_source = check_addressing(&(*line_params).parsed_params[word], data_model);
@@ -262,6 +264,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             return SYNTAX_ERROR;
         }
 
+        /* check for comma in the rest of the words */
         for (j = i + 1; j < line_params_count; j++)
         {
             if (strchr((*line_params).parsed_params[j], ',') != NULL)
@@ -281,7 +284,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             return 1;
         }
 
-                if (strlen((*line_params).parsed_params[i]) == 1)
+        if (strlen((*line_params).parsed_params[i]) == 1)
         {
             printf("word index %d is just comma. operands are in indexs before and after\n", i);
             /* do staff maybe recursive? */
@@ -313,16 +316,6 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             printf("first part is %s\n", operands_arr[0]);
             printf("first part is %s\n", operands_arr[1]);
         }
-
-        if (line_params_count == word + 1)
-        {
-            /* code */
-        }
-
-        /*!!!!!!!!*/
-
-        /* move operand 1 to word-1, and operand 2 to word  */
-        /* in main algo after syntax check need word-- */
     }
 
     return 1;
