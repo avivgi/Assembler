@@ -284,34 +284,68 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             return 1;
         }
 
+        /* if the word with comma is just a comma */
         if (strlen((*line_params).parsed_params[i]) == 1)
         {
             printf("word index %d is just comma. operands are in indexs before and after\n", i);
-            /* do staff maybe recursive? */
-            /* if so need to move the words to right location "word-1 and word" */
+
+            /*check if need to check syntax == no spaces in operands*/
+
+            /* check if first operand dont have spaces */
+            if (i != 2)
+            {
+                if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
+                {
+                    printf("first operand of 2 have SYNTAX_ERROR\n");
+                    return SYNTAX_ERROR;
+                }
+            }
+
+            /* check if second operand dont have spaces */
+            if (line_params_count != i + 2)
+            {
+                if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i + 1, 1))
+                {
+                    printf("second operand of 2 have SYNTAX_ERROR\n");
+                    return SYNTAX_ERROR;
+                }
+            }
+
+            strcpy((*line_params).parsed_params[word - 1], (*line_params).parsed_params[word]);
+            strcpy((*line_params).parsed_params[word], (*line_params).parsed_params[i + 1]);
         }
+
         else
         {
-            printf("comma include in opernads\n");
+            printf("comma include in parts of opernads\n");
             operands_count = parse_string_into_string_array(data_model, (*line_params).parsed_params[i], &operands_arr, ",");
             if (operands_count == 1)
             {
                 printf("check where is comma in %s\n", (*line_params).parsed_params[i]);
                 if (*ptr_comma == (*line_params).parsed_params[i][0])
                 {
-                    printf("comma is with second operand\n");
+                    printf("comma in start of second operans\n");
                 }
-                else
+                else if (*ptr_comma == (*line_params).parsed_params[i][strlen((*line_params).parsed_params[i]) - 1])
                 {
-                    printf("comma is with first operand\n");
+                    printf("comma in end of first operand\n");
                 }
             }
+
+            else if (operands_count == 2)
+            {
+                /* break the left overs and add then in the right place, operands_arr[0] to operand 1 and operands_arr[1] to operand 2 */
+                printf("some parts from operand is with the other\n");
+            }
+
+            /*@@@@@ no need we made sure we have only 1 comma */
             else if (operands_count > 2)
             {
                 fprintf(stderr, "Error. Number of operands illegal for the command\n");
                 safe_free(1, operands_arr);
-                return ERR_NUMBER_OPERANDS_FOR_COMMAND;
+                return SYNTAX_ERROR;
             }
+            /*@@@@@ no need we made sure we have only 1 comma */
 
             printf("first part is %s\n", operands_arr[0]);
             printf("first part is %s\n", operands_arr[1]);
@@ -575,7 +609,6 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
             int register_index;
             parse_string_into_string_array(data_model, *word, &registers_arr, ",");
             operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
-            operand_entry.dValue = 22;
 
             for (register_index = 0; register_index < register_type; register_index++)
             {
@@ -589,10 +622,12 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
 
                 if (register_index == 0)
                 {
+                    operand_entry.dValue = i * 10;
                     write_bits_in_word(&operand_entry.word, i, 3, 5);
                 }
                 else
                 {
+                    operand_entry.dValue += i;
                     write_bits_in_word(&operand_entry.word, i, 3, 2);
                 }
             }
