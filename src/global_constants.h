@@ -9,6 +9,7 @@
 #define MAX_PROGRAM_LENGTH 1000
 #define MAX_PARAM_COUNT 40
 #define NUM_OF_RESIGTERS 8
+#define BITS_IN_ENCRYPTED_WORD 7
 
 /*messages*/
 #define LABEL_DATA_WAS_FOUND 1

@@ -5,7 +5,10 @@
 #include <errno.h>
 #include <limits.h>
 #include <stdio.h>
+#include <math.h>
+
 #include "printUtils.h"
+
 #include "../global_constants.h"
 
 /**
@@ -221,7 +224,7 @@ void print_assembly_line(FILE *dest, Word_entry *word_entry, size_t size)
         if (DEBUG)
         {
             print_word(dest, word_entry[i].word);
-            fprintf(dest, " %d ", word_entry[i].dValue);
+            fprintf(dest, " ");
         }
         fprintf(dest, "%s\n", encrypt_word(word_entry[i].word));
     }
@@ -230,7 +233,7 @@ void print_assembly_line(FILE *dest, Word_entry *word_entry, size_t size)
 /**
  * @brief Encrypts a word.
  *
- * This function takes a Word value and converts it to a string representation.
+ * This function takes a Word value and converts it to a string representation in base 4.
  * Each bit in the word is converted to a specific character:
  * 0 -> '*'
  * 1 -> '#'
@@ -243,11 +246,26 @@ void print_assembly_line(FILE *dest, Word_entry *word_entry, size_t size)
  */
 char *encrypt_word(Word word)
 {
-    char *result = (char *)malloc(BITS_IN_WORD + 1);
+
+    char *result = (char *)malloc(BITS_IN_ENCRYPTED_WORD + 1);
+
     int i;
-    for (i = 0; i < BITS_IN_WORD; i++)
+    int base4[7]; /* Array to store the base 4 digits */
+
+    /* If the word is negative, adjust it to represent its two's complement*/
+    if (word < 0)
+        word = (1 << 14) + word;
+
+    /* Convert the 14-bit word into base 4 */
+    for (i = 6; i >= 0; i--)
     {
-        switch ((word >> (BITS_IN_WORD - 1 - i)) & 1)
+        base4[i] = word % 4;
+        word /= 4;
+    }
+
+    for (i = 0; i < 7; i++)
+    {
+        switch (base4[i])
         {
         case 0:
             result[i] = '*';
@@ -262,10 +280,10 @@ char *encrypt_word(Word word)
             result[i] = '!';
             break;
         default:
-            result[i] = ' ';
-            break;
+            result[i] = 'X';
         }
     }
-    result[BITS_IN_WORD] = '\0';
+
+    result[BITS_IN_ENCRYPTED_WORD] = '\0';
     return result;
 }

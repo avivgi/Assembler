@@ -11,7 +11,6 @@
 #include "../Utils/memoryUtils.h"
 #include "../Utils/stringUtils.h"
 #include "../datamodel.h"
-#include "../Utils/baseUtils.h"
 #include "../Utils/printUtils.h"
 
 char *strdup(const char *s);
@@ -107,7 +106,7 @@ int labels(Data_model *data_model,
     {
         /*fallback to type LABEL: code*/
         new_symbol.type = CODE;
-        new_symbol.value = data_model->data_count + CODE_START_ADDRESS;
+        new_symbol.value = data_model->instruction_count + CODE_START_ADDRESS;
         result = LABEL_CODE_WAS_FOUND;
     }
     strcpy(new_symbol.name, label_name);
