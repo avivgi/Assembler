@@ -1,8 +1,8 @@
 .define sz = 2
 MAIN:           mov     r3, LIST[sz]
-LOOP:           jmp     L!
+LOOP:           jmp     L1
                 mcr m_mcr
-                    cmp     r3,#sz
+                    cmp     r3, #sz
                 bne     END
                 endmcr
                 prn     #-5
