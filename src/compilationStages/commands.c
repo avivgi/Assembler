@@ -490,7 +490,7 @@ int check_addressing(char **word, Data_model *data_model)
         {
             if (*num < 0)
             {
-                fprintf(stdout, "Error. Index of array can not be negative in line\n", data_model->line_number);
+                fprintf(stdout, "Error. Index of array can not be negative in line %d\n", data_model->line_number);
                 result = ERR_INVALID_ADDRESSING;
             }
             else

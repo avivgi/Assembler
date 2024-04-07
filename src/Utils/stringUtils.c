@@ -136,9 +136,8 @@ int parse_command(char *buffer, char *command, char *first_param, int line_numbe
 
     /* bypass spaced before command*/
     while (((buffer[i] != '\0') && (buffer[i] != ',')) && ((buffer[i] == ' ') || (buffer[i] == '\t')))
-    {
         i++;
-    }
+
     if (buffer[i] == ',')
     {
         fprintf(stderr, "Error. Illegal comma in line %d.\n", line_number);
@@ -146,12 +145,14 @@ int parse_command(char *buffer, char *command, char *first_param, int line_numbe
     }
 
     /*Getting Command*/
+
     while ((buffer[i] != '\0') && (buffer[i] != ' ') && (buffer[i] != '\t') && (buffer[i] != '\n'))
     {
         command[j] = buffer[i];
         result = 1;
         i++;
         j++;
+
         if (buffer[i] == ',')
         {
             fprintf(stderr, "Error. Illegal comma in line %d.\n", line_number);
@@ -163,7 +164,7 @@ int parse_command(char *buffer, char *command, char *first_param, int line_numbe
             return ERR_COMMAND_NOT_FOUND;
         }
     }
-    command[i] = '\0';
+    command[j] = '\0';
 
     if (buffer[i] == ',')
     {

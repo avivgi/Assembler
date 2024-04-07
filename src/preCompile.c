@@ -29,6 +29,7 @@ int preCompile(const char *arg)
     char *line = NULL;
     int line_number = 0;
     int is_macro = 0;
+    char *start_of_macro;
 
     char *fileName = (char *)calloc(strlen(arg) + 4, sizeof(char));
     if (!fileName)
@@ -55,65 +56,70 @@ int preCompile(const char *arg)
     /*start reading the file and looking for macros*/
     while (read_line(source, &line))
     {
-        line_number++;
         is_macro = 0;
+        line_number++;
+
         if (string_length_without_white_spaces(line) < 3)
             continue;
 
         parse_command(line, check_for_macro, macro_name, line_number);
         if (check_for_macro[0] == ';')
             continue;
-        if (strcmp(check_for_macro, "mcr") == 0) /*beginning of a macro*/
-        {
-            /*need to increase the size of the macro list*/
-            list_of_macros = realloc(list_of_macros, (++number_of_macros) * sizeof(macro));
-            if (list_of_macros == NULL)
-            {
-                safe_free(2, fileName, line);
-                fclose(source);
-                fclose(destination);
-                EXIT_ON_MEM_ALLOC_FAIL
-            }
 
-            list_of_macros[number_of_macros - 1].number_of_lines = 0;
-            list_of_macros[number_of_macros - 1].command_line = malloc(INITIAL_COMMAND_LINE_SIZE * sizeof(Command_line));
-            if (list_of_macros[number_of_macros - 1].command_line == NULL)
+        start_of_macro = strstr(line, "mcr");
+        if (start_of_macro != NULL)
+            if (strcmp(check_for_macro, "mcr") == 0) /*beginning of a macro*/
             {
-                safe_free(3, fileName, line, list_of_macros);
-                fclose(source);
-                fclose(destination);
-                EXIT_ON_MEM_ALLOC_FAIL
-            }
-            strcpy(list_of_macros[number_of_macros - 1].macro_name, macro_name);
-
-            /*pulling the content of the macro*/
-            while (read_line(source, &line))
-            {
-                if (strcmp(line, "endmcr") == 0)
-                    break;
-
-                if (list_of_macros[number_of_macros - 1].number_of_lines >= INITIAL_COMMAND_LINE_SIZE)
+                /*need to increase the size of the macro list*/
+                list_of_macros = realloc(list_of_macros, (++number_of_macros) * sizeof(macro));
+                if (list_of_macros == NULL)
                 {
-                    list_of_macros[number_of_macros - 1].command_line = realloc(list_of_macros[number_of_macros - 1].command_line,
-                                                                                (list_of_macros[number_of_macros - 1].number_of_lines * 2) * sizeof(Command_line));
-                    if (list_of_macros[number_of_macros - 1].command_line == NULL)
-                    {
-                        safe_free(3, fileName, line, list_of_macros);
-                        fclose(source);
-                        fclose(destination);
-                        EXIT_ON_MEM_ALLOC_FAIL
-                    }
+                    safe_free(2, fileName, line);
+                    fclose(source);
+                    fclose(destination);
+                    EXIT_ON_MEM_ALLOC_FAIL
                 }
-                strcpy(list_of_macros[number_of_macros - 1].command_line[list_of_macros[number_of_macros - 1].number_of_lines], line);
-                list_of_macros[number_of_macros - 1].number_of_lines++;
-            } /*end of macro*/
-            continue;
-        }
+
+                list_of_macros[number_of_macros - 1].number_of_lines = 0;
+                list_of_macros[number_of_macros - 1].command_line = malloc(INITIAL_COMMAND_LINE_SIZE * sizeof(Command_line));
+                if (list_of_macros[number_of_macros - 1].command_line == NULL)
+                {
+                    safe_free(3, fileName, line, list_of_macros);
+                    fclose(source);
+                    fclose(destination);
+                    EXIT_ON_MEM_ALLOC_FAIL
+                }
+                strcpy(list_of_macros[number_of_macros - 1].macro_name, macro_name);
+
+                /*pulling the content of the macro*/
+                while (read_line(source, &line))
+                {
+                    char *end_of_macro = strstr(line, "endmcr");
+                    if (end_of_macro != NULL)
+                        break;
+                    if (list_of_macros[number_of_macros - 1].number_of_lines >= INITIAL_COMMAND_LINE_SIZE)
+                    {
+                        list_of_macros[number_of_macros - 1].command_line = realloc(list_of_macros[number_of_macros - 1].command_line,
+                                                                                    (list_of_macros[number_of_macros - 1].number_of_lines * 2) * sizeof(Command_line));
+                        if (list_of_macros[number_of_macros - 1].command_line == NULL)
+                        {
+                            safe_free(3, fileName, line, list_of_macros);
+                            fclose(source);
+                            fclose(destination);
+                            EXIT_ON_MEM_ALLOC_FAIL
+                        }
+                    }
+                    strcpy(list_of_macros[number_of_macros - 1].command_line[list_of_macros[number_of_macros - 1].number_of_lines], line);
+                    list_of_macros[number_of_macros - 1].number_of_lines++;
+                } /*end of macro*/
+                continue;
+            }
 
         /*check if the line is a macro*/
         for (j = 0; j < number_of_macros; j++)
         {
-            if (strcmp(line, list_of_macros[j].macro_name) == 0)
+            start_of_macro = strstr(line, list_of_macros[j].macro_name);
+            if (start_of_macro != NULL)
             {
                 for (i = 0; i < list_of_macros[j].number_of_lines; i++)
                     fprintf(destination, "%s\n", list_of_macros[j].command_line[i]);
