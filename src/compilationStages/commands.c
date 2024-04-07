@@ -258,7 +258,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         /* if comma not found or we have 1 more comma in the found word */
         if (ptr_comma == NULL || ptr_comma != strrchr((*line_params).parsed_params[i], ','))
         {
-            fprintf(stdout, "Error. Number of operands illegal for the command\n");
+            fprintf(stdout, "Error. Number of operands illegal for the command in line %d\n", data_model->line_number);
             return SYNTAX_ERROR;
         }
 
@@ -267,7 +267,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         {
             if (strchr((*line_params).parsed_params[j], ',') != NULL)
             {
-                fprintf(stdout, "Error. Number of operands illegal for the command\n");
+                fprintf(stdout, "Error. Number of operands illegal for the command in line %d\n", data_model->line_number);
                 return SYNTAX_ERROR;
             }
         }
@@ -290,7 +290,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             {
                 if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                 {
-                    fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR\n");
+                    fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
                     return SYNTAX_ERROR;
                 }
             }
@@ -300,7 +300,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             {
                 if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i + 1, 1))
                 {
-                    fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR\n");
+                    fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
                     return SYNTAX_ERROR;
                 }
             }
@@ -330,7 +330,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     {
                         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                         {
-                            fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR\n");
+                            fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -340,7 +340,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     {
                         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i, 1))
                         {
-                            fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR\n");
+                            fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -358,7 +358,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     {
                         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                         {
-                            fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR\n");
+                            fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -368,7 +368,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     {
                         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i + 1, 1))
                         {
-                            fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR\n");
+                            fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -387,7 +387,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                 {
                     if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                     {
-                        fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR\n");
+                        fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
                         return SYNTAX_ERROR;
                     }
                 }
@@ -398,7 +398,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                 {
                     if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i, 1))
                     {
-                        fprintf(stdout, "second operand of 2 have SYNTAX_ERROR\n");
+                        fprintf(stdout, "second operand of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
                         return SYNTAX_ERROR;
                     }
                 }
@@ -448,6 +448,7 @@ int write_bits_in_word(Word *word, int write_value, int value_len, int first_ind
  */
 int check_addressing(char **word, Data_model *data_model)
 {
+    int i;
     int result = 1; /* defualt addressing is direct  */
     int *num = malloc(sizeof(int));
     char *ptr_open = NULL;
@@ -487,11 +488,27 @@ int check_addressing(char **word, Data_model *data_model)
 
         if (is_number(index, num))
         {
-            result = 2;
+            if (*num < 0)
+            {
+                fprintf(stdout, "Error. Index of array can not be negative in line\n", data_model->line_number);
+                result = ERR_INVALID_ADDRESSING;
+            }
+            else
+            {
+                result = 2;
+            }
         }
-        else if (is_define(index, data_model->symbols, data_model->symbol_count) >= 0)
+        else if ((i = is_define(index, data_model->symbols, data_model->symbol_count)) >= 0)
         {
-            result = 2;
+            if (data_model->symbols[i].value < 0)
+            {
+                fprintf(stdout, "Error. Index of array can not be negative in line %d\n", data_model->line_number);
+                result = ERR_INVALID_ADDRESSING;
+            }
+            else
+            {
+                result = 2;
+            }
         }
         else
         {
