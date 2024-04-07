@@ -21,7 +21,6 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
 {
     As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     int i;
-    /* int num; */
     Word_entry instruction_entry;
     int addressing_target = ERR_INVALID_ADDRESSING;
     int addressing_source = ERR_INVALID_ADDRESSING;
@@ -732,6 +731,65 @@ int is_define(char *label, Symbol *symbol_table, int symbol_count)
 /* should update operands on 2nd pass. return 0 in success and something else on errors*/
 int updateOperands(Data_model *data_model, Line_params *line_params, size_t line_params_count)
 {
+    As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
+    int i, command, addressing_target; /*, addressing_source; */
+    int word = 0;
+    /* char **operands_arr = NULL; */
+
+    /* check if first word is label*/
+    if ((*line_params).parsed_params[word][strlen((*line_params).parsed_params[word]) - 1] == ':')
+    {
+        word++;
+    }
+
+    /* check if the command is in command list */
+    for (command = 0; command < NUM_OF_COMMANDS_IN_LANGUAGE; command++)
+    {
+        if (strcmp((*line_params).parsed_params[word], (assembler_commands[command].command_name)) == 0)
+        {
+            word++;
+            break;
+        }
+    }
+
+    if (assembler_commands[command].command_type == 0)
+    {
+        return 1;
+    }
+
+    else if (assembler_commands[command].command_type == 1)
+    {
+        for (i = word + 1; i < line_params_count; i++)
+        {
+            strcat((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
+        }
+
+        addressing_target = check_addressing(&(*line_params).parsed_params[word], data_model);
+        /* no need to add code words for addressing type immediate or register */
+        if (addressing_target == 0 || addressing_target == 3)
+        {
+            return 1;
+        }
+
+        /* permenent index adressing */
+        if (addressing_target == 2)
+        {
+            /* remove "[index]" */
+        }
+
+        /* else is direct addressing*/
+
+        /* loop in symbols and find the operand */
+        /* extract his address */
+        /* extract his type extern 1 / entry 2 */
+        /* find the first "blank" code word, and make it 0 */
+        /* write the new value of code word */
+    }
+
+    else if (assembler_commands[command].command_type == 2)
+    {
+        /* code */
+    }
 
     return 1;
 }
