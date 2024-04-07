@@ -119,7 +119,6 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         /* after syntax check the first operand will be in word - 1, and the second in word*/
         word--;
 
-        printf("source is %s\n", (*line_params).parsed_params[word]);
         /* check address type for source */
         addressing_source = check_addressing(&(*line_params).parsed_params[word], data_model);
         if (addressing_source < 0)
@@ -133,7 +132,6 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
             return ERR_WRONG_TYPE_OF_ADDRESSING;
         }
 
-        printf("target is %s\n", (*line_params).parsed_params[word + 1]);
         /* check address type for target */
         addressing_target = check_addressing(&(*line_params).parsed_params[word + 1], data_model);
         if (addressing_target < 0)
@@ -214,7 +212,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     else
                     {
                         /* error */
-                        fprintf(stderr, "Syntax Error. Index in word+1 but word+2 isn't just '\"]\"' in line %d\n", data_model->line_number);
+                        fprintf(stdout, "Syntax Error. Unnecessary char in array in line %d\n", data_model->line_number);
                         return SYNTAX_ERROR;
                     }
                 }
@@ -230,7 +228,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                 else
                 {
                     /* error */
-                    fprintf(stderr, "Syntax Error. Index in word but word+1 isn't just \"]\" in line %d\n", data_model->line_number);
+                    fprintf(stdout, "Syntax Error. Unnecessary char in array  in line %d\n", data_model->line_number);
                     return SYNTAX_ERROR;
                 }
             }
@@ -238,7 +236,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         else
         {
             /* syntax error number of operands / unnecessary white chars  */
-            fprintf(stderr, "Syntax Error. There are illegal white chars in line %d\n", data_model->line_number);
+            fprintf(stdout, "Syntax Error. There is illegal white char in line %d\n", data_model->line_number);
             return SYNTAX_ERROR;
         }
     }
@@ -260,7 +258,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         /* if comma not found or we have 1 more comma in the found word */
         if (ptr_comma == NULL || ptr_comma != strrchr((*line_params).parsed_params[i], ','))
         {
-            fprintf(stderr, "Error. Number of operands illegal for the command\n");
+            fprintf(stdout, "Error. Number of operands illegal for the command\n");
             return SYNTAX_ERROR;
         }
 
@@ -269,7 +267,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         {
             if (strchr((*line_params).parsed_params[j], ',') != NULL)
             {
-                fprintf(stderr, "Error. Number of operands illegal for the command 2\n");
+                fprintf(stdout, "Error. Number of operands illegal for the command\n");
                 return SYNTAX_ERROR;
             }
         }
@@ -287,16 +285,12 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         /* if the word with comma is just a comma */
         if (strlen((*line_params).parsed_params[i]) == 1)
         {
-            printf("word index %d is just comma. operands are in indexs before and after\n", i);
-
-            /*check if need to check syntax == no spaces in operands*/
-
             /* check if first operand dont have spaces */
             if (i != 2)
             {
                 if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                 {
-                    printf("first operand of 2 have SYNTAX_ERROR\n");
+                    fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR\n");
                     return SYNTAX_ERROR;
                 }
             }
@@ -306,7 +300,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             {
                 if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i + 1, 1))
                 {
-                    printf("second operand of 2 have SYNTAX_ERROR\n");
+                    fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR\n");
                     return SYNTAX_ERROR;
                 }
             }
@@ -315,40 +309,103 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             strcpy((*line_params).parsed_params[word], (*line_params).parsed_params[i + 1]);
         }
 
+        /* comma include in parts of opernads */
         else
         {
-            printf("comma include in parts of opernads\n");
             operands_count = parse_string_into_string_array(data_model, (*line_params).parsed_params[i], &operands_arr, ",");
             if (operands_count == 1)
             {
-                printf("check where is comma in %s\n", (*line_params).parsed_params[i]);
+                /* check where in the word is the comma and remove it */
+
+                /* if comma in start of second opernad */
                 if (*ptr_comma == (*line_params).parsed_params[i][0])
                 {
-                    printf("comma in start of second operans\n");
+                    for (j = 0; j < strlen((*line_params).parsed_params[i]); j++)
+                    {
+                        (*line_params).parsed_params[i][j] = (*line_params).parsed_params[i][j + 1];
+                    }
+
+                    /* if first operand need syntax check */
+                    if (i > 2)
+                    {
+                        if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
+                        {
+                            fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR\n");
+                            return SYNTAX_ERROR;
+                        }
+                    }
+
+                    /* if second operand need syntax check */
+                    if (line_params_count > i + 1)
+                    {
+                        if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i, 1))
+                        {
+                            fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR\n");
+                            return SYNTAX_ERROR;
+                        }
+                    }
+
+                    strcpy((*line_params).parsed_params[word - 1], (*line_params).parsed_params[word]);
+                    strcpy((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
                 }
+
+                /* if comma in end of first opernad */
                 else if (*ptr_comma == (*line_params).parsed_params[i][strlen((*line_params).parsed_params[i]) - 1])
                 {
-                    printf("comma in end of first operand\n");
+                    *ptr_comma = '\0';
+                    /* if first operand need syntax check */
+                    if (i > word)
+                    {
+                        if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
+                        {
+                            fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR\n");
+                            return SYNTAX_ERROR;
+                        }
+                    }
+
+                    /* if second operand need syntax check */
+                    if (line_params_count > i + 2)
+                    {
+                        if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i + 1, 1))
+                        {
+                            fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR\n");
+                            return SYNTAX_ERROR;
+                        }
+                    }
+
+                    strcpy((*line_params).parsed_params[word - 1], (*line_params).parsed_params[word]);
+                    strcpy((*line_params).parsed_params[word], (*line_params).parsed_params[i + 1]);
                 }
             }
 
+            /* some parts of both operands are with the comma */
             else if (operands_count == 2)
             {
-                /* break the left overs and add then in the right place, operands_arr[0] to operand 1 and operands_arr[1] to operand 2 */
-                printf("some parts from operand is with the other\n");
-            }
+                (*line_params).parsed_params[i] = operands_arr[0];
+                /* if first operand need syntax check */
+                if (i > 1)
+                {
+                    if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
+                    {
+                        fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR\n");
+                        return SYNTAX_ERROR;
+                    }
+                }
 
-            /*@@@@@ no need we made sure we have only 1 comma */
-            else if (operands_count > 2)
-            {
-                fprintf(stderr, "Error. Number of operands illegal for the command\n");
-                safe_free(1, operands_arr);
-                return SYNTAX_ERROR;
-            }
-            /*@@@@@ no need we made sure we have only 1 comma */
+                (*line_params).parsed_params[i] = operands_arr[1];
+                /* if second operand need syntax check */
+                if (line_params_count > i + 1)
+                {
+                    if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i, 1))
+                    {
+                        fprintf(stdout, "second operand of 2 have SYNTAX_ERROR\n");
+                        return SYNTAX_ERROR;
+                    }
+                }
 
-            printf("first part is %s\n", operands_arr[0]);
-            printf("first part is %s\n", operands_arr[1]);
+                strcpy((*line_params).parsed_params[word - 1], (*line_params).parsed_params[word]);
+                strcpy((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
+            }
         }
     }
 
@@ -410,11 +467,9 @@ int check_addressing(char **word, Data_model *data_model)
         }
         else
         {
-            fprintf(stderr, "Immediate addressing is missing a number in line %d\n", data_model->line_number);
+            fprintf(stdout, "Immediate addressing is missing a number in line %d\n", data_model->line_number);
             result = ERR_INVALID_ADDRESSING;
         }
-
-        /*printf("the word %s is immediate number\n", *word);*/
     }
 
     /* 2 permenent index */
@@ -440,7 +495,7 @@ int check_addressing(char **word, Data_model *data_model)
         }
         else
         {
-            fprintf(stderr, "The array missing an number or define index in line %d\n", data_model->line_number);
+            fprintf(stdout, "The array missing an number or define as index in line %d\n", data_model->line_number);
             result = ERR_INVALID_ADDRESSING;
         }
         safe_free(1, index);
@@ -492,13 +547,12 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
     {
         if (is_number((*word) + 1, num))
         {
-            fprintf(stderr, "0 number is: %d\n", *num);
+            /* the number as integer is now in num */
         }
         else
         {
             i = is_define((*word) + 1, data_model->symbols, data_model->symbol_count);
             *num = data_model->symbols[i].value;
-            fprintf(stderr, "0 number is define: %d\n", *num);
         }
 
         operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
@@ -512,10 +566,9 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
     /* 1 direct */
     else if (addressing == 1)
     {
-        fprintf(stderr, "adding blank word\n");
         operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
         operand_entry.dValue = -1;
-        /* setting the ARE bits to 11 */
+        /* turn on the two ARE bits*/
         write_bits_in_word(&operand_entry.word, 3, 2, 0);
 
         push((void **)&data_model->instructions_table, &data_model->instruction_count, sizeof(Word_entry), &operand_entry);
@@ -551,13 +604,12 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
 
         if (is_number(index, num))
         {
-            fprintf(stderr, "2 index is: %d\n", *num);
+            /* the number as integer is now in num */
         }
         else
         {
             i = is_define(index, data_model->symbols, data_model->symbol_count);
             *num = data_model->symbols[i].value;
-            fprintf(stderr, "2 index is define: %d\n", *num);
         }
 
         index_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
@@ -582,7 +634,6 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
                 {
                     if (register_type == 0) /* register_type == 0 target*/
                     {
-                        fprintf(stderr, "source register is: %d\n", i);
                         operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
                         operand_entry.dValue = i;
                         write_bits_in_word(&operand_entry.word, i, 3, 2);
@@ -592,7 +643,6 @@ int handle_addressing(Data_model *data_model, int addressing, char **word, int r
                     }
                     else /* register_type == 1 source*/
                     {
-                        fprintf(stderr, "target register is: %d\n", i);
                         operand_entry.address = data_model->instruction_count + CODE_START_ADDRESS;
                         operand_entry.dValue = i;
                         write_bits_in_word(&operand_entry.word, i, 3, 5);
