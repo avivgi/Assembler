@@ -8,7 +8,7 @@
  * @param label The label to search for.
  * @param symbol_table The symbol table to search in.
  * @param symbol_count The number of symbols in the symbol table.
- * @return 1 if the label exists in the symbol table, 0 otherwise.
+ * @return Index of the label in the table, otherwise negative error.
  */
 
 int isLabelExist(char *label, Symbol *symbol_table, int symbol_count)

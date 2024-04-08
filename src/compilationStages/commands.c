@@ -734,7 +734,8 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     int i, command, addressing_target; /*, addressing_source; */
     int word = 0;
-    /* char **operands_arr = NULL; */
+    int label = -1;
+    char **operands_arr = NULL;
 
     /* check if first word is label*/
     if ((*line_params).parsed_params[word][strlen((*line_params).parsed_params[word]) - 1] == ':')
@@ -765,25 +766,26 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         }
 
         addressing_target = check_addressing(&(*line_params).parsed_params[word], data_model);
-        /* no need to add code words for addressing type immediate or register */
+        /* no need to update code words for addressing type immediate or register */
         if (addressing_target == 0 || addressing_target == 3)
         {
             return 1;
         }
 
-        /* permenent index adressing */
-        if (addressing_target == 2)
-        {
-            /* remove "[index]" */
-        }
-
-        /* else is direct addressing*/
+        /* remove index if has, and the operand will be in operands_arr[0] */
+        parse_string_into_string_array(data_model, (*line_params).parsed_params[word], &operands_arr, "[");
 
         /* loop in symbols and find the operand */
-        /* extract his address */
-        /* extract his type extern 1 / entry 2 */
+
+        if ((label = isLabelExist(operands_arr[0], data_model->symbols, data_model->symbol_count)) < 0)
+        {
+            fprintf(stdout, "Error. Can not find the operand in labels table\n");
+            return EER_LABEL_NOT_FOUND;
+        }
+
         /* find the first "blank" code word, and make it 0 */
-        /* write the new value of code word */
+        /* extract and write the address */
+        /* extract and write his type extern 1 / entry 2 */
     }
 
     else if (assembler_commands[command].command_type == 2)
