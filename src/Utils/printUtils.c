@@ -167,7 +167,7 @@ void print_entry_and_extern_table(Data_model data_model, const char *filename, e
     for (i = found_at_inx; i < data_model.symbol_count; i++)
     {
         if (data_model.symbols[i].type == type)
-            fprintf(dest, "%-10s\t%d\n", data_model.symbols[i].name, data_model.symbols[i].value);
+            fprintf(dest, "%s %04d\n", data_model.symbols[i].name, data_model.symbols[i].value);
     }
 
     fclose(dest);
@@ -286,4 +286,42 @@ char *encrypt_word(Word word)
 
     result[BITS_IN_ENCRYPTED_WORD] = '\0';
     return result;
+}
+
+void print_extern_table(Data_model data_model, const char *filename, enum Symbol_type type)
+{
+    FILE *dest;
+    char fullFileName[100];
+    int i, found_at_inx = -1;
+
+    for (i = 0; i < data_model.symbol_count; i++)
+    {
+        if (data_model.symbols[i].type == type)
+        {
+            found_at_inx = i;
+            break;
+        }
+    }
+
+    if (found_at_inx == -1)
+        return;
+
+    strcpy(fullFileName, filename);
+    if (type == ENTRY)
+        strcat(fullFileName, ".ent");
+    else if (type == EXTERN)
+        strcat(fullFileName, ".ext");
+    if ((dest = fopen(fullFileName, "w")) == NULL)
+    {
+        fprintf(stderr, "Error! Failed open file %s\n", fullFileName);
+        return;
+    }
+
+    for (i = found_at_inx; i < data_model.symbol_count; i++)
+    {
+        if (data_model.symbols[i].type == type)
+            fprintf(dest, "%s %04d\n", data_model.symbols[i].name, data_model.symbols[i].value);
+    }
+
+    fclose(dest);
 }

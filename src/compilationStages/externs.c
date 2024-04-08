@@ -29,7 +29,6 @@ char *strdup(const char *s);
  */
 int externs(Data_model *data_model, Line_params *line_params, size_t line_params_count)
 {
-
     /*
     possible returns:
     NOT EXTERN
@@ -81,3 +80,37 @@ int externs(Data_model *data_model, Line_params *line_params, size_t line_params
                ? (error_flag ? EXTERN_FOUND_AND_ADDED_WITH_ERRORS : EXTERN_FOUND_AND_ADDED)
                : NOT_EXTERN;
 }
+
+/**
+ * Function to add an external reference.
+ * @param data_model The data model.
+ * @param label The label to add.
+ */
+void add_extern_reference(Data_model *data_model, char *label)
+{
+    Reference_address new_reference;
+    new_reference.address = data_model->instruction_count;
+    strcpy(new_reference.name, label);
+    push((void **)&(data_model->externals), &(data_model->externals_count), sizeof(Reference_address), &new_reference);
+}
+
+Bool is_label_extern(Data_model *data_model, char *label)
+{
+    int i = 0;
+    while (i < data_model->symbol_count)
+    {
+        if (strcmp(data_model->symbols[i].name, label) == 0)
+            if (data_model->symbols[i].type == EXTERN)
+                return true;
+
+        i++;
+    }
+    return false;
+}
+/*
+void sample()
+{
+    if (is_label_extern(&data_model, label))
+        add_extern_reference(&data_model, label);
+}
+*/
