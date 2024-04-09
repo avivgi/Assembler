@@ -107,10 +107,3 @@ Bool is_label_extern(Data_model *data_model, char *label)
     }
     return false;
 }
-/*
-void sample()
-{
-    if (is_label_extern(&data_model, label))
-        add_extern_reference(&data_model, label);
-}
-*/

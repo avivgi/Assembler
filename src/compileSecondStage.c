@@ -64,6 +64,10 @@ int compileSecondStage(const char *filename, Data_model *data_model)
 
         parse_line(&line_params, &line_params_count, buffer, "\t\n\f\r ");
 
+        /* step 3 && 4 - if type== define continue*/
+        if (strcmp((line_params).parsed_params[0], ".define") == 0)
+            continue;
+
         /*step 3-4 if first word is label, skip it, if this is .string .extern or .data continue*/
         if (is_label_data_extern_string(line_params, line_params_count) == 1)
             continue;
