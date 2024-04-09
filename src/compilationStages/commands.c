@@ -14,8 +14,7 @@
 #include "../Utils/languageUtils.h"
 #include "../global_constants.h"
 #include "../Utils/memoryUtils.h"
-
-/*#include "../Utils/printUtils.h"*/
+#include "../compilationStages/externs.h"
 
 int commands(Data_model *data_model, Line_params *line_params, size_t line_params_count)
 {
@@ -735,16 +734,8 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     int word = 0;
     int label = -1;
     int code_word = -1;
+    int result = 1;
     char **operands_arr = NULL;
-    char *ptr_open = NULL;
-
-    /* until define wont arrive to here */
-    if ((*line_params).parsed_params[word][0] == '.')
-    {
-        printf("Something arrive to commands which is not command. line start with the word %s in line %d\n", (*line_params).parsed_params[word], data_model->line_number);
-        return 1;
-    }
-    /* until define wont arrive to here */
 
     /* check if first word is label*/
     if ((*line_params).parsed_params[word][strlen((*line_params).parsed_params[word]) - 1] == ':')
@@ -777,20 +768,18 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         /* remove [index] from operand label */
         if (operand_addressing == 2)
         {
+            char *ptr_open = NULL;
             printf("remove [index] from operand: %s\n", operands_arr[operand]);
             ptr_open = strchr(operands_arr[operand], '[');
             *ptr_open = '\0';
             printf("now its: %s\n", operands_arr[operand]);
         }
-        else
-        {
-            printf("issue is here\n");
-        }
 
         if ((label = isLabelExist(operands_arr[operand], data_model->symbols, data_model->symbol_count)) < 0)
         {
-            fprintf(stdout, "Error. Can not find the operand in labels table\n");
-            return EER_LABEL_NOT_FOUND;
+            fprintf(stdout, "Error. Can not find the operand in labels table in line %d\n", data_model->line_number);
+            result = EER_LABEL_NOT_FOUND;
+            /* return EER_LABEL_NOT_FOUND; */
         }
         else /* for tests */
         {
@@ -808,6 +797,12 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
             }
         }
 
+        if (code_word < 0)
+        {
+            printf("Can't find blank word\n");
+            result = ERR_WORD_NOT_FOUND;
+        }
+
         /* extract and write the address */
         printf("write the address of label: %d\n", data_model->symbols[label].value);
         /* the print above is good but dValue and word are not */
@@ -817,7 +812,16 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
 
         /* add Avner code for extern */
         /* extract and write his type extern 1 / entry 2 */
+        if (is_label_extern(data_model, operands_arr[operand]))
+        {
+            add_extern_reference(data_model, operands_arr[operand]);
+            write_bits_in_word(&data_model->instructions_table[code_word].word, 1, 2, 0);
+        }
+        else /* in currnet file */
+        {
+            write_bits_in_word(&data_model->instructions_table[code_word].word, 2, 2, 0);
+        }
     }
 
-    return 1;
+    return result;
 }
