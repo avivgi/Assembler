@@ -731,11 +731,20 @@ int is_define(char *label, Symbol *symbol_table, int symbol_count)
 /* should update operands on 2nd pass. return 0 in success and something else on errors*/
 int updateOperands(Data_model *data_model, Line_params *line_params, size_t line_params_count)
 {
-    As_Command assembler_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
-    int i, command, addressing_target; /*, addressing_source; */
+    int i, operand, operand_count, operand_addressing;
     int word = 0;
     int label = -1;
+    int code_word = -1;
     char **operands_arr = NULL;
+    char *ptr_open = NULL;
+
+    /* until define wont arrive to here */
+    if ((*line_params).parsed_params[word][0] == '.')
+    {
+        printf("Something arrive to commands which is not command. line start with the word %s in line %d\n", (*line_params).parsed_params[word], data_model->line_number);
+        return 1;
+    }
+    /* until define wont arrive to here */
 
     /* check if first word is label*/
     if ((*line_params).parsed_params[word][strlen((*line_params).parsed_params[word]) - 1] == ':')
@@ -743,54 +752,71 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         word++;
     }
 
-    /* check if the command is in command list */
-    for (command = 0; command < NUM_OF_COMMANDS_IN_LANGUAGE; command++)
+    /* move index to the start of first operand */
+    word++;
+
+    /* combine all words and operands to single word */
+    for (i = word + 1; i < line_params_count; i++)
     {
-        if (strcmp((*line_params).parsed_params[word], (assembler_commands[command].command_name)) == 0)
-        {
-            word++;
-            break;
-        }
+        strcat((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
     }
 
-    if (assembler_commands[command].command_type == 0)
-    {
-        return 1;
-    }
+    operand_count = parse_string_into_string_array(data_model, (*line_params).parsed_params[word], &operands_arr, ",");
 
-    else if (assembler_commands[command].command_type == 1)
+    printf("operand_count: %d\n", operand_count);
+    for (operand = 0; operand < operand_count; operand++)
     {
-        for (i = word + 1; i < line_params_count; i++)
+
+        operand_addressing = check_addressing(&operands_arr[operand], data_model);
+        printf("operand_addressing for %s is: %d\n", operands_arr[operand], operand_addressing);
+        if (operand_addressing == 0 || operand_addressing == 3)
         {
-            strcat((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
+            continue;
         }
 
-        addressing_target = check_addressing(&(*line_params).parsed_params[word], data_model);
-        /* no need to update code words for addressing type immediate or register */
-        if (addressing_target == 0 || addressing_target == 3)
+        /* remove [index] from operand label */
+        if (operand_addressing == 2)
         {
-            return 1;
+            printf("remove [index] from operand: %s\n", operands_arr[operand]);
+            ptr_open = strchr(operands_arr[operand], '[');
+            *ptr_open = '\0';
+            printf("now its: %s\n", operands_arr[operand]);
+        }
+        else
+        {
+            printf("issue is here\n");
         }
 
-        /* remove index if has, and the operand will be in operands_arr[0] */
-        parse_string_into_string_array(data_model, (*line_params).parsed_params[word], &operands_arr, "[");
-
-        /* loop in symbols and find the operand */
-
-        if ((label = isLabelExist(operands_arr[0], data_model->symbols, data_model->symbol_count)) < 0)
+        if ((label = isLabelExist(operands_arr[operand], data_model->symbols, data_model->symbol_count)) < 0)
         {
             fprintf(stdout, "Error. Can not find the operand in labels table\n");
             return EER_LABEL_NOT_FOUND;
         }
+        else /* for tests */
+        {
+            printf("found label in index: %d\n", label);
+        }
 
         /* find the first "blank" code word, and make it 0 */
-        /* extract and write the address */
-        /* extract and write his type extern 1 / entry 2 */
-    }
+        for (i = 0; i < data_model->instruction_count; i++)
+        {
+            if ((data_model->instructions_table[i].word & 3) == 3)
+            {
+                printf("found blank word in address: %d \n", data_model->instructions_table[i].address);
+                code_word = i;
+                break;
+            }
+        }
 
-    else if (assembler_commands[command].command_type == 2)
-    {
-        /* code */
+        /* extract and write the address */
+        printf("write the address of label: %d\n", data_model->symbols[label].value);
+        /* the print above is good but dValue and word are not */
+        data_model->instructions_table[code_word].dValue = data_model->symbols[label].value;
+        data_model->instructions_table[code_word].word = 0;
+        write_bits_in_word(&data_model->instructions_table[code_word].word, data_model->symbols[label].value, 12, 2);
+
+        /* add Avner code for extern */
+        /* extract and write his type extern 1 / entry 2 */
     }
 
     return 1;
