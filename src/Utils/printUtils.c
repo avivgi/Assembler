@@ -288,40 +288,25 @@ char *encrypt_word(Word word)
     return result;
 }
 
-void print_extern_table(Data_model data_model, const char *filename, enum Symbol_type type)
+void print_extern_table(Data_model data_model, const char *filename)
 {
     FILE *dest;
     char fullFileName[100];
-    int i, found_at_inx = -1;
+    int i;
 
-    for (i = 0; i < data_model.symbol_count; i++)
-    {
-        if (data_model.symbols[i].type == type)
-        {
-            found_at_inx = i;
-            break;
-        }
-    }
-
-    if (found_at_inx == -1)
+    if (data_model.externals_count == 0)
         return;
 
     strcpy(fullFileName, filename);
-    if (type == ENTRY)
-        strcat(fullFileName, ".ent");
-    else if (type == EXTERN)
-        strcat(fullFileName, ".ext");
+    strcat(fullFileName, ".ext");
     if ((dest = fopen(fullFileName, "w")) == NULL)
     {
         fprintf(stderr, "Error! Failed open file %s\n", fullFileName);
         return;
     }
 
-    for (i = found_at_inx; i < data_model.symbol_count; i++)
-    {
-        if (data_model.symbols[i].type == type)
-            fprintf(dest, "%s %04d\n", data_model.symbols[i].name, data_model.symbols[i].value);
-    }
+    for (i = 0; i < data_model.externals_count; i++)
+        fprintf(dest, "%s %04d\n", data_model.externals[i].name, data_model.externals[i].address);
 
     fclose(dest);
 }

@@ -22,6 +22,12 @@ int compile(const char *filename)
     initDataModel(&data_model);
 
     result = compileFirstStage(filename, &data_model);
+    if (result > 0)
+    {
+        fprintf(stderr, "Compilation terminated due to errors for file: %s.\n", filename);
+        if (!DEBUG)
+            return result;
+    }
     result += compileSecondStage(filename, &data_model);
     if (result != 0)
     {
@@ -40,7 +46,7 @@ int compile(const char *filename)
 
     print_instruction_table(data_model, filename);
     print_entry_and_extern_table(data_model, filename, ENTRY);
-    print_entry_and_extern_table(data_model, filename, EXTERN);
+    print_extern_table(data_model, filename);
 
     return 0;
 }

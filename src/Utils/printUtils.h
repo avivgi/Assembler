@@ -13,4 +13,5 @@ void print_entry_and_extern_table(Data_model data_model, const char *filename, e
 void print_instruction_table(Data_model data_model, const char *filename);
 char *encrypt_word(Word word);
 void print_assembly_line(FILE *dest, Word_entry *word_entry, size_t size);
+void print_extern_table(Data_model data_model, const char *filename);
 #endif

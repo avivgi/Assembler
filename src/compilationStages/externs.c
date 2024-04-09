@@ -89,7 +89,7 @@ int externs(Data_model *data_model, Line_params *line_params, size_t line_params
 void add_extern_reference(Data_model *data_model, char *label)
 {
     Reference_address new_reference;
-    new_reference.address = data_model->instruction_count;
+    new_reference.address = data_model->instruction_count + CODE_START_ADDRESS;
     strcpy(new_reference.name, label);
     push((void **)&(data_model->externals), &(data_model->externals_count), sizeof(Reference_address), &new_reference);
 }
