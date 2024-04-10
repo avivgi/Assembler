@@ -13,4 +13,5 @@
 .define 3LLL = 3
 .define 3AAA=3;
 .define A1=ddd
+.define sz = 2
 
