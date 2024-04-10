@@ -733,8 +733,8 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     int i, operand, operand_count, operand_addressing;
     int word = 0;
     int label = -1;
-    int code_word = -1;
     int result = 1;
+    char regi_count = 0;
     char **operands_arr = NULL;
 
     /* check if first word is label*/
@@ -745,23 +745,34 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
 
     /* move index to the start of first operand */
     word++;
+    data_model->instruction_count++;
+    printf("IC now: %d\n", data_model->instruction_count);
+
+    if ((*line_params).param_count == word)
+    {
+        return result;
+    }
 
     /* combine all words and operands to single word */
-    for (i = word + 1; i < line_params_count; i++)
+    for (i = word + 1; i < (*line_params).param_count; i++)
     {
         strcat((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
     }
 
     operand_count = parse_string_into_string_array(data_model, (*line_params).parsed_params[word], &operands_arr, ",");
 
-    printf("operand_count: %d\n", operand_count);
     for (operand = 0; operand < operand_count; operand++)
     {
-
         operand_addressing = check_addressing(&operands_arr[operand], data_model);
         printf("operand_addressing for %s is: %d\n", operands_arr[operand], operand_addressing);
         if (operand_addressing == 0 || operand_addressing == 3)
         {
+            if (operand_addressing)
+            {
+                regi_count++;
+            }
+
+            data_model->instruction_count++;
             continue;
         }
 
@@ -769,10 +780,8 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         if (operand_addressing == 2)
         {
             char *ptr_open = NULL;
-            printf("remove [index] from operand: %s\n", operands_arr[operand]);
             ptr_open = strchr(operands_arr[operand], '[');
             *ptr_open = '\0';
-            printf("now its: %s\n", operands_arr[operand]);
         }
 
         if ((label = isLabelExist(operands_arr[operand], data_model->symbols, data_model->symbol_count)) < 0)
@@ -787,7 +796,8 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         }
 
         /* find the first "blank" code word, and make it 0 */
-        for (i = 0; i < data_model->instruction_count; i++)
+        /*
+        for (i = data_model->instruction_count; i < first_stage_instruction_count; i++)
         {
             if ((data_model->instructions_table[i].word & 3) == 3)
             {
@@ -802,26 +812,39 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
             printf("Can't find blank word\n");
             result = ERR_WORD_NOT_FOUND;
         }
+        */
 
         /* extract and write the address */
         printf("write the address of label: %d\n", data_model->symbols[label].value);
         /* the print above is good but dValue and word are not */
-        data_model->instructions_table[code_word].dValue = data_model->symbols[label].value;
-        data_model->instructions_table[code_word].word = 0;
-        write_bits_in_word(&data_model->instructions_table[code_word].word, data_model->symbols[label].value, 12, 2);
+        data_model->instructions_table[data_model->instruction_count].dValue = data_model->symbols[label].value;
+        data_model->instructions_table[data_model->instruction_count].word = 0;
+        write_bits_in_word(&data_model->instructions_table[data_model->instruction_count].word, data_model->symbols[label].value, 12, 2);
 
-        /* add Avner code for extern */
         /* extract and write his type extern 1 / entry 2 */
         if (is_label_extern(data_model, operands_arr[operand]))
         {
             add_extern_reference(data_model, operands_arr[operand]);
-            write_bits_in_word(&data_model->instructions_table[code_word].word, 1, 2, 0);
+            write_bits_in_word(&data_model->instructions_table[data_model->instruction_count].word, 1, 2, 0);
         }
         else /* in currnet file */
         {
-            write_bits_in_word(&data_model->instructions_table[code_word].word, 2, 2, 0);
+            write_bits_in_word(&data_model->instructions_table[data_model->instruction_count].word, 2, 2, 0);
+        }
+
+        data_model->instruction_count++;
+
+        if (operand_addressing == 2)
+        {
+            data_model->instruction_count++;
         }
     }
 
+    if (regi_count == 2)
+    {
+        data_model->instruction_count--;
+    }
+
+    printf("final IC: %d\n", data_model->instruction_count);
     return result;
 }

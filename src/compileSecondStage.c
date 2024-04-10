@@ -28,6 +28,8 @@ char *strdup(const char *s);
  */
 int compileSecondStage(const char *filename, Data_model *data_model)
 {
+    size_t instruction_count_first_stage = data_model->instruction_count;
+
     int result = 0;
     int error_flag = 0;
     FILE *source;
@@ -52,9 +54,8 @@ int compileSecondStage(const char *filename, Data_model *data_model)
 
     /*step 1*/
 
-    /* resume this after promoting IC correctly
+    /* resume this after promoting IC correctly*/
     data_model->instruction_count = 0;
-     */
 
     /* step 2 - read line */
 
