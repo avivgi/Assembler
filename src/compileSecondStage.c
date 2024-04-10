@@ -28,8 +28,6 @@ char *strdup(const char *s);
  */
 int compileSecondStage(const char *filename, Data_model *data_model)
 {
-    size_t instruction_count_first_stage = data_model->instruction_count;
-
     int result = 0;
     int error_flag = 0;
     FILE *source;
@@ -47,7 +45,7 @@ int compileSecondStage(const char *filename, Data_model *data_model)
 
     if ((source = fopen(fullFileName, "r")) == NULL)
     {
-        fprintf(stdout, "Error! Failed open file %s\n", fullFileName);
+        fprintf(stderr, "Error: Error! Failed open file %s\n", fullFileName);
         free(fullFileName);
         return (ERR_OPEN_FILE);
     }

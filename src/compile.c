@@ -47,6 +47,6 @@ int compile(const char *filename)
     print_instruction_table(data_model, filename);
     print_entry_and_extern_table(data_model, filename, ENTRY);
     print_extern_table(data_model, filename);
-
+    printf("Compilation completed successfully for file: %s.\n", filename);
     return 0;
 }

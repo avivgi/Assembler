@@ -19,7 +19,7 @@ void push(void **array, size_t *size, size_t element_size, const void *new_eleme
     *array = realloc(*array, (*size) * element_size);
     if (*array == NULL)
     {
-        fprintf(stdout, "Memory allocation failed\n");
+        fprintf(stderr, "Error: Memory allocation failed\n");
         exit(ERR_MEMORY_ALLOCATION_ERROR);
     }
     memcpy((char *)(*array) + ((*size) - 1) * element_size, new_element, element_size);

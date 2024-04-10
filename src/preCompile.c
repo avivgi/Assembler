@@ -39,7 +39,7 @@ int preCompile(const char *arg)
     strcat(fileName, ".as");
     if ((source = fopen(fileName, "r")) == NULL)
     {
-        fprintf(stdout, "Error! Failed open file %s\n", fileName);
+        fprintf(stderr, "Error: Error. Failed open file %s\n", fileName);
         safe_free(1, fileName);
         return (ERR_OPEN_FILE);
     }
@@ -47,7 +47,7 @@ int preCompile(const char *arg)
     strcat(fileName, ".am");
     if ((destination = fopen(fileName, "w+")) == NULL)
     {
-        fprintf(stdout, "Error! Failed open file %s\n", fileName);
+        fprintf(stderr, "Error: Error! Failed open file %s\n", fileName);
         safe_free(1, fileName);
         fclose(source);
         return (ERR_OPEN_FILE);

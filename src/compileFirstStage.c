@@ -44,7 +44,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
 
     if ((source = fopen(fullFileName, "r")) == NULL)
     {
-        fprintf(stdout, "Error! Failed open file %s\n", fullFileName);
+        fprintf(stderr, "Error. Failed open file %s\n", fullFileName);
         safe_free(1, fullFileName);
         return (ERR_OPEN_FILE);
     }
