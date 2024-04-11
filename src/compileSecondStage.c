@@ -28,7 +28,6 @@ char *strdup(const char *s);
  */
 int compileSecondStage(const char *filename, Data_model *data_model)
 {
-    int result = 0;
     int error_flag = 0;
     FILE *source;
     char *buffer = NULL;
@@ -84,17 +83,13 @@ int compileSecondStage(const char *filename, Data_model *data_model)
         safe_free(1, entry_label_name);
 
         /* step 7 update 2nd - 4th operands */
-        result = updateOperands(data_model, &line_params, line_params_count);
-        /*step 8 - IC = IC + L*/
+        error_flag += updateOperands(data_model, &line_params, line_params_count);
 
-        /* resume this when really promoring ic*/
-        /*         if (result == 1)
-                     data_model->instruction_count += 1;
-          */
+        /*step 8 - IC = IC + L*/
     }
     /*step 9 - free line_params*/
     if (DEBUG)
-        fprintf(stderr, "Finished second stage for %s with error %d and result %d\n", filename, error_flag, result);
+        fprintf(stderr, "Finished second stage for %s with error(s) %d.\n", filename, error_flag);
 
     if (error_flag != 0)
         fprintf(stderr, "Compilation terminated after second stage due to errors.\n");

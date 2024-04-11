@@ -25,8 +25,7 @@ int compile(const char *filename)
     if (result > 0)
     {
         fprintf(stderr, "Compilation terminated due to errors for file: %s.\n", filename);
-        if (!DEBUG)
-            return result;
+        return result;
     }
     result += compileSecondStage(filename, &data_model);
     if (result != 0)
@@ -34,6 +33,8 @@ int compile(const char *filename)
         fprintf(stderr, "Compilation terminated due to errors for file: %s.\n", filename);
         if (!DEBUG)
             return result;
+        else
+            fprintf(stderr, "Because DEBUG flag is on, we will continue to print the tables despite the 2nd stage errors.\n");
     }
 
     if (DEBUG)

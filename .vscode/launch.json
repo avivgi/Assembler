@@ -6,7 +6,7 @@
             "type": "cppdbg",
             "request": "launch",
             "args": [
-                "tests/test8"
+                "tests/test3"
             ],
             "filterStdout": true,
             "stopAtEntry": false,

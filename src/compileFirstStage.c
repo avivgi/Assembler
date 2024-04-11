@@ -65,7 +65,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
 
         /* step 5+6  - labels   */
         result = labels(data_model, &line_params, line_params_count);
-        if (result == ERR_LABEL_OR_NAME_IS_TAKEN)
+        if (result == ERR_LABEL_OR_NAME_IS_TAKEN || result == ERR_VARIABLE_ISNT_INTEGER)
         {
             error_flag += 1;
             continue;
@@ -103,7 +103,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
 
     safe_free_array((void *)(line_params).parsed_params, (line_params).param_count);
     safe_free(1, buffer);
-    fprintf(stderr, "Finished first stage for %s with error %d and result %d\n", filename, error_flag, result);
+    fprintf(stderr, "Finished first stage for %s with error(s) %d.\n", filename, error_flag);
 
     /*step 16- if errors stop*/
     if (error_flag != 0)

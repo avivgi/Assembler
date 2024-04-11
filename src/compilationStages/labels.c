@@ -85,7 +85,12 @@ int labels(Data_model *data_model,
     {
         new_symbol.type = DATA;
         new_symbol.value = data_model->data_count;
-        add_int_array_to_data_table(data_model, (*line_params), (int)(*line_params).param_count);
+        result = add_int_array_to_data_table(data_model, (*line_params), (int)(*line_params).param_count);
+        if (result < 0)
+        {
+            safe_free(1, label_name);
+            return result;
+        }
         result = LABEL_DATA_WAS_FOUND;
     }
     /*detect type LABEL: .string */
@@ -134,7 +139,7 @@ int add_int_array_to_data_table(Data_model *data_model,
     int param = 2;
     int *arr = NULL;
 
-    size_t array_size = 0;
+    int array_size = 0;
     /*  size_t total_array_size = 0; */
 
     Word_entry data_entry;
@@ -142,7 +147,7 @@ int add_int_array_to_data_table(Data_model *data_model,
     while (param < param_count)
     {
         array_size = parse_string_into_int_array(data_model, (line_params).parsed_params[param], &arr, ",");
-        if (array_size == 0)
+        if (array_size <= 0)
         {
             fprintf(stderr, "Error: Not a number in line %d.\n", data_model->line_number);
             safe_free(1, arr);

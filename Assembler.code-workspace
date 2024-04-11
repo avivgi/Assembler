@@ -13,7 +13,9 @@
 			"stdlib.h": "c",
 			"stringutils.h": "c",
 			"languageutils.h": "c",
-			"createdefinesymbol.h": "c"
+			"createdefinesymbol.h": "c",
+			"labels.h": "c",
+			"printutils.h": "c"
 		}
 	}
 }
