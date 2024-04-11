@@ -746,14 +746,13 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     /* move index to the start of first operand */
     word++;
     data_model->instruction_count++;
-    printf("IC now: %d\n", data_model->instruction_count);
 
     if ((*line_params).param_count == word)
     {
         return result;
     }
 
-    /* combine all words and operands to single word */
+    /* combine all parsed_params to single param */
     for (i = word + 1; i < (*line_params).param_count; i++)
     {
         strcat((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
@@ -764,7 +763,6 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     for (operand = 0; operand < operand_count; operand++)
     {
         operand_addressing = check_addressing(&operands_arr[operand], data_model);
-        printf("operand_addressing for %s is: %d\n", operands_arr[operand], operand_addressing);
         if (operand_addressing == 0 || operand_addressing == 3)
         {
             if (operand_addressing)
@@ -788,36 +786,12 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         {
             fprintf(stdout, "Error. Can not find the operand in labels table in line %d\n", data_model->line_number);
             result = EER_LABEL_NOT_FOUND;
-            /* return EER_LABEL_NOT_FOUND; */
         }
-        else /* for tests */
-        {
-            printf("found label in index: %d\n", label);
-        }
-
-        /* find the first "blank" code word, and make it 0 */
-        /*
-        for (i = data_model->instruction_count; i < first_stage_instruction_count; i++)
-        {
-            if ((data_model->instructions_table[i].word & 3) == 3)
-            {
-                printf("found blank word in address: %d \n", data_model->instructions_table[i].address);
-                code_word = i;
-                break;
-            }
-        }
-
-        if (code_word < 0)
-        {
-            printf("Can't find blank word\n");
-            result = ERR_WORD_NOT_FOUND;
-        }
-        */
 
         /* extract and write the address */
-        printf("write the address of label: %d\n", data_model->symbols[label].value);
-        /* the print above is good but dValue and word are not */
         data_model->instructions_table[data_model->instruction_count].dValue = data_model->symbols[label].value;
+
+        /* overwrite the "blank" code word */
         data_model->instructions_table[data_model->instruction_count].word = 0;
         write_bits_in_word(&data_model->instructions_table[data_model->instruction_count].word, data_model->symbols[label].value, 12, 2);
 
@@ -845,6 +819,5 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         data_model->instruction_count--;
     }
 
-    printf("final IC: %d\n", data_model->instruction_count);
     return result;
 }
