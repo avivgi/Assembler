@@ -270,19 +270,8 @@ int parse_line(Line_params *line_params, size_t *line_params_count, const char *
         snprintf((*line_params).parsed_params[i++], MAX_PARAM_SIZE, "%s", token);
     }
 
+    *line_params_count = i - 1;
     (*line_params).param_count = i - 1;
-    /*
-    (*line_params_count)++;
-    */
-    (*line_params_count) = 1;
-
-    /*
-        printf("Contents of parsed_params:\n ");
-        for (i = 0; i < (*line_params)[*line_params_count - 1].param_count; i++)
-        {
-            printf("Line #%lu -> parsed_params[%d]: %s\n", *line_params_count - 1, i, (*line_params)[*line_params_count - 1].parsed_params[i]);
-        }
-    */
     return 0; /* Indicate success */
 }
 

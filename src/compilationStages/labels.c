@@ -245,9 +245,17 @@ int add_char_array_to_assembly(Data_model *data_model,
 {
     int i;
     Word_entry data_entry;
+    size_t str_len;
+    char str[MAX_LINE_LENGTH];
 
-    const char *str = (line_params).parsed_params[2];
-    size_t str_len = strlen(str);
+    for (i = 2; i < line_params_count; i++)
+    {
+        strcat(str, (line_params).parsed_params[i]);
+        if (i < line_params_count - 1)
+            strcat(str, " ");
+    }
+
+    str_len = strlen(str);
 
     for (i = 0; i < str_len; i++)
     {

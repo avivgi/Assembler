@@ -2,13 +2,11 @@
 message: .string "Hello, World"
 .define a=5
 ; Print the message
-MAIM:     mov eax, 4
-    mov ebx, 1
-    mov ecx, message
-    mov edx, 13
-    bne 0x80
+MAIM:     mov r2, r4
+   mov r1, r1
+    mov r1, message
+    mov r1,r1
 
     ; Exit the program
-EXIT:   mov eax, 1
-    sub ebx, ebx
-    bne 0x80
+EXIT:   mov r1, r1
+    sub #3, r1

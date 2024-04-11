@@ -26,6 +26,8 @@ int compile_assembly_file(char *filename)
 
         // silent stdout
         freopen("/dev/null", "w", stdout);
+        freopen("/dev/null", "w", stderr);
+
         execl("../bin/assembler", "assembler", filename, (char *)NULL);
 
         perror("execl"); // If execl returns, it means an error occurred
@@ -170,7 +172,31 @@ void compile_assembly_files_in_directory(const char *dir_path)
                 sprintf(full_file_path, "%s/%s", dir_path, entry->d_name);
 
                 // Call compile_assembly_file with the full path
+                // Call compile_assembly_file with the full path
                 compile_assembly_file(full_file_path);
+            }
+        }
+        closedir(dir);
+    }
+    else
+    {
+        perror("opendir failed");
+        exit(EXIT_FAILURE);
+    }
+}
+
+// delete all files in this directory that ends with *.ob, *.ent, *.ext, *.data, *.am, *.instructions
+void delete_all_file()
+{
+    DIR *dir;
+    struct dirent *entry;
+    if ((dir = opendir(".")) != NULL)
+    {
+        while ((entry = readdir(dir)) != NULL)
+        {
+            if (entry->d_type == DT_REG && (strcmp(entry->d_name + strlen(entry->d_name) - 3, ".ob") == 0 || strcmp(entry->d_name + strlen(entry->d_name) - 4, ".ent") == 0 || strcmp(entry->d_name + strlen(entry->d_name) - 4, ".ext") == 0 || strcmp(entry->d_name + strlen(entry->d_name) - 5, ".data") == 0 || strcmp(entry->d_name + strlen(entry->d_name) - 3, ".am") == 0 || strcmp(entry->d_name + strlen(entry->d_name) - 12, ".instruction") == 0 || strcmp(entry->d_name + strlen(entry->d_name) - 8, ".symbols") == 0))
+            {
+                remove(entry->d_name);
             }
         }
         closedir(dir);
@@ -184,6 +210,7 @@ void compile_assembly_files_in_directory(const char *dir_path)
 
 int main()
 {
+    delete_all_file();
     char current_path[MAX_PATH_LENGTH];
     if (getcwd(current_path, sizeof(current_path)) == NULL)
     {
