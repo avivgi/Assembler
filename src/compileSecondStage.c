@@ -29,6 +29,7 @@ char *strdup(const char *s);
 int compileSecondStage(const char *filename, Data_model *data_model)
 {
     int error_flag = 0;
+    int result = 0;
     FILE *source;
     char *buffer = NULL;
     /*    int L = 0; */
@@ -83,7 +84,12 @@ int compileSecondStage(const char *filename, Data_model *data_model)
         safe_free(1, entry_label_name);
 
         /* step 7 update 2nd - 4th operands */
-        error_flag += updateOperands(data_model, &line_params, line_params_count);
+        result += updateOperands(data_model, &line_params, line_params_count);
+        if (result < 0)
+        {
+            error_flag += 1;
+            continue;
+        }
 
         /*step 8 - IC = IC + L*/
     }
