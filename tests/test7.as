@@ -3,7 +3,7 @@ K: .data -22
 .define ind = 5
 .entry LIST
 LIST: .data 6, 8, sz
-
+mov LIST[2], K
 ; zero operands
 ;rts
 ;END: hlt
