@@ -32,7 +32,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     int error_flag = 0;
     FILE *source;
     size_t line_params_count = 0;
-    Line_params line_params;
+    Line_params line_params = {0};
 
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
 
