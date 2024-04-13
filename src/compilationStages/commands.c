@@ -44,6 +44,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
             break;
         }
     }
+
     if (result == ERR_WORD_NOT_FOUND)
     {
         fprintf(stdout, "Error. Didn't find command name: %s in line %d\n",
@@ -83,6 +84,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         addressing_target = check_addressing(&(*line_params).parsed_params[word], data_model);
         if (addressing_target < 0)
         {
+            fprintf(stdout, "Error. Invalid addressing in line %d\n", data_model->line_number);
             return ERR_INVALID_ADDRESSING;
         }
 
@@ -106,7 +108,6 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
 
     else if (assembler_commands[i].command_type == 2)
     {
-
         /* check syntax and modife for easier handle */
 
         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, (*line_params).param_count, word, assembler_commands[result].command_type))
@@ -234,7 +235,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         else
         {
             /* syntax error number of operands / unnecessary white chars  */
-            fprintf(stdout, "Syntax Error. There is illegal white char in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Number of operands illegal for the command in line %d\n", data_model->line_number);
             return SYNTAX_ERROR;
         }
     }
@@ -256,7 +257,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         /* if comma not found or we have 1 more comma in the found word */
         if (ptr_comma == NULL || ptr_comma != strrchr((*line_params).parsed_params[i], ','))
         {
-            fprintf(stdout, "Error. Number of operands illegal for the command in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Number of operands is illegal for the command in line %d\n", data_model->line_number);
             return SYNTAX_ERROR;
         }
 
@@ -273,7 +274,13 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
         /* if both operands and comma are in the same word */
         if (line_params_count == word + 1)
         {
-            parse_string_into_string_array(data_model, (*line_params).parsed_params[word], &operands_arr, ",");
+            if (2 != parse_string_into_string_array(data_model, (*line_params).parsed_params[word], &operands_arr, ","))
+            {
+                fprintf(stdout, "Error. Number of operands illegal for the command in line %d\n", data_model->line_number);
+                safe_free(1, operands_arr);
+                return SYNTAX_ERROR;
+            }
+
             strcpy((*line_params).parsed_params[word - 1], operands_arr[0]);
             strcpy((*line_params).parsed_params[word], operands_arr[1]);
             safe_free(1, operands_arr);
@@ -453,8 +460,14 @@ int check_addressing(char **word, Data_model *data_model)
     char *ptr_close = NULL;
     char *index = NULL;
 
+    if (strchr(*word, ',') != NULL)
+    {
+        fprintf(stdout, "Error. An operand have a comma in line %d\n", data_model->line_number);
+        result = ERR_INVALID_ADDRESSING;
+    }
+
     /* 0 immediate  */
-    if ((*word)[0] == '#')
+    else if ((*word)[0] == '#')
     {
         if (is_number((*word) + 1, num))
         {
