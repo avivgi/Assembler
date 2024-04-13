@@ -1,0 +1,10 @@
+Symbol name: sz        	Value: 2	type: 1: MDEFINE
+Symbol name: abc       	Value: 4444	type: 1: MDEFINE
+Symbol name: MAIN      	Value: 100	type: 2: CODE
+Symbol name: LOOP      	Value: 104	type: 2: CODE
+Symbol name: L1        	Value: 120	type: 2: CODE
+Symbol name: END       	Value: 124	type: 2: CODE
+Symbol name: len       	Value: 4	type: 1: MDEFINE
+Symbol name: STR       	Value: 147	type: 3: DATA
+Symbol name: LIST      	Value: 154	type: 3: DATA
+Symbol name: K         	Value: 157	type: 3: DATA

@@ -1,5 +1,6 @@
-.define sz = 2
-K: .data 22
+K: .data -22
+.define sz = -2
+.define ind = 5
+.entry LIST
 LIST: .data 6, 8, sz
-rts
-END: hlt
+mov LIST[2], K

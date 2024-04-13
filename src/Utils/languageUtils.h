@@ -5,6 +5,5 @@
 #include "../language.h"
 #include "../datamodel.h"
 
-int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count);
-
+int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count, Data_model data_model);
 #endif

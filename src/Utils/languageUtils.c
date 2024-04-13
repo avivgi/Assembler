@@ -17,7 +17,7 @@
  * @param symbol_count The number of symbols in the array.
  * @return 0 if the label is legal, an error code otherwise.
  */
-int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not good enough*/
+int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count, Data_model data_model)
 {
     As_Command assember_commands[NUM_OF_COMMANDS_IN_LANGUAGE] = AS_COMMAND_LIST;
     const char registers[NUNMER_OF_REGISTERS][3] = RESIGTERS;
@@ -25,14 +25,14 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     int i;
     if (isalpha(label_name[0]) == 0)
     {
-        fprintf(stderr, "Error. The first character of the label %s isn't a letter\n", label_name);
+        fprintf(stderr, "Error. The first character of the label %s isn't a letter in line %d\n", label_name, data_model.line_number);
         return FIRST_LETTER_IS_NOT_A_LETTER;
     }
     for (i = 0; i < NUM_OF_COMMANDS_IN_LANGUAGE; i++)
     {
         if (strcmp(label_name, (assember_commands[i].command_name)) == 0)
         {
-            fprintf(stderr, "Error. The name of the label %s is already taken\n", label_name);
+            fprintf(stderr, "Error. The name of the label %s is already taken in line %d\n", label_name, data_model.line_number);
             return ERR_LABEL_OR_NAME_IS_TAKEN; /*illegal*/
         }
     }
@@ -41,7 +41,7 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     {
         if (strcmp(label_name, (registers[i])) == 0)
         {
-            fprintf(stderr, "Error. The name of the label %s is already taken\n", label_name);
+            fprintf(stderr, "Error. The name of the label %s is already taken in line %d\n", label_name, data_model.line_number);
 
             return ERR_LABEL_OR_NAME_IS_TAKEN; /*illegal*/
         }
@@ -50,7 +50,7 @@ int legalLabel(char *label_name, Symbol **symbols, size_t symbol_count) /*not go
     {
         if (strcmp(label_name, (*symbols)[i].name) == 0)
         {
-            fprintf(stderr, "Error. The name of the label %s is already taken\n", label_name);
+            fprintf(stderr, "Error. The name of the label %s is already taken in line %d\n", label_name, data_model.line_number);
             return ERR_LABEL_OR_NAME_IS_TAKEN;
         }
     }

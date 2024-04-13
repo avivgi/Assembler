@@ -1,9 +1,9 @@
 Symbol name: sz        	Value: 2	type: 1: MDEFINE
 Symbol name: MAIN      	Value: 100	type: 2: CODE
-Symbol name: LOOP      	Value: 100	type: 2: CODE
-Symbol name: L1        	Value: 100	type: 2: CODE
-Symbol name: END       	Value: 100	type: 2: CODE
+Symbol name: LOOP      	Value: 104	type: 2: CODE
+Symbol name: L1        	Value: 120	type: 2: CODE
+Symbol name: END       	Value: 122	type: 2: CODE
 Symbol name: len       	Value: 4	type: 1: MDEFINE
-Symbol name: STR       	Value: 100	type: 3: DATA
-Symbol name: LIST      	Value: 107	type: 3: DATA
-Symbol name: K         	Value: 110	type: 3: DATA
+Symbol name: STR       	Value: 135	type: 3: DATA
+Symbol name: LIST      	Value: 142	type: 3: DATA
+Symbol name: K         	Value: 145	type: 3: DATA

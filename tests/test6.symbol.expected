@@ -1,0 +1,4 @@
+Symbol name: message   	Value: 114	type: 3: DATA
+Symbol name: a         	Value: 5	type: 1: MDEFINE
+Symbol name: MAIM      	Value: 100	type: 2: CODE
+Symbol name: EXIT      	Value: 109	type: 2: CODE

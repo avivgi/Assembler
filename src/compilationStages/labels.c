@@ -73,7 +73,7 @@ int labels(Data_model *data_model,
     label_name[str_len - 1] = '\0';
     str_len--;
 
-    if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count)) != 0)
+    if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count, *data_model)) != 0)
     {
         safe_free(1, label_name);
         return ERR_LABEL_OR_NAME_IS_TAKEN;

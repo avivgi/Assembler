@@ -34,7 +34,7 @@ int createDefineSymbol(Data_model *data_model, Line_params *line_params, size_t 
 
     /* printf("###%s### -> %s\n", (*line_params)[*line_params_count - 1].parsed_params[0], (*line_params)[*line_params_count - 1].parsed_params[1]);*/
 
-    if ((legalLabel((*line_params).parsed_params[0], &data_model->symbols, data_model->symbol_count)) == 0)
+    if ((legalLabel((*line_params).parsed_params[0], &data_model->symbols, data_model->symbol_count, *data_model)) == 0)
     {
         new_symbol.type = MDEFINE;
         strcpy(new_symbol.name, (*line_params).parsed_params[0]);
@@ -48,13 +48,13 @@ int createDefineSymbol(Data_model *data_model, Line_params *line_params, size_t 
 
         if ((errno == ERANGE) || (errno != 0 && value == 0))
         {
-            fprintf(stderr, "Error: Error: Define parameter isn't a number in line %d.\n", data_model->line_number);
+            fprintf(stderr, "Error: Define parameter isn't a number in line %d.\n", data_model->line_number);
             safe_free(2, param, define_string);
             return ERR_VARIABLE_ISNT_INTEGER;
         }
         if (endptr == (*line_params).parsed_params[3])
         {
-            fprintf(stderr, "Error: Error: No digits were found in line %d.\n", data_model->line_number);
+            fprintf(stderr, "Error: No digits were found in line %d.\n", data_model->line_number);
             safe_free(2, define_string, param);
             return ERR_VARIABLE_ISNT_INTEGER;
         }

@@ -11,4 +11,8 @@ END: hlt
 .define len = 4
 STR: .string "abcdef"
 LIST: .data 6, -9, len
+cmp r6, #sz
+cmp r7, #sz
+cmp r6, #sz
+cmp r7, #sz
 K: .data 22

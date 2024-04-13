@@ -36,6 +36,7 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     size_t line_params_count = 0;
     Line_params line_params;
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
+    data_model->line_number = -1;
 
     if (!fullFileName)
         EXIT_ON_MEM_ALLOC_FAIL
@@ -60,6 +61,8 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     while (read_line(source, &buffer))
     {
         char *entry_label_name = NULL;
+
+        data_model->line_number++;
 
         parse_line(&line_params, &line_params_count, buffer, "\t\n\f\r ");
 
@@ -96,9 +99,6 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     /*step 9 - free line_params*/
     if (DEBUG)
         fprintf(stderr, "Finished second stage for %s with error(s) %d.\n", filename, error_flag);
-
-    if (error_flag != 0)
-        fprintf(stderr, "Compilation terminated after second stage due to errors.\n");
 
     fclose(source);
     safe_free(2, buffer, fullFileName);

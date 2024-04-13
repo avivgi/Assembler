@@ -59,7 +59,7 @@ int externs(Data_model *data_model, Line_params *line_params, size_t line_params
         if (label_name == NULL)
             EXIT_ON_MEM_ALLOC_FAIL
 
-        if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count)) != 0)
+        if ((legalLabel(label_name, &data_model->symbols, data_model->symbol_count, *data_model)) != 0)
         {
             error_flag = true;
             i++;
