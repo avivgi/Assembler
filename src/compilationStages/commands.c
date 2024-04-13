@@ -799,6 +799,7 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         {
             fprintf(stdout, "Error. Can not find the operand in labels table in line %d\n", data_model->line_number);
             result = EER_LABEL_NOT_FOUND;
+            continue;
         }
 
         /* extract and write the address */
