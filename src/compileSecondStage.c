@@ -36,7 +36,7 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     size_t line_params_count = 0;
     Line_params line_params;
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
-    data_model->line_number = -1;
+    data_model->line_number = 0;
 
     if (!fullFileName)
         EXIT_ON_MEM_ALLOC_FAIL
