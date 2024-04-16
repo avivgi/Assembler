@@ -288,6 +288,12 @@ char *encrypt_word(Word word)
     return result;
 }
 
+/**
+ * Writes the external symbols table to a file.
+ *
+ * @param data_model The data model containing the external symbols table.
+ * @param filename The name of the file to write the external symbols table to.
+ */
 void print_extern_table(Data_model data_model, const char *filename)
 {
     FILE *dest;

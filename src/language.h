@@ -36,24 +36,6 @@ typedef struct
             {15, "hlt", 0, 0x0, 0x0}, \
     }
 
-enum Sentence_type
-{
-    EMPTY,
-    COMMENT,
-    DEFINITOR,
-    INSTRUCTOR,
-    CONST
-};
-
-enum Operand_adderss_type
-{
-    NA = -1,
-    IMM = 0,
-    DIRECT = 1,
-    INDEX = 2,
-    REGISTER = 3
-} operand_adderss_type;
-
 #define RESIGTERS                                      \
     {                                                  \
         "r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7" \
