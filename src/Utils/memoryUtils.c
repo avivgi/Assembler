@@ -3,6 +3,7 @@
 #include <string.h>
 #include "../global_constants.h"
 #include <stdarg.h>
+#include <signal.h>
 
 /**
  * Function to push a new element into an array.
