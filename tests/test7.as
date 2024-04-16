@@ -10,11 +10,8 @@ LIST: .data 6, 8, sz
 ; 1 operand
 ; 2 operands
 
-
-
-;lea sz, fasdiu3245dghfgshdsf78dhkj12345
-;fasdiu3245dghfgshdsf78dhkj12345: .data 1
-
+lea r1, fasdiu3245dghfgshdsf78dhkj12345
+fasdiu3245dghfgshdsf78dhkj12345: .data 3
 
 ; to success
 ; zero operands
@@ -39,32 +36,32 @@ LIST: .data 6, 8, sz
 
 ; 2 operands
 
-;cmp #1,#ind
-;cmp LIST[1],LIST[ind]
-;cmp r1,r7
-;cmp LIST[0] , LIST[ind]
-;cmp LIST[0] ,LIST[ind]
-;cmp LIST[ 0] ,LIST[ind]
-;cmp LIST[0 ] ,LIST[ind]
-;cmp LIST[ 0 ] ,LIST[ind]
-;cmp LIST[0] ,LIST[ind]
-;cmp LIST[0] ,LIST[ ind]
-;cmp LIST[0] ,LIST[ind ]
-;cmp LIST[0] ,LIST[ ind ]
-;cmp LIST[ 0 ] ,LIST[ ind ]
-;cmp LIST[ 0], LIST[ind]
-;cmp LIST[0 ], LIST[ind]
-;cmp LIST[ 0 ], LIST[ind]
-;cmp LIST[0], LIST[ind]
-;cmp LIST[0], LIST[ ind]
-;cmp LIST[0], LIST[ind ]
-;cmp LIST[0], LIST[ ind ]
-;cmp LIST[0 ],LIST[ind]
-;cmp LIST[ 0],LIST[ind]
-;cmp LIST[ 0 ],LIST[ind]
-;cmp LIST[0],LIST[ ind]
-;cmp LIST[0],LIST[ind ]
-;cmp LIST[0],LIST[ ind ]
-;cmp LIST[ 0],LIST[ ind ]
-;cmp LIST[0 ],LIST[ ind ]
-;cmp LIST[ 0 ],LIST[ ind ]
+cmp #1,#ind
+cmp LIST[1],LIST[ind]
+cmp r1,r7
+cmp LIST[0] , LIST[ind]
+cmp LIST[0] ,LIST[ind]
+cmp LIST[ 0] ,LIST[ind]
+cmp LIST[0 ] ,LIST[ind]
+cmp LIST[ 0 ] ,LIST[ind]
+cmp LIST[0] ,LIST[ind]
+cmp LIST[0] ,LIST[ ind]
+cmp LIST[0] ,LIST[ind ]
+cmp LIST[0] ,LIST[ ind ]
+cmp LIST[ 0 ] ,LIST[ ind ]
+cmp LIST[ 0], LIST[ind]
+cmp LIST[0 ], LIST[ind]
+cmp LIST[ 0 ], LIST[ind]
+cmp LIST[0], LIST[ind]
+cmp LIST[0], LIST[ ind]
+cmp LIST[0], LIST[ind ]
+cmp LIST[0], LIST[ ind ]
+cmp LIST[0 ],LIST[ind]
+cmp LIST[ 0],LIST[ind]
+cmp LIST[ 0 ],LIST[ind]
+cmp LIST[0],LIST[ ind]
+cmp LIST[0],LIST[ind ]
+cmp LIST[0],LIST[ ind ]
+cmp LIST[ 0],LIST[ ind ]
+cmp LIST[0 ],LIST[ ind ]
+cmp LIST[ 0 ],LIST[ ind ]

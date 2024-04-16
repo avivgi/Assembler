@@ -764,12 +764,19 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     word++;
     data_model->instruction_count++;
 
+    /* command without operands */
     if ((*line_params).param_count == word)
     {
         return result;
     }
 
     /* combine all parsed_params to single param */
+    (*line_params).parsed_params[word] = realloc((*line_params).parsed_params[word], MAX_LINE_LENGTH * sizeof(char));
+    if (!(*line_params).parsed_params[word])
+    {
+        EXIT_ON_MEM_ALLOC_FAIL
+    }
+
     for (i = word + 1; i < (*line_params).param_count; i++)
     {
         strcat((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
@@ -837,5 +844,7 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         data_model->instruction_count--;
     }
 
+    /*safe_free(2, operands_arr, line);*/
+    safe_free(1, operands_arr);
     return result;
 }
