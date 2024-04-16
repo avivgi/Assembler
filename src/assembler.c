@@ -24,7 +24,7 @@ int main(int argc, char *argv[])
     int i = 1;
     int error_flag = 0;
 
-    register_errors();
+    /* register_errors();*/
     if (filesCount < 1)
     {
         fprintf(stderr, "Error. No arguments received. Exiting.\n");
