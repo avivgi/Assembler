@@ -109,7 +109,6 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
     else if (assembler_commands[i].command_type == 2)
     {
         /* check syntax and modife for easier handle */
-
         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, (*line_params).param_count, word, assembler_commands[result].command_type))
         {
             return SYNTAX_ERROR;
@@ -122,25 +121,30 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         addressing_source = check_addressing(&(*line_params).parsed_params[word], data_model);
         if (addressing_source < 0)
         {
-            return ERR_INVALID_ADDRESSING;
+            fprintf(stdout, "Error. Invalid addressing for the source in line %d\n", data_model->line_number);
         }
 
-        if (!(assembler_commands[result].allowed_source_operand_adderss_type & 1u << addressing_source))
+        else if (!(assembler_commands[result].allowed_source_operand_adderss_type & 1u << addressing_source))
         {
             fprintf(stdout, "Error. Wrong type of addressing of source in line %d\n", data_model->line_number);
-            return ERR_WRONG_TYPE_OF_ADDRESSING;
+            addressing_source = ERR_WRONG_TYPE_OF_ADDRESSING;
         }
 
         /* check address type for target */
         addressing_target = check_addressing(&(*line_params).parsed_params[word + 1], data_model);
         if (addressing_target < 0)
         {
-            return ERR_INVALID_ADDRESSING;
+            fprintf(stdout, "Error. Invalid addressing for the target in line %d\n", data_model->line_number);
         }
 
-        if (!(assembler_commands[result].allowed_target_operand_adderss_type & 1u << addressing_target))
+        else if (!(assembler_commands[result].allowed_target_operand_adderss_type & 1u << addressing_target))
         {
             fprintf(stdout, "Error. Wrong type of addressing of target in line %d\n", data_model->line_number);
+            addressing_target = ERR_WRONG_TYPE_OF_ADDRESSING;
+        }
+
+        if (addressing_source < 0 || addressing_target < 0)
+        {
             return ERR_WRONG_TYPE_OF_ADDRESSING;
         }
 
@@ -169,7 +173,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
             handle_addressing(data_model, addressing_target, &(*line_params).parsed_params[word + 1], 0);
         }
     }
-
+    /*printf("command first check done\n");*/
     return result;
 }
 
