@@ -5,7 +5,7 @@
 
 /*General*/
 #define MAX_LINE_LENGTH 81
-#define MAX_PARAM_SIZE 31
+#define MAX_PARAM_SIZE 80
 #define MAX_PARAM_COUNT 40
 #define NUM_OF_RESIGTERS 8
 #define BITS_IN_ENCRYPTED_WORD 7
