@@ -51,7 +51,7 @@ int compile_assembly_file(char *filename)
             }
             else
             {
-                printf("Error by assembler (progrematic) %s crashed with error code: %d\n", filename, exit_code);
+                printf("Error by assembler (progrematic, invalid syntax, etc) %s with error code: %d\n", filename, exit_code);
                 return 1;
             }
         }

@@ -11,11 +11,12 @@
 /**
  * Precompiles the given file.
  *step 1 - read line
- *step 2 - check if the line is a macro
- *step 3 - if the line is a macro, add it to the list of macros
- *step 4 - if the line is a macro, read the macro and add it to the list of macros
- *step 5 - if the line is a macro, continue to the next line
- *step 6 - if the line is not a macro, print it to the destination file
+ *step 2 - check if the line is a comment
+ *step 3 - check if the line is a macro
+ *step 4 - if the line is a macro, add it to the list of macros
+ *step 5 - if the line is a macro, read the macro and add it to the list of macros
+ *step 6 - if the line is a macro, continue to the next line
+ *step 7 - if the line is not a macro, print it to the destination file
  * @param arg The name of the file to precompile.
  * @return Returns an integer indicating the success or failure of the precompilation process.
  */
@@ -62,9 +63,10 @@ int preCompile(const char *arg)
         if (string_length_without_white_spaces(line) < 3)
             continue;
 
-        parse_command(line, check_for_macro, macro_name, line_number);
-        if (check_for_macro[0] == ';')
+        if (is_comment(&line))
             continue;
+
+        parse_command(line, check_for_macro, macro_name, line_number);
 
         start_of_macro = strstr(line, "mcr");
         if (start_of_macro != NULL)
@@ -135,4 +137,20 @@ int preCompile(const char *arg)
     fclose(source);
     fclose(destination);
     return 0;
+}
+
+/**
+ * Checks if a given line is a comment.
+ *
+ * @param line The line to check.
+ * @return true if the line is a comment, false otherwise.
+ */
+Bool is_comment(char **line)
+{
+    int i = 0;
+    while ((*line[i] == ' ' || *line[i] == '\t') && (i < strlen(*line)))
+        i++;
+    if (*line[i] == ';')
+        return true;
+    return false;
 }

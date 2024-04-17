@@ -35,7 +35,7 @@ int compile(const char *filename)
         if (!DEBUG)
             return result;
         else
-            fprintf(stderr, "Because DEBUG flag is on, we will continue to print the tables despite the 2nd stage errors.\n");
+            fprintf(stderr, "DEBUG mode on: continue to print the tables despite the 2nd stage errors.\n");
     }
 
     if (DEBUG)

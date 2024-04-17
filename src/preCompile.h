@@ -12,5 +12,6 @@ typedef struct
 } macro;
 
 int preCompile(const char *arg);
+Bool is_comment(char **line);
 
 #endif
