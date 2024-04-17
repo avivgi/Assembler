@@ -192,6 +192,12 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
     char *ptr_open = NULL;
     if (operands_number == 1)
     {
+        (*line_params).parsed_params[word] = realloc((*line_params).parsed_params[word], MAX_LINE_LENGTH * sizeof(char));
+        if (!(*line_params).parsed_params[word])
+        {
+            EXIT_ON_MEM_ALLOC_FAIL
+        }
+
         if ((ptr_open = strchr((*line_params).parsed_params[word], '[')) != NULL)
         {
             /* if last char in word is '[' */
@@ -400,6 +406,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                         return SYNTAX_ERROR;
                     }
                 }
+                strcpy((*line_params).parsed_params[word - 1], (*line_params).parsed_params[word]);
 
                 (*line_params).parsed_params[i] = operands_arr[1];
                 /* if second operand need syntax check */
@@ -412,8 +419,10 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     }
                 }
 
-                strcpy((*line_params).parsed_params[word - 1], (*line_params).parsed_params[word]);
-                strcpy((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
+                if (i != word)
+                {
+                    strcpy((*line_params).parsed_params[word], (*line_params).parsed_params[i]);
+                }
             }
         }
     }
