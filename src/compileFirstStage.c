@@ -21,7 +21,21 @@
 
 /**
  * Compiles the given file.
- *
+ * step 1 - open file
+ * step 2 - read line
+ * step 3 && 4 - if type== define put define in mdefine table
+ * step 5+6  - labels
+ * step 7 - is data or string
+ * step 8 - put symbol in symbol table
+ * step 9 - identify data/params and put them in mem table (which?) update DC
+ * step 10 - if extern or entry
+ * step 11 - if extern put in etx table
+ * step 12 - if symbol put in symbol table
+ * step 13 - lookup operation in table
+ * step 14 - calculate L , build binary code of first word
+ * step 15 - IC = IC + L . goto #2
+ * step 16- if errors stop
+ * step 17- update data with value IC+100 in symbol table
  * @param filename The name of the file to compile.
  * @return Returns an integer indicating the success or failure of the compilation process.
  */
@@ -33,7 +47,6 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     FILE *source;
     size_t line_params_count = 0;
     Line_params line_params = {0};
-
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
 
     if (!fullFileName)
@@ -107,7 +120,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     if (DEBUG)
         fprintf(stderr, "Finished first stage for %s with error(s) %d.\n", filename, error_flag);
 
-    /*step 16- if errors stop*/
+    /*step 16 - if errors stop*/
     if (error_flag != 0)
     {
         fclose(source);
@@ -115,7 +128,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
         return error_flag;
     }
 
-    /*step 17- update data with value IC+100 in symbol table*/
+    /*step 17 - update data with value IC+100 in symbol table*/
     update_data_address(data_model);
 
     safe_free(1, fullFileName);

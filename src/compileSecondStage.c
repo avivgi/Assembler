@@ -22,7 +22,16 @@ char *strdup(const char *s);
 
 /**
  * Compiles the given file.
- *
+ * step 1 - reset IC
+ * step 2 - read line
+ * step 3 - if type == define continue
+ * step 4 - if first word is label, skip it, if this is .string .extern or .data continue
+ * step 5 - is it .entry label? if so mark symbols as entry
+ * step 6 - update 2nd - 4th operands
+ * step 8 - free line_params
+ * step 9 - repeat from step 2
+ * step 10 - free buffer and fullFileName
+ * step 11 - return error_flag
  * @param filename The name of the file to compile.
  * @return Returns an integer indicating the success or failure of the compilation process.
  */
@@ -52,8 +61,6 @@ int compileSecondStage(const char *filename, Data_model *data_model)
     }
 
     /*step 1*/
-
-    /* resume this after promoting IC correctly*/
     data_model->instruction_count = 0;
 
     /* step 2 - read line */
@@ -87,6 +94,7 @@ int compileSecondStage(const char *filename, Data_model *data_model)
         safe_free(1, entry_label_name);
 
         /* step 7 update 2nd - 4th operands */
+        printf("line number %d\n", data_model->line_number);
         result += updateOperands(data_model, &line_params, line_params_count);
         if (result < 0)
         {

@@ -24,14 +24,14 @@ int compile(const char *filename)
     result = compileFirstStage(filename, &data_model);
     if (result > 0)
     {
-        fprintf(stderr, "Compilation terminated due to errors for file: %s.\n", filename);
-        if (!DEBUG)
-            return result;
+        fprintf(stderr, "Error: Compilation encountared error during first phases for file: %s. Continue.\n", filename);
+        /* if (!DEBUG)
+             return result; */
     }
     result += compileSecondStage(filename, &data_model);
     if (result != 0)
     {
-        fprintf(stderr, "Compilation terminated due to errors for file: %s.\n", filename);
+        fprintf(stderr, "Error: Compilation terminated due to errors for file: %s.\n", filename);
         if (!DEBUG)
             return result;
         else

@@ -1,11 +1,11 @@
 mov r1, r2
-BIL a,b,c
+;BIL a,b,c
 mov r1, r2
 mov r1, r2
-BIL a,b,c
+;BIL a,b,c
 mov r1, r2
 mov r1, r2
 mov r1, r2
 mov r1, r2
 mov r1, r2
-mov r1, r2v
+;mov r1, r2v

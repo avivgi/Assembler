@@ -160,8 +160,8 @@ int parse_command(char *buffer, char *command, char *first_param, int line_numbe
         }
         if (j == MAX_PARAM_SIZE)
         {
-            fprintf(stderr, "Error. Undefined command name in %d.\n", line_number);
-            return ERR_COMMAND_NOT_FOUND;
+            fprintf(stderr, "Error. label or command too long in line %d.\n", line_number);
+            return ERR_COMMAND_TOO_LONG;
         }
     }
     command[j] = '\0';

@@ -59,6 +59,15 @@ typedef struct
     int line_number;
 } Data_model;
 
+enum Operand_adderss_type
+{
+    NA = -1,
+    IMM = 0,
+    DIRECT = 1,
+    INDEX = 2,
+    REGISTER = 3
+} operand_adderss_type;
+
 int isLabelExist(char *label, Symbol *symbol_table, int symbol_count);
 int getLabelAddress(char *label, Symbol *symbol_table, int symbol_count);
 void initDataModel(Data_model *data_model);

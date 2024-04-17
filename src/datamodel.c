@@ -39,6 +39,11 @@ int getLabelAddress(char *label, Symbol *symbol_table, int symbol_count)
     return 0;
 }
 
+/**
+ * Initializes the data model structure.
+ *
+ * @param data_model A pointer to the Data_model structure to be initialized.
+ */
 void initDataModel(Data_model *data_model)
 {
     data_model->symbol_count = 0;
