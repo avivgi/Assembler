@@ -148,9 +148,11 @@ int preCompile(const char *arg)
 Bool is_comment(char **line)
 {
     int i = 0;
-    while ((*line[i] == ' ' || *line[i] == '\t') && (i < strlen(*line)))
+    while (((*line)[i] == ' ' || (*line)[i] == '\t') && (i < strlen(*line)))
+    {
         i++;
-    if (*line[i] == ';')
+    }
+    if ((*line)[i] == ';')
         return true;
     return false;
 }
