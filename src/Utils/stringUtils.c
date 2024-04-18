@@ -234,7 +234,7 @@ int parse_line(Line_params *line_params, size_t *line_params_count, const char *
         if (*line_params == NULL)
         {
             free(buffer_c);
-            EXIT_ON_MEM_ALLOC_FAIL
+            EXIT_ON_MEM_ALLOC_FAIL_EARLY
         }
     */
     /* Initialize the new Line_params struct */
@@ -348,7 +348,7 @@ int parse_string_into_string_array(Data_model *data_model, char *buffer, char **
     /* Duplicate the input buffer */
     buffer_c = strdup(buffer);
     if (buffer_c == NULL)
-        EXIT_ON_MEM_ALLOC_FAIL;
+        EXIT_ON_MEM_ALLOC_FAIL_EARLY;
 
     /* Initialize result_array */
     *result_array = NULL;
@@ -365,7 +365,7 @@ int parse_string_into_string_array(Data_model *data_model, char *buffer, char **
             {
                 free((*result_array)[j]);
             }
-            EXIT_ON_MEM_ALLOC_FAIL;
+            EXIT_ON_MEM_ALLOC_FAIL_EARLY;
         }
 
         (*result_array)[i] = strdup(token);
@@ -376,7 +376,7 @@ int parse_string_into_string_array(Data_model *data_model, char *buffer, char **
                 free((*result_array)[j]);
             }
             free(buffer_c);
-            EXIT_ON_MEM_ALLOC_FAIL;
+            EXIT_ON_MEM_ALLOC_FAIL_EARLY;
         }
 
         i++;

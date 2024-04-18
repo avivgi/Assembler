@@ -110,5 +110,6 @@ int compileSecondStage(const char *filename, Data_model *data_model)
 
     fclose(source);
     safe_free(2, buffer, fullFileName);
+    safe_free_array((void *)(line_params).parsed_params, (line_params).param_count);
     return error_flag;
 }

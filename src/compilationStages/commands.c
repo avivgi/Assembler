@@ -763,6 +763,12 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     char regi_count = 0;
     char **operands_arr = NULL;
 
+    /*AVNER CHANGE*/
+    int line_status = data_model->line_status[data_model->line_number - 1];
+    printf("data model line number %d", data_model->line_number);
+    printf("line status %d\n", line_status);
+    /* END AVNER CHANGE*/
+
     /* check if first word is label*/
     if ((*line_params).parsed_params[word][strlen((*line_params).parsed_params[word]) - 1] == ':')
     {
@@ -823,7 +829,10 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         }
 
         /* extract and write the address */
-        data_model->instructions_table[data_model->instruction_count].dValue = data_model->symbols[label].value;
+        /*AVNER CHANGE*/
+        if (line_status)
+            /*END AVNER CHANGE*/
+            data_model->instructions_table[data_model->instruction_count].dValue = data_model->symbols[label].value;
 
         /* overwrite the "blank" code word */
         data_model->instructions_table[data_model->instruction_count].word = 0;

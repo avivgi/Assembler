@@ -1,6 +1,8 @@
 #ifndef __MEMORY_UTILS__
 #define __MEMORY_UTILS__
 #include <stdlib.h>
+/*        safe_free_array((void *)(line_params).parsed_params, (line_params).param_count); \
+ */
 #define EXIT_ON_MEM_ALLOC_FAIL       \
     do                               \
     {                                \

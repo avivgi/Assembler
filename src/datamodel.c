@@ -56,13 +56,22 @@ void initDataModel(Data_model *data_model)
     data_model->line_number = 0;
     data_model->externals_count = 0;
     data_model->externals = NULL;
+    data_model->line_status = NULL;
 }
 
 void free_data_model(Data_model *data_model)
 {
-    safe_free(4,
+    safe_free(5,
               data_model->symbols,
               data_model->instructions_table,
               data_model->data_table,
-              data_model->externals);
+              data_model->externals,
+              data_model->line_status);
+}
+
+void line_status_indicator(Data_model *data_model)
+{
+    data_model->line_number++;
+    data_model->line_status = realloc(data_model->line_status, data_model->line_number * sizeof(int));
+    data_model->line_status[data_model->line_number - 1] = 0;
 }

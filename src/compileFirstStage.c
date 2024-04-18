@@ -65,7 +65,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     /* step 2 - read line */
     while (read_line(source, &buffer))
     {
-        data_model->line_number++;
+        line_status_indicator(data_model);
         parse_line(&line_params, &line_params_count, buffer, "\t\n\f\r ");
 
         /* step 3 && 4 - if type== define put define in mdefine table*/
@@ -112,6 +112,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
             error_flag += 1;
             continue;
         }
+        data_model->line_status[data_model->line_number - 1] = OK;
     }
 
     safe_free_array((void *)(line_params).parsed_params, (line_params).param_count);
