@@ -50,7 +50,7 @@ int compileFirstStage(const char *filename, Data_model *data_model)
     char *fullFileName = (char *)calloc(strlen(filename) + 4, sizeof(char));
 
     if (!fullFileName)
-        EXIT_ON_MEM_ALLOC_FAIL
+        EXIT_ON_MEM_ALLOC_FAIL_EARLY;
 
     strcpy(fullFileName, filename);
     strcat(fullFileName, ".am");

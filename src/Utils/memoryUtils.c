@@ -59,7 +59,7 @@ void safe_free(int num_args, ...)
  */
 void errors(int signum)
 {
-    printf("Error: an error occoured while compiling. Error code: %d. Existing.\n", signum);
+    printf("Error: Compilation encountared an error. Error code: %d. Existing.\n", signum);
     exit(signum);
 }
 

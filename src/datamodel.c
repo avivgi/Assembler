@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "datamodel.h"
 #include <string.h>
+#include "Utils/memoryUtils.h"
 
 /**
  * Checks if a label exists in the symbol table.
@@ -55,4 +56,13 @@ void initDataModel(Data_model *data_model)
     data_model->line_number = 0;
     data_model->externals_count = 0;
     data_model->externals = NULL;
+}
+
+void free_data_model(Data_model *data_model)
+{
+    safe_free(4,
+              data_model->symbols,
+              data_model->instructions_table,
+              data_model->data_table,
+              data_model->externals);
 }

@@ -31,7 +31,7 @@ int read_line(FILE *file, char **buffer)
 
     *buffer = malloc(MAX_LINE_LENGTH * sizeof(char));
     if (!(*buffer))
-        EXIT_ON_MEM_ALLOC_FAIL
+        EXIT_ON_MEM_ALLOC_FAIL_EARLY
 
     while ((c = fgetc(file)) != EOF)
     {
@@ -50,7 +50,7 @@ int read_line(FILE *file, char **buffer)
             if (!temp)
             {
                 safe_free(1, buffer);
-                EXIT_ON_MEM_ALLOC_FAIL
+                EXIT_ON_MEM_ALLOC_FAIL_EARLY
             }
             *buffer = temp;
         }
@@ -224,7 +224,7 @@ int parse_line(Line_params *line_params, size_t *line_params_count, const char *
     *line_params_count = 0;
     if (buffer_c == NULL)
     {
-        EXIT_ON_MEM_ALLOC_FAIL
+        EXIT_ON_MEM_ALLOC_FAIL_EARLY
     }
     /* init new Line Params*/
 
@@ -245,7 +245,7 @@ int parse_line(Line_params *line_params, size_t *line_params_count, const char *
     if ((*line_params).parsed_params == NULL)
     {
         safe_free(1, buffer_c);
-        EXIT_ON_MEM_ALLOC_FAIL
+        EXIT_ON_MEM_ALLOC_FAIL_EARLY
     }
 
     /* Allocate memory for each char pointer in parsed_params */
@@ -256,7 +256,7 @@ int parse_line(Line_params *line_params, size_t *line_params_count, const char *
         {
             safe_free_array((void **)(*line_params).parsed_params, (*line_params).param_count);
             safe_free(1, buffer_c);
-            EXIT_ON_MEM_ALLOC_FAIL
+            EXIT_ON_MEM_ALLOC_FAIL_EARLY
         }
     }
 
@@ -292,7 +292,7 @@ char *mid(char *buffer, int start, int end)
     length = end - start + 1;
     result = malloc((length + 1) * sizeof(char));
     if (result == NULL)
-        EXIT_ON_MEM_ALLOC_FAIL
+        EXIT_ON_MEM_ALLOC_FAIL_EARLY
 
     strncpy(result, buffer + start, length);
     result[length] = '\0';

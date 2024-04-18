@@ -71,5 +71,5 @@ enum Operand_adderss_type
 int isLabelExist(char *label, Symbol *symbol_table, int symbol_count);
 int getLabelAddress(char *label, Symbol *symbol_table, int symbol_count);
 void initDataModel(Data_model *data_model);
-
+void free_data_model(Data_model *data_model);
 #endif

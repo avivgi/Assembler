@@ -33,7 +33,10 @@ int compile(const char *filename)
     {
         fprintf(stderr, "Error: Compilation terminated due to errors for file: %s.\n", filename);
         if (!DEBUG)
+        {
+            free_data_model(&data_model);
             return result;
+        }
         else
             fprintf(stderr, "DEBUG mode on: continue to print the tables despite the 2nd stage errors.\n");
     }
@@ -50,5 +53,6 @@ int compile(const char *filename)
     print_entry_and_extern_table(data_model, filename, ENTRY);
     print_extern_table(data_model, filename);
     printf("Compilation completed successfully for file: %s.\n", filename);
+    free_data_model(&data_model);
     return 0;
 }

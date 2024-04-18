@@ -34,7 +34,7 @@ int preCompile(const char *arg)
 
     char *fileName = (char *)calloc(strlen(arg) + 4, sizeof(char));
     if (!fileName)
-        EXIT_ON_MEM_ALLOC_FAIL
+        EXIT_ON_MEM_ALLOC_FAIL_EARLY
 
     strcpy(fileName, arg);
     strcat(fileName, ".as");
@@ -79,7 +79,7 @@ int preCompile(const char *arg)
                     safe_free(2, fileName, line);
                     fclose(source);
                     fclose(destination);
-                    EXIT_ON_MEM_ALLOC_FAIL
+                    EXIT_ON_MEM_ALLOC_FAIL_EARLY
                 }
 
                 list_of_macros[number_of_macros - 1].number_of_lines = 0;
@@ -89,7 +89,7 @@ int preCompile(const char *arg)
                     safe_free(3, fileName, line, list_of_macros);
                     fclose(source);
                     fclose(destination);
-                    EXIT_ON_MEM_ALLOC_FAIL
+                    EXIT_ON_MEM_ALLOC_FAIL_EARLY
                 }
                 strcpy(list_of_macros[number_of_macros - 1].macro_name, macro_name);
 
@@ -108,7 +108,7 @@ int preCompile(const char *arg)
                             safe_free(3, fileName, line, list_of_macros);
                             fclose(source);
                             fclose(destination);
-                            EXIT_ON_MEM_ALLOC_FAIL
+                            EXIT_ON_MEM_ALLOC_FAIL_EARLY
                         }
                     }
                     strcpy(list_of_macros[number_of_macros - 1].command_line[list_of_macros[number_of_macros - 1].number_of_lines], line);

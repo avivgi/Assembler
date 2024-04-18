@@ -41,9 +41,8 @@ int createDefineSymbol(Data_model *data_model, Line_params *line_params, size_t 
 
         param = strdup((*line_params).parsed_params[1]);
         if (param == NULL)
-        {
             EXIT_ON_MEM_ALLOC_FAIL
-        }
+
         value = (int)strtol(param, &endptr, 10);
 
         if ((errno == ERANGE) || (errno != 0 && value == 0))
