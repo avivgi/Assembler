@@ -73,11 +73,15 @@ void register_errors(void)
     signal(SIGFPE, errors);
     signal(SIGILL, errors);
     signal(SIGABRT, errors);
+
+/* these flags arent relevant for windows environemnt*/
+#if defined(__APPLE__) || defined(__linux__)
     signal(SIGTRAP, errors);
     signal(SIGBUS, errors);
     signal(SIGSYS, errors);
     signal(SIGXCPU, errors);
     signal(SIGXFSZ, errors);
+#endif
 }
 
 /**
