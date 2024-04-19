@@ -58,7 +58,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
     {
         if ((*line_params).param_count != word)
         {
-            fprintf(stdout, "Error. Number of opperands is illegal in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Number of opperands is illegal for command %s in line %d\n", assembler_commands[result].command_name, data_model->line_number);
             return ERR_NUMBER_OPERANDS_FOR_COMMAND;
         }
 
@@ -84,13 +84,13 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         addressing_target = check_addressing(&(*line_params).parsed_params[word], data_model);
         if (addressing_target < 0)
         {
-            fprintf(stdout, "Error. Invalid addressing in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Invalid addressing for operand %s in line %d\n", (*line_params).parsed_params[word], data_model->line_number);
             return ERR_INVALID_ADDRESSING;
         }
 
         if (!(assembler_commands[result].allowed_target_operand_adderss_type & 1u << addressing_target))
         {
-            fprintf(stdout, "Error. Wrong type of addressing of target in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Wrong type of addressing of target \"%s\", addressing type %d, in line %d\n", (*line_params).parsed_params[word], addressing_target, data_model->line_number);
             return ERR_WRONG_TYPE_OF_ADDRESSING;
         }
 
@@ -121,12 +121,12 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         addressing_source = check_addressing(&(*line_params).parsed_params[word], data_model);
         if (addressing_source < 0)
         {
-            fprintf(stdout, "Error. Invalid addressing for the source in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Invalid addressing for the source \"%s\" in line %d\n", data_model->line_number);
         }
 
         else if (!(assembler_commands[result].allowed_source_operand_adderss_type & 1u << addressing_source))
         {
-            fprintf(stdout, "Error. Wrong type of addressing of source in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Wrong type of addressing of source \"%s\", addressing type %d, in line %d\n", (*line_params).parsed_params[word], addressing_source, data_model->line_number);
             addressing_source = ERR_WRONG_TYPE_OF_ADDRESSING;
         }
 
@@ -139,7 +139,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
 
         else if (!(assembler_commands[result].allowed_target_operand_adderss_type & 1u << addressing_target))
         {
-            fprintf(stdout, "Error. Wrong type of addressing of target in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Wrong type of addressing of target \"%s\", addressing type %d, in line %d\n", (*line_params).parsed_params[word], addressing_target, data_model->line_number);
             addressing_target = ERR_WRONG_TYPE_OF_ADDRESSING;
         }
 
@@ -237,7 +237,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                 else
                 {
                     /* error */
-                    fprintf(stdout, "Syntax Error. Unnecessary char in array  in line %d\n", data_model->line_number);
+                    fprintf(stdout, "Syntax Error. Unnecessary char in array in line %d\n", data_model->line_number);
                     return SYNTAX_ERROR;
                 }
             }
@@ -305,7 +305,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             {
                 if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                 {
-                    fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
+                    fprintf(stdout, "Error. Source operand have SYNTAX_ERROR in line %d\n", data_model->line_number);
                     return SYNTAX_ERROR;
                 }
             }
@@ -315,7 +315,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
             {
                 if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i + 1, 1))
                 {
-                    fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
+                    fprintf(stdout, "Error. Target operand have SYNTAX_ERROR in line %d\n", data_model->line_number);
                     return SYNTAX_ERROR;
                 }
             }
@@ -345,7 +345,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     {
                         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                         {
-                            fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
+                            fprintf(stdout, "Error. Source operand have SYNTAX_ERROR in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -355,7 +355,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     {
                         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i, 1))
                         {
-                            fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
+                            fprintf(stdout, "Error. Target operand have SYNTAX_ERROR in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -373,7 +373,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     {
                         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                         {
-                            fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
+                            fprintf(stdout, "Error. Source operand have SYNTAX_ERROR in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -383,7 +383,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                     {
                         if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i + 1, 1))
                         {
-                            fprintf(stdout, "second operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
+                            fprintf(stdout, "Error. Target operand have SYNTAX_ERROR in line %d\n", data_model->line_number);
                             return SYNTAX_ERROR;
                         }
                     }
@@ -402,7 +402,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                 {
                     if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, word, 1))
                     {
-                        fprintf(stdout, "first operand out of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
+                        fprintf(stdout, "Error. Source operand have SYNTAX_ERROR in line %d\n", data_model->line_number);
                         return SYNTAX_ERROR;
                     }
                 }
@@ -414,7 +414,7 @@ int syntax_check_commands(Data_model *data_model, Line_params *line_params, size
                 {
                     if (SYNTAX_ERROR == syntax_check_commands(data_model, line_params, line_params_count, i, 1))
                     {
-                        fprintf(stdout, "second operand of 2 have SYNTAX_ERROR in line %d\n", data_model->line_number);
+                        fprintf(stdout, "Error. Target operand have SYNTAX_ERROR in line %d\n", data_model->line_number);
                         return SYNTAX_ERROR;
                     }
                 }
@@ -492,7 +492,7 @@ int check_addressing(char **word, Data_model *data_model)
         }
         else
         {
-            fprintf(stdout, "Immediate addressing is missing a number in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Immediate addressing of \"%s\" is missing a number in line %d\n", *word, data_model->line_number);
             result = ERR_INVALID_ADDRESSING;
         }
     }
@@ -514,7 +514,7 @@ int check_addressing(char **word, Data_model *data_model)
         {
             if (*num < 0)
             {
-                fprintf(stdout, "Error. Index of array can not be negative in line %d\n", data_model->line_number);
+                fprintf(stdout, "Error. Index of an array can not be negative, the index is %s, in line %d\n", index, data_model->line_number);
                 result = ERR_INVALID_ADDRESSING;
             }
             else
@@ -526,7 +526,7 @@ int check_addressing(char **word, Data_model *data_model)
         {
             if (data_model->symbols[i].value < 0)
             {
-                fprintf(stdout, "Error. Index of array can not be negative in line %d\n", data_model->line_number);
+                fprintf(stdout, "Error. Index of array can not be negative, the index is %d for define \"%s\", in line %d\n", data_model->symbols[i].value, index, data_model->line_number);
                 result = ERR_INVALID_ADDRESSING;
             }
             else
@@ -536,7 +536,7 @@ int check_addressing(char **word, Data_model *data_model)
         }
         else
         {
-            fprintf(stdout, "The array missing an number or define as index in line %d\n", data_model->line_number);
+            fprintf(stdout, "The array missing an number or define as an index in line %d\n", data_model->line_number);
             result = ERR_INVALID_ADDRESSING;
         }
         safe_free(1, index);
