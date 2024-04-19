@@ -764,7 +764,9 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     char **operands_arr = NULL;
 
     /*AVNER CHANGE*/
-    int line_status = data_model->line_status[data_model->line_number - 1];
+    int line_status;
+    printf("before setting line status\n");
+    line_status = data_model->line_status[data_model->line_number - 1];
     printf("data model line number %d", data_model->line_number);
     printf("line status %d\n", line_status);
     /* END AVNER CHANGE*/

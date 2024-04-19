@@ -9,8 +9,19 @@ ABBA: .data -22
 .entry LIST
 LIST: .data 6, 8, sz
 
+
+
+
+;a: .data 1
+;b: .data 2
+;c: .data 3
+
+
+;BIL a,b,c
+
 ;lea r1, fasdiu3245dghfgshdsf78dhkj12345
-fasdiu3245dghfgshdsf78dhkj12345: .data 4
+;fasdiu3245dghfgshdsf78dhkj12345: .data 4
+
 
 ;; to success
 ;; addressing
