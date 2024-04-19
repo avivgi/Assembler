@@ -762,8 +762,7 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     int result = 1;
     char regi_count = 0;
     char **operands_arr = NULL;
-
-    printf("second stage command start\n");
+    int line_status = data_model->line_status[data_model->line_number - 1];
 
     /* check if first word is label*/
     if ((*line_params).parsed_params[word][strlen((*line_params).parsed_params[word]) - 1] == ':')
@@ -773,7 +772,10 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
 
     /* move index to the start of first operand */
     word++;
-    data_model->instruction_count++;
+    if (line_status != 0)
+    {
+        data_model->instruction_count++;
+    }
 
     /* command without operands */
     if ((*line_params).param_count == word)
@@ -805,7 +807,10 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
                 regi_count++;
             }
 
-            data_model->instruction_count++;
+            if (line_status != 0)
+            {
+                data_model->instruction_count++;
+            }
             continue;
         }
 
@@ -825,7 +830,7 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         }
 
         /* if there is error in first stage there will be no update of code words */
-        if (data_model->line_status[data_model->line_number - 1] == 0)
+        if (line_status == 0)
         { /*END AVNER CHANGE*/
             result = ERR_IN_FIRST_STAGE;
             continue;
@@ -857,12 +862,11 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         }
     }
 
-    if (regi_count == 2)
+    if (line_status != 0 && regi_count == 2)
     {
         data_model->instruction_count--;
     }
 
-    printf("second stage command is finish with result %d\n", result);
     safe_free(1, operands_arr);
     return result;
 }
