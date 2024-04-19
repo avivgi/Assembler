@@ -58,7 +58,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
     {
         if ((*line_params).param_count != word)
         {
-            fprintf(stdout, "Error. Number of opperands is illegal in line %d\n", data_model->line_number); /* line number in am file */
+            fprintf(stdout, "Error. Number of opperands is illegal in line %d\n", data_model->line_number);
             return ERR_NUMBER_OPERANDS_FOR_COMMAND;
         }
 
@@ -763,13 +763,7 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
     char regi_count = 0;
     char **operands_arr = NULL;
 
-    /*AVNER CHANGE*/
-    int line_status;
-    printf("before setting line status\n");
-    line_status = data_model->line_status[data_model->line_number - 1];
-    printf("data model line number %d", data_model->line_number);
-    printf("line status %d\n", line_status);
-    /* END AVNER CHANGE*/
+    printf("second stage command start\n");
 
     /* check if first word is label*/
     if ((*line_params).parsed_params[word][strlen((*line_params).parsed_params[word]) - 1] == ':')
@@ -825,16 +819,20 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
 
         if ((label = isLabelExist(operands_arr[operand], data_model->symbols, data_model->symbol_count)) < 0)
         {
-            fprintf(stdout, "Error. Can not find the operand in labels table in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Can not find the operand \"%s\" in labels table in line %d\n", operands_arr[operand], data_model->line_number);
             result = EER_LABEL_NOT_FOUND;
             continue;
         }
 
+        /* if there is error in first stage there will be no update of code words */
+        if (data_model->line_status[data_model->line_number - 1] == 0)
+        { /*END AVNER CHANGE*/
+            result = ERR_IN_FIRST_STAGE;
+            continue;
+        }
+
         /* extract and write the address */
-        /*AVNER CHANGE*/
-        if (line_status)
-            /*END AVNER CHANGE*/
-            data_model->instructions_table[data_model->instruction_count].dValue = data_model->symbols[label].value;
+        data_model->instructions_table[data_model->instruction_count].dValue = data_model->symbols[label].value;
 
         /* overwrite the "blank" code word */
         data_model->instructions_table[data_model->instruction_count].word = 0;
@@ -864,7 +862,7 @@ int updateOperands(Data_model *data_model, Line_params *line_params, size_t line
         data_model->instruction_count--;
     }
 
-    /*safe_free(2, operands_arr, line);*/
+    printf("second stage command is finish with result %d\n", result);
     safe_free(1, operands_arr);
     return result;
 }
