@@ -121,7 +121,7 @@ int commands(Data_model *data_model, Line_params *line_params, size_t line_param
         addressing_source = check_addressing(&(*line_params).parsed_params[word], data_model);
         if (addressing_source < 0)
         {
-            fprintf(stdout, "Error. Invalid addressing for the source \"%s\" in line %d\n", data_model->line_number);
+            fprintf(stdout, "Error. Invalid addressing for the source \"%s\" in line %d\n", (*line_params).parsed_params[word], data_model->line_number);
         }
 
         else if (!(assembler_commands[result].allowed_source_operand_adderss_type & 1u << addressing_source))
