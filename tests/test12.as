@@ -57,14 +57,13 @@ K: .data -22
 
 
 ; comma with some of both
-;cmp LIST[0 ],LIST[ind]
-;cmp LIST[ 0],LIST[ind]
-;cmp LIST[ 0 ],LIST[ind]
-;cmp LIST[0],LIST[ ind]
-;cmp LIST[0],LIST[ind ]
-;cmp LIST[0],LIST[ ind ]
-;cmp LIST[ 0],LIST[ ind ]
-;cmp LIST[0 ],LIST[ ind ]
-;cmp LIST[ 0 ],LIST[ ind ]
-
+cmp LIST[0 ],LIST[ind]
+cmp LIST[ 0],LIST[ind]
+cmp LIST[ 0 ],LIST[ind]
+cmp LIST[0],LIST[ ind]
+cmp LIST[0],LIST[ind ]
+cmp LIST[0],LIST[ ind ]
+cmp LIST[ 0],LIST[ ind ]
+cmp LIST[0 ],LIST[ ind ]
+cmp LIST[ 0 ],LIST[ ind ]
 

@@ -3,8 +3,6 @@
 #include <stdint.h>
 #include "global_constants.h"
 
-#define BITS_IN_WORD 14
-
 typedef int16_t Word;
 
 enum Symbol_type

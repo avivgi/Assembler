@@ -1,4 +1,10 @@
-Symbol name: K         	Value: 104	type: 3: DATA
+Symbol name: ABBA      	Value: 100	type: 3: DATA
 Symbol name: sz        	Value: -2	type: 1: MDEFINE
-Symbol name: ind       	Value: 5	type: 1: MDEFINE
-Symbol name: LIST      	Value: 105	type: 4: ENTRY
+Symbol name: ind       	Value: 77	type: 1: MDEFINE
+Symbol name: ind1      	Value: 1	type: 1: MDEFINE
+Symbol name: ind2      	Value: 2	type: 1: MDEFINE
+Symbol name: ind3      	Value: 3	type: 1: MDEFINE
+Symbol name: ind4      	Value: 4	type: 1: MDEFINE
+Symbol name: ind5      	Value: 5	type: 1: MDEFINE
+Symbol name: LIST      	Value: 101	type: 4: ENTRY
+Symbol name: fasdiu3245dghfgshdsf78dhkj12345	Value: 104	type: 3: DATA

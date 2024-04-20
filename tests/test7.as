@@ -290,4 +290,4 @@ LIST: .data 6, 8, sz
 ;cmp LIST[0],LIST[ ind]
 ;cmp LIST[0],LIST[ind ]
 ;; 0 spaces
-;cmp LIST[0],LIST[ind]
+cmp LIST[0],LIST[ind]

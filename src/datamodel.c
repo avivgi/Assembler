@@ -59,6 +59,11 @@ void initDataModel(Data_model *data_model)
     data_model->line_status = NULL;
 }
 
+/**
+ * Frees the memory allocated for a Data_model structure.
+ *
+ * @param data_model A pointer to the Data_model structure to be freed.
+ */
 void free_data_model(Data_model *data_model)
 {
     safe_free(5,
@@ -69,6 +74,13 @@ void free_data_model(Data_model *data_model)
               data_model->line_status);
 }
 
+/**
+ * Updates the line status indicator in the data model.
+ * Increments the line number and reallocates memory for the line status array.
+ * Sets the newly added line status to 0.
+ *
+ * @param data_model A pointer to the data model structure.
+ */
 void line_status_indicator(Data_model *data_model)
 {
     data_model->line_number++;

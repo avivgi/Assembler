@@ -94,15 +94,13 @@ int compileSecondStage(const char *filename, Data_model *data_model)
         safe_free(1, entry_label_name);
 
         /* step 7 update 2nd - 4th operands */
-        printf("line number %d\n", data_model->line_number);
+        /* step 8 - IC = IC + L*/
         result += updateOperands(data_model, &line_params, line_params_count);
         if (result < 0)
         {
             error_flag += 1;
             continue;
         }
-
-        /*step 8 - IC = IC + L*/
     }
     /*step 9 - free line_params*/
     if (DEBUG)

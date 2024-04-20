@@ -1,6 +1,8 @@
 #ifndef __LANGUAGE__
 #define __LANGUAGE__
 
+#define BITS_IN_WORD 14
+
 #define NUNMER_OF_REGISTERS 8
 #define CODE_START_ADDRESS 100
 
