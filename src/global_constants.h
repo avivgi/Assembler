@@ -1,7 +1,7 @@
 #ifndef __GLOBAL_CONSTANTS__
 #define __GLOBAL_CONSTANTS__
 
-#define DEBUG true
+#define DEBUG false
 
 /*General*/
 #define MAX_LINE_LENGTH 81
